@@ -1,0 +1,53 @@
+#端口号配置
+server:
+  port: 80
+spring:
+  #配置MYSQL数据库
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/bookapp
+    username: root
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+    #配置redis缓存
+  redis:
+    database: 0 #数据库
+    host: 47.99.53.238 #主机
+    port: 6379 #端口号
+    password: root
+    timeout: -1
+    pool: #连接配置
+      max-active: 20 #最大连接数
+      max-wait: -1 #最大等待时间
+      max-idle: 8 #最大空闲连接
+      min-idle: 0 #最小空闲连接
+  #配置上传文件的最大限制
+  http:
+    multipart:
+      enabled: true
+      max-file-size: 30MB
+      max-request-size: 30MB
+#配置mybatis使用
+mybatis:
+  mapper-locations: classpath:mapping/*.xml  #注意：一定要对应mapper映射xml文件的所在路径
+  type-aliases-package: com.jxtc.bookapp.entity  # 注意：对应实体类的路径
+
+#pagehelper分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql

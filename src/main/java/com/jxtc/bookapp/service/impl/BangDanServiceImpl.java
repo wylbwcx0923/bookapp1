@@ -17,6 +17,8 @@ import com.jxtc.bookapp.utils.PageResult;
 import com.jxtc.bookapp.utils.TimeUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +33,9 @@ import java.util.*;
  */
 @Service
 public class BangDanServiceImpl implements BangDanService {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private BangdanMapper bangdanMapper;
     @Autowired
@@ -116,7 +121,7 @@ public class BangDanServiceImpl implements BangDanService {
             }
             //将从MySQL中取出的内容放入缓存
             String listStr = JSONArray.fromObject(list).toString();
-            System.out.println(listStr);
+            logger.debug(listStr);
             redisService.hmSet(bangDanId + "bangdan", pageIndex + "_" + pageSize, listStr);
         } else {
             JSONArray array = JSONArray.fromObject(isExists);

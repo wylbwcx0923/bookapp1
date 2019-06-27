@@ -8,6 +8,8 @@ import com.jxtc.bookapp.entity.UserVipExample;
 import com.jxtc.bookapp.mapper.UserInfoMapper;
 import com.jxtc.bookapp.mapper.UserVipMapper;
 import com.jxtc.bookapp.service.UserInfoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ import java.util.List;
  */
 @Service
 public class SheduTaskUtil {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private UserVipMapper userVipMapper;
@@ -53,7 +57,7 @@ public class SheduTaskUtil {
             for (UserVip vip : userVips) {
                 if (vip.getExpireTime().getTime() <= new Date().getTime()) {
                     vip.setStatus(ApiConstant.VipStatus.EXPIRE);//过期
-                    System.out.println("执行了过期");
+                    logger.debug("执行了过期");
                     userVipMapper.updateByPrimaryKey(vip);
                     //将用户表中Vip用户的类型改为普通用户
                     UserInfo userInfo = new UserInfo();

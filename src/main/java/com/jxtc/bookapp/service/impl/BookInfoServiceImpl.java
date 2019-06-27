@@ -14,6 +14,8 @@ import com.jxtc.bookapp.utils.PageResult;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,7 @@ import java.util.*;
  */
 @Service(value = "bookInfoService")
 public class BookInfoServiceImpl implements BookInfoService {
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private BookInfoMapper bookInfoMapper;
     @Autowired
@@ -89,12 +91,12 @@ public class BookInfoServiceImpl implements BookInfoService {
         String bookStr = (String) redisService.get(bookId + "");
         //如果存在直接从缓存取,否则去MySQL取
         if (StringUtils.isNotEmpty(bookStr)) {
-            System.out.println(bookStr);
+            logger.debug(bookStr);
             JSONObject object = JSONObject.fromObject(bookStr);
             bookInfo = (BookInfo) JSONObject.toBean(object, BookInfo.class);
         } else {
             bookInfo = bookInfoMapper.selectByBookId(bookId);
-            System.out.println(bookInfo.getIsVIP());
+            logger.debug("书籍类型",bookInfo.getIsVIP());
             if (bookInfo != null) {
                 bookInfo.setPicUrl(ApiConstant.Config.IMGPATH + bookInfo.getPicUrl());
                 int vipBook = checkVIPBookByBookId(bookId);
@@ -224,7 +226,7 @@ public class BookInfoServiceImpl implements BookInfoService {
             }
             List<BookInfo> categoryBooks = bookInfoMapper.selectBooksByCategory(category);
             authorBooks.addAll(categoryBooks);
-            System.out.println(authorBooks);
+            logger.debug("推荐书籍列表",authorBooks);
             //将取得的书籍放入缓存
             if (authorBooks != null && authorBooks.size() > 0) {
                 String arrayStr = JSONArray.fromObject(authorBooks).toString();

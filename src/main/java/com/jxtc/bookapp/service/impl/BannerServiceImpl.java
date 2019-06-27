@@ -13,6 +13,8 @@ import com.jxtc.bookapp.service.RedisService;
 import com.jxtc.bookapp.utils.PageResult;
 import com.jxtc.bookapp.utils.TimeUtil;
 import net.sf.json.JSONArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +27,7 @@ import java.util.List;
 
 @Service
 public class BannerServiceImpl implements BannerService {
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private MaterialMapper materialMapper;
     @Autowired
@@ -82,7 +84,7 @@ public class BannerServiceImpl implements BannerService {
         material.setUrl(url);
         material.setCreateTime(new Date());
         materialMapper.insertSelective(material);
-        System.out.println("图片上传成功");
+        logger.debug("图片上传成功");
     }
 
     @Override

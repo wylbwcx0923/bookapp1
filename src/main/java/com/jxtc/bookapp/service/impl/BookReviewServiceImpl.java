@@ -12,6 +12,8 @@ import com.jxtc.bookapp.utils.JSONUtil;
 import com.jxtc.bookapp.utils.PageResult;
 import net.sf.json.JSONArray;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ import java.util.List;
 
 @Service
 public class BookReviewServiceImpl implements BookReviewService {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private BookReviewMapper bookReviewMapper;
@@ -55,13 +59,13 @@ public class BookReviewServiceImpl implements BookReviewService {
             bookReviews = bookReviewMapper.selectPageBookReviews(bookId, (pageIndex - 1) * pageSize, pageSize);
             if (bookReviews != null && bookReviews.size() > 0) {
                 String arrayStr = JSONUtil.listToJsonStr(bookReviews);
-                System.out.println("书评来自MYSQL");
+                logger.debug("书评来自MYSQL");
                 redisService.hmSet(bookId + "review", pageIndex + "_" + pageSize, arrayStr);
             }
         } else {
             JSONArray array = JSONArray.fromObject(isExists);
             bookReviews = (List<BookReview>) JSONArray.toCollection(array, BookReview.class);
-            System.out.println("书评来自缓存");
+            logger.debug("书评来自缓存");
         }
         if (bookReviews != null && bookReviews.size() > 0) {
             for (BookReview bookReview : bookReviews) {
@@ -117,6 +121,8 @@ public class BookReviewServiceImpl implements BookReviewService {
         }
         if (bookReviews != null && bookReviews.size() > 0) {
             for (BookReview bookReview : bookReviews) {
+                String bookPic = ApiConstant.Config.IMGPATH + "pic/" + bookReview.getBookId() + "/" + bookReview.getBookId() + ".jpg";
+                bookReview.setHeadImg(bookPic);
                 String flag = (String) redisService.get("PRAISE" + userId + "_" + bookReview.getId());
                 if (StringUtils.isNotEmpty(flag)) {
                     bookReview.setIsPraise(1);

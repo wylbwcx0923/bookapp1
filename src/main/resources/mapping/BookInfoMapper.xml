@@ -568,4 +568,42 @@
             limit 0
             ,6
     </select>
+
+    <select id="countBooksByParams" resultType="int">
+        select count(*) from book_info
+        <where>
+            <if test="bookId != null and bookId !=0">
+                and book_id=#{bookId}
+            </if>
+            <if test="bookName != null and bookName != ''">
+                and book_name like concat('%', #{bookName,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="author != null and author != ''">
+                and author like concat('%',#{author,jdbcType=VARCHAR} ,'%')
+            </if>
+            <if test="status != null and status!=2">
+                and putaway=#{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBooksByParams" resultMap="ResultMapWithBLOBs">
+        select * from book_info
+        <where>
+            <if test="bookId != null and bookId !=0">
+                and book_id=#{bookId}
+            </if>
+            <if test="bookName != null and bookName != ''">
+                and book_name like concat('%', #{bookName,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="author != null and author != ''">
+                and author like concat('%',#{author,jdbcType=VARCHAR} ,'%')
+            </if>
+            <if test="status != null and status!=2">
+                and putaway=#{status}
+            </if>
+        </where>
+        order by book_id desc
+        limit #{offset} ,#{size}
+    </select>
 </mapper>

@@ -295,4 +295,10 @@
                  limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
     </select>
 
+    <select id="praise" resultType="int">
+        update book_review
+        set praise=#{praise,jdbcType=INTEGER}
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
 </mapper>

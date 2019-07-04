@@ -25,7 +25,7 @@ spring:
     #配置redis缓存
   redis:
     database: 0 #数据库
-    host: 47.99.53.238 #主机
+    host: 47.99.114.219 #主机
     port: 6379 #端口号
     password: root
     timeout: -1

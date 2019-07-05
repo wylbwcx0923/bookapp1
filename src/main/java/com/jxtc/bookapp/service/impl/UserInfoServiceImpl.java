@@ -141,12 +141,15 @@ public class UserInfoServiceImpl implements UserInfoService {
     public void clearUserByRedis(String userId) {
         //阅币同步
         UserInfo userInfo = getUserInfoByLocal(userId);
-        int coin = userInfo.getCoin();
-        UserInfo usup = new UserInfo();
-        usup.setCoin(coin);
         UserInfoExample example = new UserInfoExample();
         example.createCriteria().andUserIdEqualTo(userId);
-        userInfoMapper.updateByExampleSelective(usup, example);
+        UserInfo userByMysql = userInfoMapper.selectByExample(example).get(0);
+        int coin = userInfo.getCoin();
+        if (coin < userByMysql.getCoin()) {
+            UserInfo usup = new UserInfo();
+            usup.setCoin(coin);
+            userInfoMapper.updateByExampleSelective(usup, example);
+        }
         //清除缓存
         redisService.hmSet("userInfo", userId, "");
     }

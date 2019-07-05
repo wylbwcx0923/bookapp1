@@ -84,7 +84,7 @@ public class BannerServiceImpl implements BannerService {
         material.setUrl(url);
         material.setCreateTime(new Date());
         materialMapper.insertSelective(material);
-        logger.debug("图片上传成功");
+        logger.info("图片上传成功");
     }
 
     @Override
@@ -151,10 +151,10 @@ public class BannerServiceImpl implements BannerService {
                 String bannerImgsStr = JSONArray.fromObject(bannerImgs).toString();
                 redisService.set(bannerId + "banner", bannerImgsStr);
             }
-        }else{
+        } else {
             //缓存中存在 从缓存中取
-            JSONArray array=JSONArray.fromObject(isExists);
-            bannerImgs= (List<BannerImgs>) JSONArray.toCollection(array,BannerImgs.class);
+            JSONArray array = JSONArray.fromObject(isExists);
+            bannerImgs = (List<BannerImgs>) JSONArray.toCollection(array, BannerImgs.class);
         }
         return bannerImgs;
     }

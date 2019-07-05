@@ -57,7 +57,7 @@ public class SheduTaskUtil {
             for (UserVip vip : userVips) {
                 if (vip.getExpireTime().getTime() <= new Date().getTime()) {
                     vip.setStatus(ApiConstant.VipStatus.EXPIRE);//过期
-                    logger.debug("执行了过期");
+                    logger.info("执行了过期");
                     userVipMapper.updateByPrimaryKey(vip);
                     //将用户表中Vip用户的类型改为普通用户
                     UserInfo userInfo = new UserInfo();

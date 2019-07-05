@@ -15,7 +15,7 @@ public interface BookInfoService {
     BookInfo getBookInfoByBookId(Integer bookId);
 
     //获得章节列表(分页)
-    PageResult<ChapterInfo> getChapterListByBookId(Integer bookId, int pageIndex, int pageSize,int orderBy);
+    PageResult<ChapterInfo> getChapterListByBookId(Integer bookId, int pageIndex, int pageSize, int orderBy);
 
     //通过id判断书籍是否为VIP书
     int checkVIPBookByBookId(Integer bookId);
@@ -27,5 +27,8 @@ public interface BookInfoService {
     List<BookInfo> searchBook(String keyWords, int pageIndex, int pageSize);
 
     //交叉推荐接口
-    PageResult<BookInfo> recommendBook(String author,String category,int pageIndex,int pageSize);
+    PageResult<BookInfo> recommendBook(String author, String category, int pageIndex, int pageSize);
+
+    //根据不同的筛选条件查询图书列表
+    PageResult<BookInfo> getBookInfoListByParam(Integer bookId, String bookName, String author, Integer status, int pageIndex, int pageSize);
 }

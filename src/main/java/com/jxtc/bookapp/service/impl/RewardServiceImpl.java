@@ -4,6 +4,7 @@ import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.entity.*;
 import com.jxtc.bookapp.mapper.RewardMapper;
 import com.jxtc.bookapp.mapper.UserInfoMapper;
+import com.jxtc.bookapp.service.ConsumeService;
 import com.jxtc.bookapp.service.RedisService;
 import com.jxtc.bookapp.service.RewardService;
 import com.jxtc.bookapp.utils.PageResult;
@@ -25,6 +26,8 @@ public class RewardServiceImpl implements RewardService {
     private UserInfoMapper userInfoMapper;
     @Autowired
     private RedisService redisService;
+    @Autowired
+    private ConsumeService consumeService;
 
     @Override
     public int insert(Reward reward) {
@@ -32,6 +35,9 @@ public class RewardServiceImpl implements RewardService {
         int type = reward.getType();
         int cost = 0;//打赏花费
         int num = reward.getMun();//打赏数量
+        if (num <= 0) {
+            return 0;
+        }
         switch (type) {
             case ApiConstant.RewardType.BIXIN://比心
                 cost = num * ApiConstant.RewardAmount.BIXIN;
@@ -66,6 +72,12 @@ public class RewardServiceImpl implements RewardService {
                 upExample.createCriteria().andUserIdEqualTo(userInfo.getUserId());
                 //从用户的账户中扣除相应的书币
                 userInfoMapper.updateByExampleSelective(upUser, upExample);
+                //打赏成功,记录消费
+                try {
+                    consumeService.addConsume(reward.getUserId(), reward.getBookId(), 0, reward.getAmount());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 //清除打赏列表的缓存
                 redisService.remove(reward.getBookId() + "reward");
                 return rewardMapper.insert(reward);

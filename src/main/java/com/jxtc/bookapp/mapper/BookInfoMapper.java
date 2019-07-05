@@ -25,12 +25,15 @@ public interface BookInfoMapper {
 
     Integer isVIPBook(@Param("bookId") Integer bookId);
 
-    List<BookInfo> selectBooksLikeKeyWords(@Param("keyWords")String keyWords);
+    List<BookInfo> selectBooksLikeKeyWords(@Param("keyWords") String keyWords);
 
-    List<BookInfo> selectBooksLikeBookName(@Param("keyWords")String keyWords);
+    List<BookInfo> selectBooksLikeBookName(@Param("keyWords") String keyWords);
 
-    List<BookInfo> selectBooksByAuthor(@Param("author")String author);
+    List<BookInfo> selectBooksByAuthor(@Param("author") String author);
 
-    List<BookInfo> selectBooksByCategory(@Param("category")String category);
+    List<BookInfo> selectBooksByCategory(@Param("category") String category);
 
+    int countBooksByParams(@Param("bookId") Integer bookId, @Param("bookName") String bookName, @Param("author") String author, @Param("status") Integer status);
+
+    List<BookInfo> selectBooksByParams(@Param("bookId") Integer bookId, @Param("bookName") String bookName, @Param("author") String author, @Param("status") Integer status, @Param("offset") int offset, @Param("size") int size);
 }

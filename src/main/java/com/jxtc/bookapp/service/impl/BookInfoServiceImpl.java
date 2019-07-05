@@ -5,10 +5,7 @@ import com.jxtc.bookapp.config.OSSCacheKey;
 import com.jxtc.bookapp.config.RedisKey;
 import com.jxtc.bookapp.entity.*;
 import com.jxtc.bookapp.mapper.*;
-import com.jxtc.bookapp.service.BookInfoService;
-import com.jxtc.bookapp.service.FileUploadService;
-import com.jxtc.bookapp.service.RedisService;
-import com.jxtc.bookapp.service.UserInfoService;
+import com.jxtc.bookapp.service.*;
 import com.jxtc.bookapp.utils.HttpClientUtil;
 import com.jxtc.bookapp.utils.PageResult;
 import net.sf.json.JSONArray;
@@ -45,6 +42,8 @@ public class BookInfoServiceImpl implements BookInfoService {
     private UserAssetMapper userAssetMapper;
     @Autowired
     private UserInfoService userInfoService;
+    @Autowired
+    private ConsumeService consumeService;
 
     /**
      * 获得章节详情
@@ -91,12 +90,12 @@ public class BookInfoServiceImpl implements BookInfoService {
         String bookStr = (String) redisService.get(bookId + "");
         //如果存在直接从缓存取,否则去MySQL取
         if (StringUtils.isNotEmpty(bookStr)) {
-            logger.debug(bookStr);
+            logger.info(bookStr);
             JSONObject object = JSONObject.fromObject(bookStr);
             bookInfo = (BookInfo) JSONObject.toBean(object, BookInfo.class);
         } else {
             bookInfo = bookInfoMapper.selectByBookId(bookId);
-            logger.debug("书籍类型",bookInfo.getIsVIP());
+            logger.info("书籍类型", bookInfo.getIsVIP());
             if (bookInfo != null) {
                 bookInfo.setPicUrl(ApiConstant.Config.IMGPATH + bookInfo.getPicUrl());
                 int vipBook = checkVIPBookByBookId(bookId);
@@ -119,13 +118,13 @@ public class BookInfoServiceImpl implements BookInfoService {
         PageResult<ChapterInfo> pageResult = new PageResult<>();
         List<ChapterInfo> chapterInfos = new ArrayList<>();
         //从缓存中获取章节列表
-        String isExists = (String) redisService.hmGet(bookId + "chapter" + orderBy, pageIndex + "_" + pageSize);
+        String isExists = (String) redisService.get(bookId + "_chapter_" + orderBy + "_" + pageIndex + "_" + pageSize);
         if (isExists == null || "".equals(isExists) || isExists.length() < 5) {
             int offset = (pageIndex - 1) * pageSize;
             chapterInfos = chapterInfoMapper.selectListByBookIdForPage(bookId, offset, pageSize, orderBy);
             //将章节列表放入缓存中
             String listStr = JSONArray.fromObject(chapterInfos).toString();
-            redisService.hmSet(bookId + "chapter" + orderBy, pageIndex + "_" + pageSize, listStr);
+            redisService.set(bookId + "_chapter_" + orderBy + "_" + pageIndex + "_" + pageSize, listStr, ApiConstant.Timer.ONE_DAY);
         } else {
             //直接从缓存中取
             JSONArray array = JSONArray.fromObject(isExists);
@@ -226,7 +225,7 @@ public class BookInfoServiceImpl implements BookInfoService {
             }
             List<BookInfo> categoryBooks = bookInfoMapper.selectBooksByCategory(category);
             authorBooks.addAll(categoryBooks);
-            logger.debug("推荐书籍列表",authorBooks);
+            logger.info("推荐书籍列表", authorBooks);
             //将取得的书籍放入缓存
             if (authorBooks != null && authorBooks.size() > 0) {
                 String arrayStr = JSONArray.fromObject(authorBooks).toString();
@@ -253,6 +252,20 @@ public class BookInfoServiceImpl implements BookInfoService {
             pageResult.setTotal(total);
             pageResult.setPageList(bookInfos);
         }
+        return pageResult;
+    }
+
+    @Override
+    public PageResult<BookInfo> getBookInfoListByParam(Integer bookId, String bookName, String author, Integer status, int pageIndex, int pageSize) {
+        PageResult<BookInfo> pageResult = new PageResult<>();
+        pageResult.setPageIndex(pageIndex);
+        pageResult.setPageSize(pageSize);
+        System.out.println("bookMapper是" + bookInfoMapper);
+        int total = bookInfoMapper.countBooksByParams(bookId, bookName, author, status);
+        pageResult.setTotal(total);
+        int offset = (pageIndex - 1) * pageSize;
+        List<BookInfo> bookInfos = bookInfoMapper.selectBooksByParams(bookId, bookName, author, status, offset, pageSize);
+        pageResult.setPageList(bookInfos);
         return pageResult;
     }
 
@@ -297,6 +310,8 @@ public class BookInfoServiceImpl implements BookInfoService {
         }
         //书币充足,解锁本章
         userInfo.setCoin(userInfo.getCoin() - discountPrice);
+        //统计消费
+        consumeService.addConsume(userInfo.getUserId(), bookId, chapterId, discountPrice);
         String objectStr = JSONObject.fromObject(userInfo).toString();
         redisService.hmSet("userInfo", userInfo.getUserId(), objectStr);
         //将用户阅读了该章节存入用户资产中

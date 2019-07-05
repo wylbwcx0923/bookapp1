@@ -102,7 +102,27 @@ public class BookController {
                                   @RequestParam(value = "pageIndex", defaultValue = "1", required = false) int pageIndex,
                                   @ApiParam(value = "每页显示数量", required = false)
                                   @RequestParam(value = "pageSize", defaultValue = "20", required = false) int pageSize) {
-        PageResult<BookInfo> pageResult=bookInfoService.recommendBook(author, category, pageIndex, pageSize);
+        PageResult<BookInfo> pageResult = bookInfoService.recommendBook(author, category, pageIndex, pageSize);
+        return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", pageResult);
+    }
+
+    @ApiOperation(value = "根据不同的条件筛选图书", notes = "根据不同的条件筛选图书", httpMethod = "GET")
+    @ResponseBody
+    @RequestMapping(value = "booklistbyparams", method = RequestMethod.GET)
+    public JXResult getBookListByParams(@ApiParam(value = "作者名", required = false)
+                                        @RequestParam(value = "author", defaultValue = "", required = false) String author,
+                                        @ApiParam(value = "书名", required = false)
+                                        @RequestParam(value = "bookName", defaultValue = "", required = false) String bookName,
+                                        @ApiParam(value = "书id", required = false)
+                                        @RequestParam(value = "bookId", required = false) Integer bookId,
+                                        @ApiParam(value = "书的状态(1.上架,0.下架,2.全部)", required = false)
+                                        @RequestParam(value = "status", required = false) Integer status,
+                                        @ApiParam(value = "当前页", required = false)
+                                        @RequestParam(value = "pageIndex", defaultValue = "1", required = false) int pageIndex,
+                                        @ApiParam(value = "每页显示数量", required = false)
+                                        @RequestParam(value = "pageSize", defaultValue = "20", required = false) int pageSize) {
+        System.out.println("author = [" + author + "], bookName = [" + bookName + "], bookId = [" + bookId + "], status = [" + status + "], pageIndex = [" + pageIndex + "], pageSize = [" + pageSize + "]");
+        PageResult<BookInfo> pageResult = bookInfoService.getBookInfoListByParam(bookId, bookName, author, status, pageIndex, pageSize);
         return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", pageResult);
     }
 }

@@ -1,5 +1,6 @@
 package com.jxtc.bookapp.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,6 +11,11 @@ import java.util.Map;
  */
 public class TimeUtil {
 
+    /**
+     * 获取当前的年月日
+     *
+     * @return
+     */
     public static Map<String, Integer> getTime() {
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
@@ -19,5 +25,17 @@ public class TimeUtil {
         map.put("month", calendar.get(Calendar.MONTH) + 1);
         map.put("day", calendar.get(Calendar.DAY_OF_MONTH));
         return map;
+    }
+
+    /**
+     * 获取当月的表的索引
+     *
+     * @return
+     */
+    public static Integer getTableIndex() {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+        int tableIndex = Integer.valueOf(sdf.format(date));
+        return tableIndex;
     }
 }

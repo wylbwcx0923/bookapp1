@@ -94,7 +94,7 @@ public class FileUploadService {
         UserInfo fileUser = new UserInfo();
         fileUser.setHeadimgurl(fileUploadResult.getName());
         userInfoMapper.updateByExampleSelective(fileUser, example);
-        logger.debug("文件上传结果", fileUploadResult);
+        logger.info("文件上传结果", fileUploadResult);
         return fileUploadResult;
     }
 

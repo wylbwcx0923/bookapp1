@@ -68,10 +68,6 @@ public class BookReview {
         return grade;
     }
 
-    public void setGrade(Double grade) {
-        this.grade = grade;
-    }
-
     public Integer getPraise() {
         return praise;
     }

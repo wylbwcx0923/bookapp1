@@ -59,13 +59,13 @@ public class BookReviewServiceImpl implements BookReviewService {
             bookReviews = bookReviewMapper.selectPageBookReviews(bookId, (pageIndex - 1) * pageSize, pageSize);
             if (bookReviews != null && bookReviews.size() > 0) {
                 String arrayStr = JSONUtil.listToJsonStr(bookReviews);
-                logger.debug("书评来自MYSQL");
+                logger.info("书评来自MYSQL");
                 redisService.hmSet(bookId + "review", pageIndex + "_" + pageSize, arrayStr);
             }
         } else {
             JSONArray array = JSONArray.fromObject(isExists);
             bookReviews = (List<BookReview>) JSONArray.toCollection(array, BookReview.class);
-            logger.debug("书评来自缓存");
+            logger.info("书评来自缓存");
         }
         if (bookReviews != null && bookReviews.size() > 0) {
             for (BookReview bookReview : bookReviews) {
@@ -147,21 +147,19 @@ public class BookReviewServiceImpl implements BookReviewService {
     public void praise(String userId, int id, int type) {
         BookReview bookReview = bookReviewMapper.selectByPrimaryKey(id);
         int praise = bookReview.getPraise() == null ? 0 : bookReview.getPraise();
-        BookReviewExample example = new BookReviewExample();
-        example.createCriteria().andIdEqualTo(id);
-        BookReview upReview = new BookReview();
+
         //如果是点赞
         if (type == ApiConstant.BookReviewPraiseType.LIKE) {
             //用户点赞完毕记录点赞的用户
             redisService.set("PRAISE" + userId + "_" + id, "true");
-            upReview.setPraise(praise + 1);
+            praise = praise + 1;
         } else {
             //取消赞
             redisService.remove("PRAISE" + userId + "_" + id);
-            upReview.setPraise(praise - 1);
+            praise = praise - 1;
         }
         redisService.remove(bookReview.getBookId() + "review");
         redisService.remove(bookReview.getUserId() + "review");
-        bookReviewMapper.updateByExampleSelective(upReview, example);
+        bookReviewMapper.praise(id, praise);
     }
 }

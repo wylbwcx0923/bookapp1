@@ -27,7 +27,7 @@ public class RewardController {
         System.out.println(reward);
         int flog = rewardService.insert(reward);
         if (flog == 0) {
-            return new JXResult(false, ApiConstant.StatusCode.OK, "打赏失败,余额不足!");
+            return new JXResult(false, ApiConstant.StatusCode.OK, "打赏失败");
         } else {
             return new JXResult(true, ApiConstant.StatusCode.OK, "打赏成功");
         }

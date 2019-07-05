@@ -121,7 +121,7 @@ public class BangDanServiceImpl implements BangDanService {
             }
             //将从MySQL中取出的内容放入缓存
             String listStr = JSONArray.fromObject(list).toString();
-            logger.debug(listStr);
+            logger.info(listStr);
             redisService.hmSet(bangDanId + "bangdan", pageIndex + "_" + pageSize, listStr);
         } else {
             JSONArray array = JSONArray.fromObject(isExists);

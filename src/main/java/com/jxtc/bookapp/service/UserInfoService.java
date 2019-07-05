@@ -67,4 +67,14 @@ public interface UserInfoService {
      * @param userQQ
      */
     void bindQQ(String userId,UserInfo userQQ);
+
+    /**
+     * 验证手机号和验证码
+     *
+     * @param phoneNumber
+     * @param code
+     * @return
+     */
+    @Transactional
+    Map<String,Object> smsVerify(String phoneNumber, String code);
 }

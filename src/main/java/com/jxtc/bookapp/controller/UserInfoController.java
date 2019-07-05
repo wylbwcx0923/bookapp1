@@ -89,4 +89,19 @@ public class UserInfoController {
         userInfoService.bindQQ(userId, userInfo);
         return new JXResult(true, ApiConstant.StatusCode.OK, "QQ绑定成功");
     }
+
+    @RequestMapping(value = "/sms/login", method = RequestMethod.POST)
+    @ApiOperation(value = "验证手机验证码(手机号登录)", notes = "验证手机验证码(手机号登录)", httpMethod = "POST")
+    @ResponseBody
+    public JXResult smsLogin(@ApiParam(value = "手机号", required = false)
+                             @RequestParam(value = "phoneNumber", defaultValue = "", required = false) String phoneNumber,
+                             @ApiParam(value = "验证码", required = true)
+                             @RequestParam(value = "code", defaultValue = "", required = false) String code) {
+        Map<String, Object> map = userInfoService.smsVerify(phoneNumber, code);
+        int errorCode = (int) map.get("errorCode");
+        if (errorCode == 200) {
+            return new JXResult(true, ApiConstant.StatusCode.OK, "手机号登录成功", map);
+        }
+        return new JXResult(false, ApiConstant.StatusCode.LOGINERROR, "登录失败", map);
+    }
 }

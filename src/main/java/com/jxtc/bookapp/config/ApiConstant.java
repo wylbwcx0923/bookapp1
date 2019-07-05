@@ -38,6 +38,7 @@ public class ApiConstant {
 
     //时间间隔
     public class Timer {
+        public static final long ONE_MIN = 60;//一分钟
         public static final long ONE_DAY = 86400;//一天
         public static final long THREE_DAY = 86400 * 3;//三天
 
@@ -47,6 +48,8 @@ public class ApiConstant {
     public class Config {
         //书籍封面地址前缀
         public static final String IMGPATH = "https://jxxs-pic.oss-cn-hangzhou.aliyuncs.com/";
+        //默认头像
+        public static final String DEFULT_HEAD="http://jxxs-app-img.oss-cn-hangzhou.aliyuncs.com/images/2019/07/05/15623071073296766100.png";
     }
 
     //收费标准千字0.25元即25阅币

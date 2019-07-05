@@ -76,7 +76,11 @@ public class UserInfoServiceImpl implements UserInfoService {
                 userInfo.setNickname(user.getNickname());
                 userInfo.setUpdateTime(new Date());
                 userInfo.setOpenid(user.getOpenid());
-                userInfo.setHeadimgurl(user.getHeadimgurl());
+                if (StringUtils.isEmpty(user.getHeadimgurl())) {
+                    userInfo.setHeadimgurl(ApiConstant.Config.DEFULT_HEAD);
+                } else {
+                    userInfo.setHeadimgurl(user.getHeadimgurl());
+                }
                 userInfo.setProvince(user.getProvince());
                 userInfo.setCoin(0);
                 userInfo.setSex(user.getSex() == null ? 1 : user.getSex());
@@ -270,4 +274,54 @@ public class UserInfoServiceImpl implements UserInfoService {
         return userId.toString();
     }
 
+    @Override
+    public Map<String, Object> smsVerify(String phoneNumber, String code) {
+        Map<String, Object> result = new HashMap<>();
+        //判断用户的验证码是否过期
+        String flagCode = (String) redisService.get("SMS_" + phoneNumber);
+        if (StringUtils.isEmpty(flagCode)) {
+            //验证码已经过期
+            result.put("errorCode", 201);
+            result.put("msg", "验证码过期,请重新获取!");
+            return result;
+        }
+        //程序执行至此,说明验证码肯定不过期
+        //判断用户输入的验证码和生成的验证码是否匹配
+        if (!flagCode.equals(code)) {
+            //输入和生成不匹配
+            result.put("errorCode", 202);
+            result.put("msg", "验证码输入错误!");
+            return result;
+        }
+        //程序执行至此,说明验证通过
+        //判断用户是否以前用该手机号注册过
+        UserInfoExample example = new UserInfoExample();
+        example.createCriteria().andPhoneEqualTo(phoneNumber);
+        List<UserInfo> userInfos = userInfoMapper.selectByExample(example);
+        if (userInfos != null && userInfos.size() > 0) {
+            //以前注册过
+            result.put("errorCode", 200);
+            result.put("userId", userInfos.get(0).getUserId());
+            return result;
+        }
+        //程序执行至此,说明第一次注册
+        //构建默认的用户对象
+        UserInfo userInfo = new UserInfo();
+        String userId = getUserId();
+        userInfo.setUserId(userId);
+        userInfo.setPhone(phoneNumber);
+        userInfo.setCreateTime(new Date());
+        userInfo.setNickname("用户" + userId);
+        userInfo.setUpdateTime(new Date());
+        userInfo.setHeadimgurl(ApiConstant.Config.DEFULT_HEAD);
+        userInfo.setCoin(0);
+        userInfo.setSex(1);//默认设置为男生
+        userInfo.setType(ApiConstant.UserType.GENNERAL_USER);
+        userInfoMapper.insert(userInfo);
+        //在用户经验值的表中插入一条该用户的数据
+        createUserEmpirical(userId);
+        result.put("errorCode", 200);
+        result.put("userId", userId);
+        return result;
+    }
 }

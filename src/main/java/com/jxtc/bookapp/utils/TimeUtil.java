@@ -38,4 +38,13 @@ public class TimeUtil {
         int tableIndex = Integer.valueOf(sdf.format(date));
         return tableIndex;
     }
+
+    /**
+     * 获得当前的时间戳
+     *
+     * @return
+     */
+    public static String getTimestamp() {
+        return System.currentTimeMillis() + "";
+    }
 }

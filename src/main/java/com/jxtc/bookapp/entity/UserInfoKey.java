@@ -20,4 +20,12 @@ public class UserInfoKey {
     public void setUserId(String userId) {
         this.userId = userId == null ? null : userId.trim();
     }
+
+    @Override
+    public String toString() {
+        return "UserInfoKey{" +
+                "id=" + id +
+                ", userId='" + userId + '\'' +
+                '}';
+    }
 }

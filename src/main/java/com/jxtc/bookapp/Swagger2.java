@@ -6,6 +6,7 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -33,11 +34,12 @@ public class Swagger2 {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 //页面标题
-                .title("景像小说app后台接口")
+                .title("景像小说APP后台API文档")
                 //版本号
                 .version("2.0")
                 //描述
                 .description("本接口文档权限归北京景像天成数字科技有限公司所有,禁止外传")
+                .contact(new Contact("不忘初心", null, null))
                 .build();
     }
 }

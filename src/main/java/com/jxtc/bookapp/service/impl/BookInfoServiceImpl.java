@@ -44,6 +44,10 @@ public class BookInfoServiceImpl implements BookInfoService {
     private UserInfoService userInfoService;
     @Autowired
     private ConsumeService consumeService;
+    @Autowired
+    private UserCoinMapper userCoinMapper;
+    @Autowired
+    private UserEmpiricalService userEmpiricalService;
 
     /**
      * 获得章节详情
@@ -295,13 +299,16 @@ public class BookInfoServiceImpl implements BookInfoService {
         int kWord = chapter.getWords() % 1000 == 0 ? chapter.getWords() / 1000 : chapter.getWords() / 1000 + 1;
         int chapterPrice = kWord * ApiConstant.Price.UNIT_PRICE;
         //根据用户的等级进行折扣
-        UserEmpiricalExample empiricalExample = new UserEmpiricalExample();
-        empiricalExample.createCriteria().andUserIdEqualTo(userInfo.getUserId());
-        UserEmpirical empirical = userEmpiricalMapper.selectByExample(empiricalExample).get(0);
+        UserEmpirical empirical = userEmpiricalService.findEmpiricalByUserId(userInfo.getUserId());
         //打折后的价格
         int discountPrice = (int) Math.round(chapterPrice * empirical.getUserDiscount());
         //判断用户的阅币是否够购买本章
-        boolean isEnough = userInfo.getCoin() - discountPrice >= 0 ? true : false;
+        //获得用户的阅币
+        UserCoinExample userCoinexample = new UserCoinExample();
+        userCoinexample.createCriteria().andUserIdEqualTo(userInfo.getUserId());
+        List<UserCoin> userCoins = userCoinMapper.selectByExample(userCoinexample);
+        UserCoin coin = userCoins.get(0);
+        boolean isEnough = coin.getCoin() - discountPrice >= 0 ? true : false;
         chapterInfo.put("chapterprice", chapterPrice);
         chapterInfo.put("discountprice", discountPrice);
         if (isEnough == false) {
@@ -309,11 +316,11 @@ public class BookInfoServiceImpl implements BookInfoService {
             return chapterInfo;
         }
         //书币充足,解锁本章
-        userInfo.setCoin(userInfo.getCoin() - discountPrice);
+        UserCoin userCoinUp = new UserCoin();
+        userCoinUp.setCoin(coin.getCoin() - discountPrice);
+        userCoinMapper.updateByExampleSelective(userCoinUp, userCoinexample);
         //统计消费
         consumeService.addConsume(userInfo.getUserId(), bookId, chapterId, discountPrice);
-        String objectStr = JSONObject.fromObject(userInfo).toString();
-        redisService.hmSet("userInfo", userInfo.getUserId(), objectStr);
         //将用户阅读了该章节存入用户资产中
         UserAsset asset = new UserAsset();
         asset.setAmount(discountPrice);

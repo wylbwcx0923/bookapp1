@@ -15,6 +15,17 @@ public class WxConfig {
     private String appid;//移动应用的唯一标识
     private String secret;
     private String appsign;
+    private String mchid;//微信商户号
+    private String notifyurl;//异步通知地址
+    private String paternerKey;
+
+    public String getPaternerKey() {
+        return paternerKey;
+    }
+
+    public void setPaternerKey(String paternerKey) {
+        this.paternerKey = paternerKey;
+    }
 
     public String getAppid() {
         return appid;
@@ -38,5 +49,21 @@ public class WxConfig {
 
     public void setAppsign(String appsign) {
         this.appsign = appsign;
+    }
+
+    public String getMchid() {
+        return mchid;
+    }
+
+    public void setMchid(String mchid) {
+        this.mchid = mchid;
+    }
+
+    public String getNotifyurl() {
+        return notifyurl;
+    }
+
+    public void setNotifyurl(String notifyurl) {
+        this.notifyurl = notifyurl;
     }
 }

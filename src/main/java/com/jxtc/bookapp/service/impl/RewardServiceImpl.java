@@ -3,6 +3,7 @@ package com.jxtc.bookapp.service.impl;
 import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.entity.*;
 import com.jxtc.bookapp.mapper.RewardMapper;
+import com.jxtc.bookapp.mapper.UserCoinMapper;
 import com.jxtc.bookapp.mapper.UserInfoMapper;
 import com.jxtc.bookapp.service.ConsumeService;
 import com.jxtc.bookapp.service.RedisService;
@@ -23,11 +24,11 @@ public class RewardServiceImpl implements RewardService {
     @Autowired
     private RewardMapper rewardMapper;
     @Autowired
-    private UserInfoMapper userInfoMapper;
-    @Autowired
     private RedisService redisService;
     @Autowired
     private ConsumeService consumeService;
+    @Autowired
+    private UserCoinMapper userCoinMapper;
 
     @Override
     public int insert(Reward reward) {
@@ -53,25 +54,19 @@ public class RewardServiceImpl implements RewardService {
                 break;
         }
         //判断当前用户的余额是否能够本次打赏消费
-        UserInfoExample example = new UserInfoExample();
+        UserCoinExample example = new UserCoinExample();
         example.createCriteria().andUserIdEqualTo(reward.getUserId());
-        List<UserInfo> userInfos = userInfoMapper.selectByExample(example);
-        if (userInfos != null && userInfos.size() > 0) {
-            UserInfo userInfo = userInfos.get(0);
-            Integer coin = userInfo.getCoin();
+        List<UserCoin> userCoins = userCoinMapper.selectByExample(example);
+        if (userCoins != null && userCoins.size() > 0) {
+            UserCoin userCoin = userCoins.get(0);
+            Integer coin = userCoin.getCoin();
             if (coin < cost) {
                 return 0;
             } else {
                 reward.setAmount(cost);
                 reward.setCreateTime(new Date());
                 //书币充足,进行打赏
-                UserInfo upUser = new UserInfo();
-                upUser.setCoin(userInfo.getCoin() - cost);
-                upUser.setUpdateTime(new Date());
-                UserInfoExample upExample = new UserInfoExample();
-                upExample.createCriteria().andUserIdEqualTo(userInfo.getUserId());
-                //从用户的账户中扣除相应的书币
-                userInfoMapper.updateByExampleSelective(upUser, upExample);
+                userCoinMapper.addCoinByUserId(reward.getUserId(), -cost);
                 //打赏成功,记录消费
                 try {
                     consumeService.addConsume(reward.getUserId(), reward.getBookId(), 0, reward.getAmount());

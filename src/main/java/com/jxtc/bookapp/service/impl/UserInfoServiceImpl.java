@@ -3,10 +3,12 @@ package com.jxtc.bookapp.service.impl;
 import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.config.WxConfig;
 import com.jxtc.bookapp.entity.*;
+import com.jxtc.bookapp.mapper.UserCoinMapper;
 import com.jxtc.bookapp.mapper.UserEmpiricalMapper;
 import com.jxtc.bookapp.mapper.UserInfoMapper;
 import com.jxtc.bookapp.mapper.UserVipMapper;
 import com.jxtc.bookapp.service.RedisService;
+import com.jxtc.bookapp.service.UserEmpiricalService;
 import com.jxtc.bookapp.service.UserInfoService;
 
 import net.sf.json.JSONObject;
@@ -42,6 +44,10 @@ public class UserInfoServiceImpl implements UserInfoService {
     private RedisService redisService;
     @Autowired
     private UserVipMapper userVipMapper;
+    @Autowired
+    private UserCoinMapper userCoinMapper;
+    @Autowired
+    private UserEmpiricalService userEmpiricalService;
 
     /**
      * 微信登录服务
@@ -71,7 +77,7 @@ public class UserInfoServiceImpl implements UserInfoService {
                 String userId = getUserId();
                 userInfo.setUserId(userId);
                 userInfo.setCity(user.getCity());
-                userInfo.setCountry(user.getCountry());
+                userInfo.setCountry(user.getNickname());
                 userInfo.setCreateTime(new Date());
                 userInfo.setNickname(user.getNickname());
                 userInfo.setUpdateTime(new Date());
@@ -88,11 +94,25 @@ public class UserInfoServiceImpl implements UserInfoService {
                 userInfoMapper.insert(userInfo);
                 //在用户经验值的表中插入一条该用户的数据
                 createUserEmpirical(userId);
+                //在用户的阅币表中插入一条数据,初始化用户的阅币账户
+                initUserCoin(userId);
                 return userId;
             }
             return userInfos.get(0).getUserId();
         }
         return null;
+    }
+
+    /**
+     * 初始化用户的阅币
+     *
+     * @param userId
+     */
+    private void initUserCoin(String userId) {
+        UserCoin userCoin = new UserCoin();
+        userCoin.setCoin(0);
+        userCoin.setUserId(userId);
+        userCoinMapper.insertSelective(userCoin);
     }
 
     @Override
@@ -104,6 +124,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             List<UserInfo> userInfos = userInfoMapper.selectByExample(example);
             if (userInfos == null || userInfos.size() <= 0) {
                 String userId = getUserId();
+                userInfo.setPassword(userInfo.getNickname());
                 userInfo.setUserId(userId);
                 userInfo.setType(ApiConstant.UserType.GENNERAL_USER);
                 userInfo.setCoin(0);
@@ -111,6 +132,8 @@ public class UserInfoServiceImpl implements UserInfoService {
                 userInfo.setUpdateTime(new Date());
                 userInfoMapper.insert(userInfo);
                 createUserEmpirical(userInfo.getUserId());
+                //在用户的阅币表中插入一条数据,初始化用户的阅币账户
+                initUserCoin(userId);
                 return userId;
             }
             return userInfos.get(0).getUserId();
@@ -143,17 +166,6 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public void clearUserByRedis(String userId) {
-        //阅币同步
-        UserInfo userInfo = getUserInfoByLocal(userId);
-        UserInfoExample example = new UserInfoExample();
-        example.createCriteria().andUserIdEqualTo(userId);
-        UserInfo userByMysql = userInfoMapper.selectByExample(example).get(0);
-        int coin = userInfo.getCoin();
-        if (coin < userByMysql.getCoin()) {
-            UserInfo usup = new UserInfo();
-            usup.setCoin(coin);
-            userInfoMapper.updateByExampleSelective(usup, example);
-        }
         //清除缓存
         redisService.hmSet("userInfo", userId, "");
     }
@@ -164,17 +176,22 @@ public class UserInfoServiceImpl implements UserInfoService {
         //首先从缓存中取看能不能取到
         String isExists = (String) redisService.hmGet("userInfo", userId);
         if (StringUtils.isNotEmpty(isExists)) {
-            clearUserByRedis(userId);//同步redis和mysql中的数据
+            clearUserByRedis(userId);
         }
         UserInfo userInfo = getUserInfoByLocal(userId);
+        //获得用户的阅币
+        UserCoinExample userCoinexample = new UserCoinExample();
+        userCoinexample.createCriteria().andUserIdEqualTo(userId);
+        List<UserCoin> userCoins = userCoinMapper.selectByExample(userCoinexample);
+        if (userCoins != null && userCoins.size() > 0) {
+            UserCoin coin = userCoins.get(0);
+            userInfo.setCoin(coin.getCoin());
+        }
         //获得用户的经验值
-        UserEmpiricalExample example = new UserEmpiricalExample();
-        example.createCriteria().andUserIdEqualTo(userId);
-        List<UserEmpirical> empiricals = userEmpiricalMapper.selectByExample(example);
-        if (empiricals != null && empiricals.size() > 0) {
-            int empircal = empiricals.get(0).getEmpirical();
-            map.put("empircal", empircal);
-            map.put("grade", empiricals.get(0).getGrade());
+        UserEmpirical empirical = userEmpiricalService.findEmpiricalByUserId(userId);
+        if (empirical != null) {
+            map.put("empircal", empirical.getEmpirical());
+            map.put("grade", empirical.getGrade());
         }
         //获得用户的vip过期时间
         if (userInfo.getType() != ApiConstant.UserType.GENNERAL_USER) {
@@ -220,7 +237,7 @@ public class UserInfoServiceImpl implements UserInfoService {
                 userInfo.setOpenid(user.getOpenid());
                 userInfo.setHeadimgurl(user.getHeadimgurl());
                 userInfo.setSex(user.getSex());
-                userInfo.setNickname(user.getNickname());
+                userInfo.setCountry(user.getNickname());
                 userInfo.setUpdateTime(new Date());
                 //更新
                 userInfoMapper.updateByExampleSelective(userInfo, example);
@@ -238,6 +255,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             UserInfo userInfo = userInfos.get(0);
             userInfo.setHeadimgurl(userQQ.getHeadimgurl());
             userInfo.setQq(userQQ.getQq());
+            userInfo.setPassword(userQQ.getNickname());
             //更新
             userInfoMapper.updateByExampleSelective(userInfo, example);
         }
@@ -320,6 +338,8 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfoMapper.insert(userInfo);
         //在用户经验值的表中插入一条该用户的数据
         createUserEmpirical(userId);
+        //在用户的阅币表中插入一条数据,初始化用户的阅币账户
+        initUserCoin(userId);
         result.put("errorCode", 200);
         result.put("userId", userId);
         return result;

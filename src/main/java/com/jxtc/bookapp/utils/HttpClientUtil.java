@@ -135,4 +135,37 @@ public class HttpClientUtil {
         }
         return resultString;
     }
+
+    /**
+     * 请求的参数类型为xml
+     *
+     * @param url
+     * @param xmlStr
+     * @return {username:"",pass:""}
+     */
+    public static String doPostXml(String url, String xmlStr) {
+        // 创建Httpclient对象
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpResponse response = null;
+        String resultString = "";
+        try {
+            // 创建Http Post请求
+            HttpPost httpPost = new HttpPost(url);
+            // 创建请求内容
+            StringEntity entity = new StringEntity(xmlStr, ContentType.APPLICATION_XML);
+            httpPost.setEntity(entity);
+            // 执行http请求
+            response = httpClient.execute(httpPost);
+            resultString = EntityUtils.toString(response.getEntity(), "utf-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                response.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return resultString;
+    }
 }

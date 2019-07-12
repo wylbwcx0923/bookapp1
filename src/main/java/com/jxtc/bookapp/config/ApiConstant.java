@@ -49,7 +49,7 @@ public class ApiConstant {
         //书籍封面地址前缀
         public static final String IMGPATH = "https://jxxs-pic.oss-cn-hangzhou.aliyuncs.com/";
         //默认头像
-        public static final String DEFULT_HEAD="http://jxxs-app-img.oss-cn-hangzhou.aliyuncs.com/images/2019/07/05/15623071073296766100.png";
+        public static final String DEFULT_HEAD = "http://jxxs-app-img.oss-cn-hangzhou.aliyuncs.com/images/2019/07/05/15623071073296766100.png";
     }
 
     //收费标准千字0.25元即25阅币
@@ -109,5 +109,70 @@ public class ApiConstant {
         public static final int CHUBAN = 3;
     }
 
+    public class WXPayConfig {
+        public static final String CREATE_ORDER = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+    }
 
+    /**
+     * 订单状态
+     */
+    public class OrderStatus {
+        public static final int DOWN_ORDER = 0;//下单状态
+        public static final int SUCCESS = 1;//支付成功
+        public static final int FAIL = 2;//支付失败
+    }
+
+    /**
+     * 订单类型
+     */
+    public class OrderType {
+        public static final int GENNERAL_29 = 1;//普通29元充值
+        public static final int GENNERAL_49 = 2;//普通49元充值
+        public static final int GENNERAL_99 = 3;//普通99元充值
+        public static final int GENNERAL_129 = 4;//普通129元充值
+        public static final int VIP_MONTH_ORDER = 5;//包月VIP
+        public static final int VIP_QUARTER_ORDER = 6;//包季VIP
+        public static final int VIP_YEAR_ORDER = 7;//包年VIP
+    }
+
+    /**
+     * 任务类型
+     */
+    public class TaskType {
+        public static final int SIGN_IN = 1;//签到
+        public static final int SHARE = 2;//分享
+        public static final int READ = 3;//阅读
+        public static final int ASSIGN_READ = 4;//指定阅读
+        public static final int BIND_WX = 5;//绑定微信
+        public static final int BIND_QQ = 6;//绑定QQ
+    }
+
+    /**
+     * 优惠券状态
+     */
+    public class CouponStatus {
+        public static final int UNUSE = 0;//未使用
+        public static final int USED = 1;//已使用
+        public static final int EXPIRE = 2;//过期
+    }
+
+    /**
+     * 经验值临界值
+     */
+    public class EmpiricalCrisis {
+        public static final int COPPER = 2000;//铜牌用户
+        public static final int AGUSER = 3000;//银牌用户
+        public static final int GOLD = 4000;//金牌用户
+        public static final int DIAMOND = 5000;//钻石用户
+    }
+
+    /**
+     * 优惠券类型
+     */
+    public class CouponType {
+        public static final int DISCOUNT = 1;//折扣券
+        public static final int VOUCHER = 2;//代金券
+        public static final int REWARD = 4;//打赏券
+
+    }
 }

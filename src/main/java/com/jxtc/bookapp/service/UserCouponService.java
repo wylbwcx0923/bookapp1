@@ -26,7 +26,7 @@ public interface UserCouponService {
      *
      * @param userId     用户Id
      * @param couponType 优惠券类型
-     * @param discount   折扣券金额,couponType=1时取此参数
+     * @param discount   折扣券折扣,couponType=1时取此参数
      * @param voucher    代金券金额,couponType=2时取此参数
      * @param reward     打赏券类型,couponType=4时取此参数(1.比心,2.玫瑰,3.666,4豪车)
      * @param limit      是否限制普通充值可用(1.限制(如果此参数为1,那么该券只能普通充值可用,VIP不可用),0.不限制)

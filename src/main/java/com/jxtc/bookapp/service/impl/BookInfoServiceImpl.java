@@ -304,11 +304,8 @@ public class BookInfoServiceImpl implements BookInfoService {
         int discountPrice = (int) Math.round(chapterPrice * empirical.getUserDiscount());
         //判断用户的阅币是否够购买本章
         //获得用户的阅币
-        UserCoinExample userCoinexample = new UserCoinExample();
-        userCoinexample.createCriteria().andUserIdEqualTo(userInfo.getUserId());
-        List<UserCoin> userCoins = userCoinMapper.selectByExample(userCoinexample);
-        UserCoin coin = userCoins.get(0);
-        boolean isEnough = coin.getCoin() - discountPrice >= 0 ? true : false;
+        int coin = userCoinMapper.getCoinByUserId(userInfo.getUserId());
+        boolean isEnough = coin - discountPrice >= 0 ? true : false;
         chapterInfo.put("chapterprice", chapterPrice);
         chapterInfo.put("discountprice", discountPrice);
         if (isEnough == false) {
@@ -316,9 +313,7 @@ public class BookInfoServiceImpl implements BookInfoService {
             return chapterInfo;
         }
         //书币充足,解锁本章
-        UserCoin userCoinUp = new UserCoin();
-        userCoinUp.setCoin(coin.getCoin() - discountPrice);
-        userCoinMapper.updateByExampleSelective(userCoinUp, userCoinexample);
+        userCoinMapper.addCoinByUserId(userInfo.getUserId(), -discountPrice);
         //统计消费
         consumeService.addConsume(userInfo.getUserId(), bookId, chapterId, discountPrice);
         //将用户阅读了该章节存入用户资产中

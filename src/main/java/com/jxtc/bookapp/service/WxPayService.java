@@ -32,4 +32,34 @@ public interface WxPayService {
      * @return
      */
     boolean payResult(String orderId);
+
+    /**
+     * 微信支付中签约
+     *
+     * @param request
+     * @param productId
+     * @param totalFee
+     * @param userId
+     * @param bookId
+     * @param couponId
+     * @return
+     */
+    Map<String, Object> payContract(HttpServletRequest request, int productId, double totalFee, String userId, Integer bookId, Integer couponId);
+
+    /**
+     * 微信自动扣费纯签约接口
+     *
+     * @param productId
+     * @param userId
+     * @param bookId
+     * @param couponId
+     * @return
+     */
+    Map<String, Object> pureSign(int productId, double totalFee, String userId, Integer bookId, Integer couponId);
+
+
+    void vipOrderProcess(Map<String, Object> restmap);
+
+    @Transactional
+    void wxPayrenew(Map<String, Object> restmap);
 }

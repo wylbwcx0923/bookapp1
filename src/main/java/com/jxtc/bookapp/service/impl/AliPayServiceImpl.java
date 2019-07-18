@@ -127,31 +127,10 @@ public class AliPayServiceImpl implements AliPayService {
                 int productId = orderSuc.getOrderType();
                 logger.info("用户购买的产品ID为:" + productId);
                 Product product = productMapper.selectByPrimaryKey(productId);
-                switch (productId) {
-                    //以下四种订单定义为普通充值订单
-                    case ApiConstant.OrderType.GENNERAL_29:
-                    case ApiConstant.OrderType.GENNERAL_49:
-                    case ApiConstant.OrderType.GENNERAL_99:
-                    case ApiConstant.OrderType.GENNERAL_129:
-                        //用户充值成功,修改用户的阅币
-                        logger.info("使用支付宝付款的用户的信息为:" + order.getUserId());
-                        //修改用户的阅币
-                        UserCoinExample userCoinexample = new UserCoinExample();
-                        userCoinexample.createCriteria().andUserIdEqualTo(order.getUserId());
-                        List<UserCoin> userCoins = userCoinMapper.selectByExample(userCoinexample);
-                        UserCoin coin = userCoins.get(0);
-                        logger.info("未充值前用户的阅币为:" + coin.getCoin());
-                        UserCoin userCoinUp = new UserCoin();
-                        userCoinUp.setCoin(coin.getCoin() + product.getOriginal() + product.getGift());
-                        userCoinMapper.updateByExampleSelective(userCoinUp, userCoinexample);
-                        break;
-                    //以下三种订单定义为VIP充值订单
-                    case ApiConstant.OrderType.VIP_MONTH_ORDER:
-                    case ApiConstant.OrderType.VIP_QUARTER_ORDER:
-                    case ApiConstant.OrderType.VIP_YEAR_ORDER:
-                        //此处代码暂缓开发
-
-                }
+                //用户充值成功,修改用户的阅币
+                logger.info("使用支付宝付款的用户的信息为:" + order.getUserId());
+                //修改用户的阅币
+                userCoinMapper.addCoinByUserId(order.getUserId(), product.getOriginal() + product.getGift());
                 //用户经验值的更新和升级
                 int empirical = product.getProductPrice().intValue() * 10;
                 userEmpiricalService.upgrade(order.getUserId(), empirical);

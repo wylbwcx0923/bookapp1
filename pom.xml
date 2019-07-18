@@ -161,13 +161,6 @@
             <artifactId>jaxen</artifactId>
             <version>1.2.0</version>
         </dependency>
-        <!--上传和操作服务器的jar-->
-        <!-- https://mvnrepository.com/artifact/com.jcraft/jsch -->
-        <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>0.1.55</version>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -222,7 +215,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--一键打包上传的插件-->
         </plugins>
     </build>
 </project>

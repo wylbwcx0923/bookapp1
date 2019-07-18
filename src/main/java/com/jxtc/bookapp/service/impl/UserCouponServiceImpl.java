@@ -43,12 +43,14 @@ public class UserCouponServiceImpl implements UserCouponService {
      * @param userId
      */
     private void expireCoupon(String userId) {
+        System.out.println("进行优惠券过期");
         //查询该用户未过期的优惠券
         Date now = new Date();
         UserCouponExample example = new UserCouponExample();
-        example.createCriteria().andCouponTypeEqualTo(ApiConstant.CouponStatus.UNUSE).andUserIdEqualTo(userId);
+        example.createCriteria().andStatusEqualTo(ApiConstant.CouponStatus.UNUSE).andUserIdEqualTo(userId);
         List<UserCoupon> couponList = userCouponMapper.selectByExample(example);
         if (couponList != null && couponList.size() > 0) {
+            System.out.println("没有过期和使用的优惠券"+couponList.size());
             //说明用户有未使用的优惠券
             for (UserCoupon userCoupon : couponList) {
                 if (userCoupon.getExpireTime().getTime() < now.getTime()) {

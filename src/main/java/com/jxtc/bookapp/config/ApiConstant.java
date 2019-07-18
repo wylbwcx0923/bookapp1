@@ -110,7 +110,12 @@ public class ApiConstant {
     }
 
     public class WXPayConfig {
+        //微信统一下单
         public static final String CREATE_ORDER = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+        //微信支付中签约接口
+        public static final String PAY_CONTRACTORDER = "https://api.mch.weixin.qq.com/pay/contractorder";
+        //微信自动扣费,申请扣费接口
+        public static final String PAY_PAPPAYAPPLY = "https://api.mch.weixin.qq.com/pay/pappayapply";
     }
 
     /**

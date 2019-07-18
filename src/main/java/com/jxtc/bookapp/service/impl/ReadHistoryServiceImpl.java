@@ -4,6 +4,7 @@ import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.entity.ReadHistory;
 import com.jxtc.bookapp.entity.ReadHistoryExample;
 import com.jxtc.bookapp.mapper.ReadHistoryMapper;
+import com.jxtc.bookapp.service.BookInfoService;
 import com.jxtc.bookapp.service.ReadHistoryService;
 import com.jxtc.bookapp.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class ReadHistoryServiceImpl implements ReadHistoryService {
 
     @Autowired
     private ReadHistoryMapper readHistoryMapper;
+    @Autowired
+    private BookInfoService bookInfoService;
 
     @Override
     public void insert(ReadHistory readHistory) {
@@ -61,6 +64,7 @@ public class ReadHistoryServiceImpl implements ReadHistoryService {
         pageResult.setTotal(total);
         List<ReadHistory> list = readHistoryMapper.selectReadHistoryList((pageIndex - 1) * pageSize, pageSize, userId);
         for (ReadHistory history : list) {
+            history.getBookInfo().setIsVIP(bookInfoService.checkVIPBookByBookId(history.getBookId()));
             history.getBookInfo().setPicUrl(ApiConstant.Config.IMGPATH + history.getBookInfo().getPicUrl());
         }
         pageResult.setPageList(list);

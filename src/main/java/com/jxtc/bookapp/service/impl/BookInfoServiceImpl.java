@@ -233,7 +233,7 @@ public class BookInfoServiceImpl implements BookInfoService {
             //将取得的书籍放入缓存
             if (authorBooks != null && authorBooks.size() > 0) {
                 String arrayStr = JSONArray.fromObject(authorBooks).toString();
-                redisService.set(arrayStr, ApiConstant.Timer.THREE_DAY);
+                redisService.set("recommend" + author + "_" + category, arrayStr, ApiConstant.Timer.THREE_DAY);
             }
         } else {
             //如果缓存中可以取到,就直接从缓存中取

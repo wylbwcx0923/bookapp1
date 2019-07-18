@@ -18,6 +18,26 @@ public class WxConfig {
     private String mchid;//微信商户号
     private String notifyurl;//异步通知地址
     private String paternerKey;
+    private String mchidVip;//vip充值的商户号
+    private String contractNotifyUrl;//签约成功的通知地址
+    private String paternerKeyVip;
+    private String papNotifyUrl;//微信自动扣费结果异步通知
+
+    public String getPaternerKeyVip() {
+        return paternerKeyVip;
+    }
+
+    public void setPaternerKeyVip(String paternerKeyVip) {
+        this.paternerKeyVip = paternerKeyVip;
+    }
+
+    public String getContractNotifyUrl() {
+        return contractNotifyUrl;
+    }
+
+    public void setContractNotifyUrl(String contractNotifyUrl) {
+        this.contractNotifyUrl = contractNotifyUrl;
+    }
 
     public String getPaternerKey() {
         return paternerKey;
@@ -29,6 +49,14 @@ public class WxConfig {
 
     public String getAppid() {
         return appid;
+    }
+
+    public String getMchidVip() {
+        return mchidVip;
+    }
+
+    public void setMchidVip(String mchidVip) {
+        this.mchidVip = mchidVip;
     }
 
     public void setAppid(String appid) {
@@ -65,5 +93,13 @@ public class WxConfig {
 
     public void setNotifyurl(String notifyurl) {
         this.notifyurl = notifyurl;
+    }
+
+    public String getPapNotifyUrl() {
+        return papNotifyUrl;
+    }
+
+    public void setPapNotifyUrl(String papNotifyUrl) {
+        this.papNotifyUrl = papNotifyUrl;
     }
 }

@@ -1,10 +1,9 @@
 package com.jxtc.bookapp.utils;
 
 import com.jxtc.bookapp.config.ApiConstant;
-import com.jxtc.bookapp.entity.UserInfo;
-import com.jxtc.bookapp.entity.UserInfoExample;
-import com.jxtc.bookapp.entity.UserVip;
-import com.jxtc.bookapp.entity.UserVipExample;
+import com.jxtc.bookapp.config.WxConfig;
+import com.jxtc.bookapp.entity.*;
+import com.jxtc.bookapp.mapper.OrderMapper;
 import com.jxtc.bookapp.mapper.UserInfoMapper;
 import com.jxtc.bookapp.mapper.UserVipMapper;
 import com.jxtc.bookapp.service.UserInfoService;
@@ -15,10 +14,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.*;
 
 /**
  * @author wyl
@@ -35,38 +35,128 @@ public class SheduTaskUtil {
     private UserInfoMapper userInfoMapper;
     @Autowired
     private UserInfoService userInfoService;
+    @Autowired
+    private OrderMapper orderMapper;
+    @Autowired
+    private WxConfig config;
 
     /**
-     * 该方法为定时执行任务,用于自动过期掉到期的vip用户
+     * 该方法为定时执行任务,用于自动扣费
      */
-    @Scheduled(cron = "0 */1 * * * ?")//每分钟执行一次
-    @Transactional//该方法配置事务支持
+    @Scheduled(cron = "0 */1 * * * ?")//每5秒钟执行一次
+    @Transactional
     public void vipExpire() {
-        //查询出今天会过期的用户
-        Date today = new Date();
-        Calendar c = Calendar.getInstance();
-        c.setTime(today);
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        Date tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+        logger.info("执行了会员过期方法");
+        //查找没有过期的所有VIP用户
         UserVipExample example = new UserVipExample();
-        example.createCriteria().andExpireTimeBetween(c.getTime(), tomorrow).andStatusEqualTo(ApiConstant.VipStatus.DREDGE);
+        //查询扣款时间在现在之前,说明需要扣款了
+        example.createCriteria().andStatusEqualTo(ApiConstant.VipStatus.DREDGE).andPayTimeLessThanOrEqualTo(new Date());
         List<UserVip> userVips = userVipMapper.selectByExample(example);
         if (userVips != null && userVips.size() > 0) {
-            for (UserVip vip : userVips) {
-                if (vip.getExpireTime().getTime() <= new Date().getTime()) {
-                    vip.setStatus(ApiConstant.VipStatus.EXPIRE);//过期
-                    logger.info("执行了过期");
-                    userVipMapper.updateByPrimaryKey(vip);
-                    //将用户表中Vip用户的类型改为普通用户
-                    UserInfo userInfo = new UserInfo();
-                    userInfo.setType(ApiConstant.UserType.GENNERAL_USER);
-                    UserInfoExample exampleUser = new UserInfoExample();
-                    exampleUser.createCriteria().andUserIdEqualTo(vip.getUserId());
-                    userInfoService.clearUserByRedis(vip.getUserId());
-                    userInfoMapper.updateByExampleSelective(userInfo, exampleUser);
+            System.out.println("需要扣费的用户为:" + userVips);
+            for (UserVip userVip : userVips) {
+                //调用微信 扣款接口进行扣费
+                //构造请求参数
+                Map<String, Object> params = new HashMap<>();
+                String appid = config.getAppid();//微信方APP的唯一标识
+                String mchId = config.getMchidVip();//自动扣费的微信商户号
+                String nonceStr = PayUtil.create_nonce_str();//随机字符串
+                String body = "会员续费扣款";//商品或支付单简要描述
+                String orderId = PayUtil.createOrderId();//商户方的订单Id
+                int totalFee = userVip.getTotalFee();//订单总金额，单位为分
+                //调用微信支付API的机器IP
+                String spbillCreateIp = null;
+                try {
+                    spbillCreateIp = InetAddress.getLocalHost().getHostAddress();
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
                 }
+                String notifyUrl = config.getPapNotifyUrl();//扣款结果异步通知
+                String tradeType = "PAP";//交易类型PAP-微信委托代扣支付
+                String contractId = userVip.getContractId();//签约成功后，微信返回的委托代扣协议id
+                params.put("appid", appid);
+                params.put("mch_id", mchId);
+                params.put("nonce_str", nonceStr);
+                params.put("body", body);
+                params.put("out_trade_no", orderId);
+                params.put("total_fee", totalFee);
+                params.put("spbill_create_ip", spbillCreateIp);
+                params.put("notify_url", notifyUrl);
+                params.put("trade_type", tradeType);
+                params.put("contract_id", contractId);
+                //构建签名
+                try {
+                    String sign = PayUtil.sign(params, config.getPaternerKeyVip());
+                    params.put("sign", sign);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                String paramsXml = XmlUtil.toXml(params);
+                String resultXml = HttpClientUtil.doPostXml(ApiConstant.WXPayConfig.PAY_PAPPAYAPPLY, paramsXml);
+                Map<String, Object> result = XmlUtil.parseXml(resultXml);
+                Set<String> keySet = result.keySet();
+                for (String key : keySet) {
+                    System.out.println("微信扣款接口调用结果:" + key + "\t" + result.get(key));
+                }
+                //订单入库
+                Order order = new Order();
+                if ("SUCCESS".equals(result.get("result_code"))) {
+                    //扣款请求成功
+                    order.setUpdateTime(new Date());
+                    order.setOrderId(orderId);
+                    order.setDes("自动续费请求扣款中...");
+                    order.setCreateTime(new Date());
+                    order.setStatus(ApiConstant.OrderStatus.DOWN_ORDER);
+                    order.setUserId(userVip.getUserId());
+                    order.setBookId(0);
+                    int orderType = 0;
+                    //获得用户的会员类型
+                    switch (userVip.getVipType()) {
+                        case ApiConstant.UserType.VIP_MONTH_USER:
+                            //包月会员
+                            orderType = ApiConstant.OrderType.VIP_MONTH_ORDER;
+                            break;
+                        case ApiConstant.UserType.VIP_QUARTER_USER:
+                            //包季会员
+                            orderType = ApiConstant.OrderType.VIP_QUARTER_ORDER;
+                            break;
+                        case ApiConstant.UserType.VIP_YEAR_USER:
+                            //包年会员
+                            orderType = ApiConstant.OrderType.VIP_YEAR_ORDER;
+                            break;
+                    }
+                    order.setOrderType(orderType);
+                    order.setAmount(totalFee);
+                    orderMapper.insertSelective(order);
+                } else {
+                    //如果扣款失败,那么将用户的Vip状态改为取消签约
+                    UserVip vipUp = new UserVip();
+                    vipUp.setId(userVip.getId());
+                    vipUp.setStatus(ApiConstant.VipStatus.EXPIRE);
+                    userVipMapper.updateByPrimaryKeySelective(vipUp);
+                }
+            }
+        }
+        //过期掉那些续费失败的过期的会员
+        UserVipExample vipExample = new UserVipExample();
+        //没有过期,但是过期时间小于等于当前时间的用户需要过期
+        vipExample.createCriteria().andStatusEqualTo(ApiConstant.VipStatus.EXPIRE).andExpireTimeLessThanOrEqualTo(new Date()).andContractIdNotEqualTo("0");
+        List<UserVip> expireUsers = userVipMapper.selectByExample(vipExample);
+        if (expireUsers != null && expireUsers.size() > 0) {
+            logger.info("有用户需要过期");
+            UserInfoExample userInfoExample = new UserInfoExample();
+            for (UserVip expireUser : expireUsers) {
+                userInfoExample.createCriteria().andUserIdEqualTo(expireUser.getUserId());
+                UserInfo userUp = new UserInfo();
+                userUp.setUpdateTime(new Date());
+                userUp.setType(ApiConstant.UserType.GENNERAL_USER);//过期之后修改为普通用户
+                userInfoService.clearUserByRedis(expireUser.getUserId());
+                userInfoMapper.updateByExampleSelective(userUp, userInfoExample);
+                UserVip userVipUp = new UserVip();
+                userVipUp.setId(expireUser.getId());
+                userVipUp.setContractId("0");
+                userVipMapper.updateByPrimaryKeySelective(userVipUp);//将扣款凭证置空
+                logger.info("过期了:" + expireUser.getUserId());
             }
         }
     }

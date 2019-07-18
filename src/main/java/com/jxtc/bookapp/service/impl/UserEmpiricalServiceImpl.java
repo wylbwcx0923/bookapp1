@@ -167,7 +167,7 @@ public class UserEmpiricalServiceImpl implements UserEmpiricalService {
         for (String task : tasks) {
             String flag = null;
             if ("BIND_WX_".equals(task) || "BIND_QQ_".equals(task)) {
-                flag = (String) redisService.get("BIND_WX_" + userId);
+                flag = (String) redisService.get(task + userId);
             } else {
                 flag = (String) redisService.get(task + sdf.format(new Date()) + "_" + userId);
             }

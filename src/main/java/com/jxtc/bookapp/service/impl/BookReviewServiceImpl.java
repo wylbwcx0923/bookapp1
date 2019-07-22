@@ -4,7 +4,7 @@ import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.entity.BookReview;
 import com.jxtc.bookapp.entity.BookReviewExample;
 import com.jxtc.bookapp.entity.UserInfo;
-import com.jxtc.bookapp.mapper.BookReviewMapper;
+import com.jxtc.bookapp.mapper.app.BookReviewMapper;
 import com.jxtc.bookapp.service.BookReviewService;
 import com.jxtc.bookapp.service.RedisService;
 import com.jxtc.bookapp.service.UserInfoService;
@@ -15,7 +15,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

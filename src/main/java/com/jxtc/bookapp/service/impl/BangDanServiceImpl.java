@@ -1,30 +1,20 @@
 package com.jxtc.bookapp.service.impl;
 
-import com.aliyun.oss.ClientException;
-import com.aliyun.oss.OSSClient;
-import com.aliyun.oss.OSSException;
-import com.aliyun.oss.model.PutObjectRequest;
 import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.entity.*;
-import com.jxtc.bookapp.mapper.BangdanBooksMapper;
-import com.jxtc.bookapp.mapper.BangdanMapper;
-import com.jxtc.bookapp.mapper.BookInfoMapper;
-import com.jxtc.bookapp.mapper.MaterialMapper;
+import com.jxtc.bookapp.mapper.app.BangdanBooksMapper;
+import com.jxtc.bookapp.mapper.app.BangdanMapper;
+import com.jxtc.bookapp.mapper.book.BookInfoMapper;
 import com.jxtc.bookapp.service.BangDanService;
 import com.jxtc.bookapp.service.BookInfoService;
 import com.jxtc.bookapp.service.RedisService;
 import com.jxtc.bookapp.utils.PageResult;
-import com.jxtc.bookapp.utils.TimeUtil;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 /**

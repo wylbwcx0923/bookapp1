@@ -4,7 +4,12 @@ import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.config.OSSCacheKey;
 import com.jxtc.bookapp.config.RedisKey;
 import com.jxtc.bookapp.entity.*;
-import com.jxtc.bookapp.mapper.*;
+import com.jxtc.bookapp.mapper.app.UserAssetMapper;
+import com.jxtc.bookapp.mapper.app.UserCoinMapper;
+import com.jxtc.bookapp.mapper.app.UserEmpiricalMapper;
+import com.jxtc.bookapp.mapper.app.UserInfoMapper;
+import com.jxtc.bookapp.mapper.book.BookInfoMapper;
+import com.jxtc.bookapp.mapper.book.ChapterInfoMapper;
 import com.jxtc.bookapp.service.*;
 import com.jxtc.bookapp.utils.HttpClientUtil;
 import com.jxtc.bookapp.utils.PageResult;
@@ -289,10 +294,9 @@ public class BookInfoServiceImpl implements BookInfoService {
             return chapterInfo;
         }
         //如果购买过的章节,可以直接看
-        UserAssetExample example = new UserAssetExample();
-        example.createCriteria().andUserIdEqualTo(userInfo.getUserId()).andBookIdEqualTo(bookId).andChapterIdEqualTo(chapterId);
-        List<UserAsset> userAssets = userAssetMapper.selectByExample(example);
-        if (userAssets != null && userAssets.size() > 0) {
+        Integer tableIndex = getTableIndex(userInfo.getUserId());
+        UserAsset asset = userAssetMapper.selectByUserIdBookIdAndChapterId(userInfo.getUserId(), bookId, chapterId, tableIndex);
+        if (asset != null) {
             return chapterInfo;
         }
         //阅读章节的价格
@@ -317,14 +321,26 @@ public class BookInfoServiceImpl implements BookInfoService {
         //统计消费
         consumeService.addConsume(userInfo.getUserId(), bookId, chapterId, discountPrice);
         //将用户阅读了该章节存入用户资产中
-        UserAsset asset = new UserAsset();
-        asset.setAmount(discountPrice);
-        asset.setBookId(bookId);
-        asset.setChapterId(chapterId);
-        asset.setUserId(userInfo.getUserId());
-        asset.setCreateTime(new Date());
-        userAssetMapper.insertSelective(asset);
+        UserAsset assetNew = new UserAsset();
+        assetNew.setAmount(discountPrice);
+        assetNew.setBookId(bookId);
+        assetNew.setChapterId(chapterId);
+        assetNew.setUserId(userInfo.getUserId());
+        assetNew.setCreateTime(new Date());
+        assetNew.setTableIndex(tableIndex);
+        userAssetMapper.insertSelective(assetNew);
         return chapterInfo;
+    }
+
+    /**
+     * 根据用户ID的最后一位决定将用户资产保存到不同的表中
+     *
+     * @param userId
+     * @return
+     */
+    private Integer getTableIndex(String userId) {
+        Integer tableIndex = Integer.valueOf(userId.substring(userId.length() - 1));
+        return tableIndex;
     }
 
     /**

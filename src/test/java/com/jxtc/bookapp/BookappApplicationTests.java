@@ -17,6 +17,8 @@ public class BookappApplicationTests {
 
     @Test
     public void contextLoads() {
-
+        String userId = "jx100001";
+        Integer tableIndex = Integer.valueOf(userId.substring(userId.length() - 1));
+        System.out.println(tableIndex);
     }
 }

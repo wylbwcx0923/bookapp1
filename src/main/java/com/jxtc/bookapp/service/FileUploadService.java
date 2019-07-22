@@ -10,7 +10,7 @@ import com.jxtc.bookapp.config.AliyunOSSConfig;
 import com.jxtc.bookapp.config.FileUploadResult;
 import com.jxtc.bookapp.entity.UserInfo;
 import com.jxtc.bookapp.entity.UserInfoExample;
-import com.jxtc.bookapp.mapper.UserInfoMapper;
+import com.jxtc.bookapp.mapper.app.UserInfoMapper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.joda.time.DateTime;

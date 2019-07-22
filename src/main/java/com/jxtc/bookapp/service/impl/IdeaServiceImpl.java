@@ -2,7 +2,7 @@ package com.jxtc.bookapp.service.impl;
 
 import com.jxtc.bookapp.entity.Idea;
 import com.jxtc.bookapp.entity.IdeaExample;
-import com.jxtc.bookapp.mapper.IdeaMapper;
+import com.jxtc.bookapp.mapper.app.IdeaMapper;
 import com.jxtc.bookapp.service.IdeaService;
 import com.jxtc.bookapp.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;

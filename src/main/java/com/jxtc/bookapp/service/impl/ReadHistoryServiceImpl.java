@@ -3,7 +3,7 @@ package com.jxtc.bookapp.service.impl;
 import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.entity.ReadHistory;
 import com.jxtc.bookapp.entity.ReadHistoryExample;
-import com.jxtc.bookapp.mapper.ReadHistoryMapper;
+import com.jxtc.bookapp.mapper.app.ReadHistoryMapper;
 import com.jxtc.bookapp.service.BookInfoService;
 import com.jxtc.bookapp.service.ReadHistoryService;
 import com.jxtc.bookapp.utils.PageResult;

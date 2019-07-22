@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * @author intellij Idea
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @MapperScan("com.jxtc.bookapp.mapper")
 @EnableTransactionManagement//开启事务管理
 @EnableScheduling//开启定时任务配置
+@EnableSwagger2
 public class BookappApplication {
 
     public static void main(String[] args) {

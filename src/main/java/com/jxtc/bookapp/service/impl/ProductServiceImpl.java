@@ -2,7 +2,7 @@ package com.jxtc.bookapp.service.impl;
 
 import com.jxtc.bookapp.entity.Product;
 import com.jxtc.bookapp.entity.ProductExample;
-import com.jxtc.bookapp.mapper.ProductMapper;
+import com.jxtc.bookapp.mapper.app.ProductMapper;
 import com.jxtc.bookapp.service.ProductService;
 import com.jxtc.bookapp.service.RedisService;
 import net.sf.json.JSONArray;

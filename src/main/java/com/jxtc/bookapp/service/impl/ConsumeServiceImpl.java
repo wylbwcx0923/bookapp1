@@ -2,9 +2,8 @@ package com.jxtc.bookapp.service.impl;
 
 import com.jxtc.bookapp.entity.Consume;
 import com.jxtc.bookapp.entity.ConsumeCount;
-import com.jxtc.bookapp.entity.ConsumeExample;
-import com.jxtc.bookapp.mapper.BookInfoMapper;
-import com.jxtc.bookapp.mapper.ConsumeMapper;
+import com.jxtc.bookapp.mapper.app.ConsumeMapper;
+import com.jxtc.bookapp.mapper.book.BookInfoMapper;
 import com.jxtc.bookapp.service.ConsumeService;
 import com.jxtc.bookapp.utils.PageResult;
 import com.jxtc.bookapp.utils.TimeUtil;

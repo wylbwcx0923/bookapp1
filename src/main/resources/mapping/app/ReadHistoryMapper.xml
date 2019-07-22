@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxtc.bookapp.mapper.app.ReadHistoryMapper">
+    <resultMap id="BaseResultMap" type="com.jxtc.bookapp.entity.ReadHistory">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="book_id" property="bookId" jdbcType="INTEGER"/>
+        <result column="last_read_chapter" property="lastReadChapter" jdbcType="INTEGER"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <association property="bookInfo" javaType="com.jxtc.bookapp.entity.BookInfo">
+            <result column="book_id" property="bookId" jdbcType="INTEGER"/>
+            <result column="book_name" property="bookName" jdbcType="VARCHAR"/>
+            <result column="author" property="author" jdbcType="VARCHAR"/>
+            <result column="category" property="category" jdbcType="VARCHAR"/>
+            <result column="complete_state" property="completeState" jdbcType="INTEGER"/>
+            <result column="last_chapter_id" property="lastChapterId" jdbcType="INTEGER"/>
+            <result column="pic_url" property="picUrl" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+        id
+        ,
+        user_id,
+        book_id,
+        last_read_chapter,
+        update_time
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.jxtc.bookapp.entity.ReadHistoryExample">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        'true' as QUERYID,
+        <include refid="Base_Column_List"/>
+        from read_history
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from read_history
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from read_history
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <delete id="deleteByExample" parameterType="com.jxtc.bookapp.entity.ReadHistoryExample">
+        delete from read_history
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.jxtc.bookapp.entity.ReadHistory">
+        insert into read_history (id, user_id, book_id,
+                                  last_read_chapter, update_time)
+        values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{bookId,jdbcType=INTEGER},
+                #{lastReadChapter,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.jxtc.bookapp.entity.ReadHistory">
+        insert into read_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="bookId != null">
+                book_id,
+            </if>
+            <if test="lastReadChapter != null">
+                last_read_chapter,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="bookId != null">
+                #{bookId,jdbcType=INTEGER},
+            </if>
+            <if test="lastReadChapter != null">
+                #{lastReadChapter,jdbcType=INTEGER},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.jxtc.bookapp.entity.ReadHistoryExample"
+            resultType="java.lang.Integer">
+        select count(*) from read_history
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update read_history
+        <set>
+            <if test="record.id != null">
+                id = #{record.id,jdbcType=INTEGER},
+            </if>
+            <if test="record.userId != null">
+                user_id = #{record.userId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.bookId != null">
+                book_id = #{record.bookId,jdbcType=INTEGER},
+            </if>
+            <if test="record.lastReadChapter != null">
+                last_read_chapter = #{record.lastReadChapter,jdbcType=INTEGER},
+            </if>
+            <if test="record.updateTime != null">
+                update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update read_history
+        set id = #{record.id,jdbcType=INTEGER},
+        user_id = #{record.userId,jdbcType=VARCHAR},
+        book_id = #{record.bookId,jdbcType=INTEGER},
+        last_read_chapter = #{record.lastReadChapter,jdbcType=INTEGER},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.jxtc.bookapp.entity.ReadHistory">
+        update read_history
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="bookId != null">
+                book_id = #{bookId,jdbcType=INTEGER},
+            </if>
+            <if test="lastReadChapter != null">
+                last_read_chapter = #{lastReadChapter,jdbcType=INTEGER},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.ReadHistory">
+        update read_history
+        set user_id           = #{userId,jdbcType=VARCHAR},
+            book_id           = #{bookId,jdbcType=INTEGER},
+            last_read_chapter = #{lastReadChapter,jdbcType=INTEGER},
+            update_time       = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectReadHistoryList" resultMap="BaseResultMap">
+        select *
+        from read_history r,
+             bc_source.book_info b
+        where r.user_id = #{userId,jdbcType=VARCHAR}
+          and r.book_id = b.book_id
+        order by r.update_time desc
+                 limit #{offset,jdbcType=INTEGER}
+                ,#{size,jdbcType=INTEGER}
+    </select>
+</mapper>

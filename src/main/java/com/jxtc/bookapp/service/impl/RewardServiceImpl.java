@@ -2,9 +2,8 @@ package com.jxtc.bookapp.service.impl;
 
 import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.entity.*;
-import com.jxtc.bookapp.mapper.RewardMapper;
-import com.jxtc.bookapp.mapper.UserCoinMapper;
-import com.jxtc.bookapp.mapper.UserInfoMapper;
+import com.jxtc.bookapp.mapper.app.RewardMapper;
+import com.jxtc.bookapp.mapper.app.UserCoinMapper;
 import com.jxtc.bookapp.service.ConsumeService;
 import com.jxtc.bookapp.service.RedisService;
 import com.jxtc.bookapp.service.RewardService;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 

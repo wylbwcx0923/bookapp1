@@ -3,7 +3,7 @@ package com.jxtc.bookapp.service.impl;
 import com.jxtc.bookapp.entity.Order;
 import com.jxtc.bookapp.entity.OrderExample;
 import com.jxtc.bookapp.entity.PageCountTotal;
-import com.jxtc.bookapp.mapper.OrderMapper;
+import com.jxtc.bookapp.mapper.app.OrderMapper;
 import com.jxtc.bookapp.service.OrderService;
 import com.jxtc.bookapp.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -102,7 +102,7 @@ public class WxPayController {
                     signnow = PayUtil.sign(restmap, wxConfig.getPaternerKeyVip());
                 } else {
                     logger.info("普通充值");
-                    PayUtil.sign(restmap, wxConfig.getPaternerKey());
+                    signnow = PayUtil.sign(restmap, wxConfig.getPaternerKey());
                 }
                 if (signnow.equals(sign)) {
                     // 进行业务处理

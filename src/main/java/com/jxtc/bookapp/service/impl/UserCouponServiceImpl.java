@@ -3,7 +3,7 @@ package com.jxtc.bookapp.service.impl;
 import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.entity.UserCoupon;
 import com.jxtc.bookapp.entity.UserCouponExample;
-import com.jxtc.bookapp.mapper.UserCouponMapper;
+import com.jxtc.bookapp.mapper.app.UserCouponMapper;
 import com.jxtc.bookapp.service.UserCouponService;
 import com.jxtc.bookapp.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;

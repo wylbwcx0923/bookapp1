@@ -9,9 +9,9 @@ import com.alipay.api.response.AlipayTradeAppPayResponse;
 import com.jxtc.bookapp.config.AliPayConfig;
 import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.entity.*;
-import com.jxtc.bookapp.mapper.OrderMapper;
-import com.jxtc.bookapp.mapper.ProductMapper;
-import com.jxtc.bookapp.mapper.UserCoinMapper;
+import com.jxtc.bookapp.mapper.app.OrderMapper;
+import com.jxtc.bookapp.mapper.app.ProductMapper;
+import com.jxtc.bookapp.mapper.app.UserCoinMapper;
 import com.jxtc.bookapp.service.*;
 import com.jxtc.bookapp.utils.PayUtil;
 import org.apache.commons.lang.StringUtils;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 
 @Service
@@ -128,12 +127,12 @@ public class AliPayServiceImpl implements AliPayService {
                 logger.info("用户购买的产品ID为:" + productId);
                 Product product = productMapper.selectByPrimaryKey(productId);
                 //用户充值成功,修改用户的阅币
-                logger.info("使用支付宝付款的用户的信息为:" + order.getUserId());
+                logger.info("使用支付宝付款的用户的信息为:" + orderSuc.getUserId());
                 //修改用户的阅币
-                userCoinMapper.addCoinByUserId(order.getUserId(), product.getOriginal() + product.getGift());
+                userCoinMapper.addCoinByUserId(orderSuc.getUserId(), product.getOriginal() + product.getGift());
                 //用户经验值的更新和升级
                 int empirical = product.getProductPrice().intValue() * 10;
-                userEmpiricalService.upgrade(order.getUserId(), empirical);
+                userEmpiricalService.upgrade(orderSuc.getUserId(), empirical);
                 //判断本次充值是否使用了优惠券
                 String isUse = (String) redisService.get("COUPON_" + orderId);
                 if (StringUtils.isNotEmpty(isUse)) {

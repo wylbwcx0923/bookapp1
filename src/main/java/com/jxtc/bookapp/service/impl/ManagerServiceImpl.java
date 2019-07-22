@@ -2,7 +2,7 @@ package com.jxtc.bookapp.service.impl;
 
 import com.jxtc.bookapp.entity.Manager;
 import com.jxtc.bookapp.entity.ManagerExample;
-import com.jxtc.bookapp.mapper.ManagerMapper;
+import com.jxtc.bookapp.mapper.app.ManagerMapper;
 import com.jxtc.bookapp.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

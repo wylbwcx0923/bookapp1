@@ -15,6 +15,16 @@ public class UserAsset {
 
     private Date createTime;
 
+    private Integer tableIndex;
+
+    public Integer getTableIndex() {
+        return tableIndex;
+    }
+
+    public void setTableIndex(Integer tableIndex) {
+        this.tableIndex = tableIndex;
+    }
+
     public Integer getId() {
         return id;
     }

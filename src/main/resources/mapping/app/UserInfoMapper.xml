@@ -407,4 +407,17 @@
         from user_info
     </select>
 
+    <select id="selectUserListByPage" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_info
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id=#{userId,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by create_time desc
+        limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
+    </select>
+
 </mapper>

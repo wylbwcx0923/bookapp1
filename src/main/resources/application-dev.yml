@@ -5,13 +5,13 @@ spring:
   #配置MYSQL数据库
   datasource:
     dbapp:
-      url: jdbc:mysql://rm-bp15i138x671d541a.mysql.rds.aliyuncs.com:3306/bookapp?useUnicode=true&characterEncoding=UTF-8
+      url: jdbc:mysql://rm-bp15i138x671d541a.mysql.rds.aliyuncs.com:3306/bookapp?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false
       username: novel
       password: dgef224vVBRh374zasx
       type: com.alibaba.druid.pool.DruidDataSource
       driver-class-name: com.mysql.jdbc.Driver
     dbbook:
-      url: jdbc:mysql://rm-bp15i138x671d541a.mysql.rds.aliyuncs.com:3306/bc_source?useUnicode=true&characterEncoding=UTF-8
+      url: jdbc:mysql://rm-bp15i138x671d541a.mysql.rds.aliyuncs.com:3306/bc_source?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false
       username: novel
       password: dgef224vVBRh374zasx
       type: com.alibaba.druid.pool.DruidDataSource
@@ -25,7 +25,7 @@ spring:
     minEvictableIdleTimeMillis: 300000
     validationQuery: select 'x'
     testWhileIdle: true
-    testOnBorrow: false
+    testOnBorrow: true
     testOnReturn: false
     poolPreparedStatements: true
     maxOpenPreparedStatements: 20
@@ -57,3 +57,13 @@ pagehelper:
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
+#文件上传到服务器的配置
+sftp:
+  ip: 47.99.114.219
+  port: 22
+  username: root
+  password: evertqIhmxxTl033tpHh
+  downloadSleep: 100 #文件下载失败下次超时重试时间
+  downloadRetry: 10 #文件下载失败重试次数
+  uploadSleep: 100 #文件上传失败下次超时重试时间
+  uploadRettry: 10  #文件上传失败重试次数

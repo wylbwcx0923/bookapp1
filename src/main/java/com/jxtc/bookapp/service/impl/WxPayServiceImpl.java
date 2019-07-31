@@ -3,7 +3,6 @@ package com.jxtc.bookapp.service.impl;
 import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.config.WxConfig;
 import com.jxtc.bookapp.entity.*;
-import com.jxtc.bookapp.mapper.*;
 import com.jxtc.bookapp.mapper.app.*;
 import com.jxtc.bookapp.service.*;
 import com.jxtc.bookapp.utils.HttpClientUtil;

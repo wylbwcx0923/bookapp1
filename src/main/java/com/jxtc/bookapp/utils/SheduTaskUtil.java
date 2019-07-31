@@ -14,7 +14,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import javax.management.Query;
 import java.io.UnsupportedEncodingException;
+import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
@@ -40,11 +45,17 @@ public class SheduTaskUtil {
     private WxConfig config;
 
     /**
-     * 该方法为定时执行任务,用于自动扣费
+     * 该方法为定时执行任务
+     * 用于自动扣费和会员自动过期
      */
-    @Scheduled(cron = "0 */1 * * * ?")//每5秒钟执行一次
+    @Scheduled(cron = "0 */1 * * * ?")//每1分钟钟执行一次
     @Transactional
     public void vipExpire() {
+        String port = getLocalPort();
+        if (!"9991".equals(port)) {
+            //只在正式环境的其中一个服务器中执行定时任务
+            return;
+        }
         logger.info("执行了会员过期方法");
         //查找没有过期的所有VIP用户
         UserVipExample example = new UserVipExample();
@@ -159,4 +170,24 @@ public class SheduTaskUtil {
             }
         }
     }
+
+    /**
+     * 获取当前服务的端口号
+     *
+     * @return
+     * @author 不忘初心
+     */
+    private String getLocalPort() {
+        MBeanServer beanServer = ManagementFactory.getPlatformMBeanServer();
+        Set<ObjectName> objectNames = null;
+        try {
+            objectNames = beanServer.queryNames(new ObjectName("*:type=Connector,*"),
+                    Query.match(Query.attr("protocol"), Query.value("HTTP/1.1")));
+        } catch (MalformedObjectNameException e) {
+            e.printStackTrace();
+        }
+        String port = objectNames.iterator().next().getKeyProperty("port");
+        return port;
+    }
+
 }

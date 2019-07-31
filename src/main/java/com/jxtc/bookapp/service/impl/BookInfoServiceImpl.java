@@ -172,6 +172,15 @@ public class BookInfoServiceImpl implements BookInfoService {
      */
     @Override
     public Map<String, Object> readBook(Integer bookId, Integer chapterId, String userId) {
+        if (StringUtils.isEmpty(userId)) {
+            //如果为未登录状态
+            Map<String, Object> map = getChapterInfo(bookId, chapterId);
+            ChapterInfo chapterInfo = (ChapterInfo) map.get("chapterInfo");
+            if (chapterInfo.getIsFree() != 1) {
+                map.put("content", "您还没有登录,登录即可阅读更多章节!");
+            }
+            return map;
+        }
         //先判断用户类型,如果包年用户直接阅读
         UserInfo userInfo = userInfoService.getUserInfoByLocal(userId);
         int userType = userInfo.getType();

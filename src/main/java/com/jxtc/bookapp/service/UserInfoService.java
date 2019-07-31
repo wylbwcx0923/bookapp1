@@ -1,6 +1,7 @@
 package com.jxtc.bookapp.service;
 
 import com.jxtc.bookapp.entity.UserInfo;
+import com.jxtc.bookapp.utils.PageResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
@@ -50,23 +51,26 @@ public interface UserInfoService {
 
     /**
      * 修改用户的基本信息
+     *
      * @param userInfo
      */
     void updateUser(UserInfo userInfo);
 
     /**
      * 绑定微信
+     *
      * @param userId
      * @param code
      */
-    void bindWeiXin(String userId,String code);
+    void bindWeiXin(String userId, String code);
 
     /**
      * 绑定QQ
+     *
      * @param userId
      * @param userQQ
      */
-    void bindQQ(String userId,UserInfo userQQ);
+    void bindQQ(String userId, UserInfo userQQ);
 
     /**
      * 验证手机号和验证码
@@ -76,5 +80,22 @@ public interface UserInfoService {
      * @return
      */
     @Transactional
-    Map<String,Object> smsVerify(String phoneNumber, String code);
+    Map<String, Object> smsVerify(String phoneNumber, String code);
+
+    /**
+     * 获得用户列表
+     *
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    PageResult<UserInfo> getUserList(int pageIndex, int pageSize, String userId);
+
+    /**
+     * 赠送给用户阅币
+     *
+     * @param userId
+     * @param coin
+     */
+    void sendCoin(String userId, int coin);
 }

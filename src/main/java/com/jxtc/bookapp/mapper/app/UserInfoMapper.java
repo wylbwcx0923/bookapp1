@@ -32,4 +32,6 @@ public interface UserInfoMapper {
 
     int getMaxId();
 
+    List<UserInfo> selectUserListByPage(@Param("offset") int offset, @Param("size") int size, @Param("userId") String userId);
+
 }

@@ -4,6 +4,7 @@ import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.config.JXResult;
 import com.jxtc.bookapp.entity.UserInfo;
 import com.jxtc.bookapp.service.UserInfoService;
+import com.jxtc.bookapp.utils.PageResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -103,5 +104,29 @@ public class UserInfoController {
             return new JXResult(true, ApiConstant.StatusCode.OK, "手机号登录成功", map);
         }
         return new JXResult(false, ApiConstant.StatusCode.LOGINERROR, "登录失败", map);
+    }
+
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @ApiOperation(value = "获得用户列表", notes = "获得用户列表", httpMethod = "GET")
+    @ResponseBody
+    public JXResult getUserList(@ApiParam(value = "当前页", required = false)
+                                @RequestParam(value = "pageIndex", defaultValue = "1", required = false) int pageIndex,
+                                @ApiParam(value = "每页显示数量", required = false)
+                                @RequestParam(value = "pageSize", defaultValue = "20", required = false) int pageSize,
+                                @ApiParam(value = "用户Id", required = false)
+                                @RequestParam(value = "userId", defaultValue = "", required = false) String userId) {
+        PageResult<UserInfo> page = userInfoService.getUserList(pageIndex, pageSize, userId);
+        return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", page);
+    }
+
+    @RequestMapping(value = "/send/coin", method = RequestMethod.PUT)
+    @ApiOperation(value = "给用户赠送阅币", notes = "给用户赠送阅币", httpMethod = "PUT")
+    @ResponseBody
+    public JXResult sendCoin(@ApiParam(value = "用户Id", required = false)
+                             @RequestParam(value = "userId", defaultValue = "", required = false) String userId,
+                             @ApiParam(value = "赠送的阅币书", required = false)
+                             @RequestParam(value = "coin", defaultValue = "", required = false) int coin) {
+        userInfoService.sendCoin(userId, coin);
+        return new JXResult(true, ApiConstant.StatusCode.OK, "赠送成功");
     }
 }

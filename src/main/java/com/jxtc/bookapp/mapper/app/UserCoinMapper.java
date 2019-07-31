@@ -29,7 +29,7 @@ public interface UserCoinMapper {
 
     int updateByPrimaryKey(UserCoin record);
 
-    int getCoinByUserId(@Param("userId") String userId);
+    Integer getCoinByUserId(@Param("userId") String userId);
 
     int addCoinByUserId(@Param("userId") String userId, @Param("addCoin") int addCoin);
 }

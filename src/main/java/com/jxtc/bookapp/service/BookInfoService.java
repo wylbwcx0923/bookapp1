@@ -20,7 +20,7 @@ public interface BookInfoService {
     //通过id判断书籍是否为VIP书
     int checkVIPBookByBookId(Integer bookId);
 
-    //去看书
+    //看书和消费接口
     Map<String, Object> readBook(Integer bookId, Integer chapterId, String userId);
 
     //图书搜索

@@ -11,6 +11,7 @@ import com.jxtc.bookapp.service.RedisService;
 import com.jxtc.bookapp.service.UserEmpiricalService;
 import com.jxtc.bookapp.service.UserInfoService;
 
+import com.jxtc.bookapp.utils.PageResult;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
@@ -343,5 +344,32 @@ public class UserInfoServiceImpl implements UserInfoService {
         result.put("errorCode", 200);
         result.put("userId", userId);
         return result;
+    }
+
+    @Override
+    public PageResult<UserInfo> getUserList(int pageIndex, int pageSize, String userId) {
+        PageResult<UserInfo> page = new PageResult<>();
+        page.setPageIndex(pageIndex);
+        page.setPageSize(pageSize);
+        int offset = (pageIndex - 1) * pageSize;
+        List<UserInfo> userInfos = userInfoMapper.selectUserListByPage(offset, pageSize, userId);
+        if (userInfos != null && userInfos.size() > 0) {
+            for (UserInfo userInfo : userInfos) {
+                Integer coin = userCoinMapper.getCoinByUserId(userInfo.getUserId());
+                coin = coin == null ? 0 : coin;
+                userInfo.setCoin(coin);
+            }
+        }
+        page.setPageList(userInfos);
+        UserInfoExample example = new UserInfoExample();
+        example.createCriteria();
+        int total = userInfoMapper.countByExample(example);
+        page.setTotal(total);
+        return page;
+    }
+
+    @Override
+    public void sendCoin(String userId, int coin) {
+        userCoinMapper.addCoinByUserId(userId, coin);
     }
 }

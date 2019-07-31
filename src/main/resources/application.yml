@@ -52,10 +52,19 @@ mybatis:
   mapper-locations: classpath:mapping/*.xml  #注意：一定要对应mapper映射xml文件的所在路径
   type-aliases-package: com.jxtc.bookapp.entity  # 注意：对应实体类的路径
   mapUnderscoreToCamelCase: true  #开启驼峰匹配
-
 #pagehelper分页插件
 pagehelper:
   helperDialect: mysql
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
+#文件上传到服务器的配置
+sftp:
+  ip: 47.99.114.219
+  port: 22
+  username: root
+  password: evertqIhmxxTl033tpHh
+  downloadSleep: 100 #文件下载失败下次超时重试时间
+  downloadRetry: 10 #文件下载失败重试次数
+  uploadSleep: 100 #文件上传失败下次超时重试时间
+  uploadRettry: 10  #文件上传失败重试次数

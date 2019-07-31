@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 /**
+ * @author 不忘初心
  * 短信验证码的配置类
  */
 @Configuration

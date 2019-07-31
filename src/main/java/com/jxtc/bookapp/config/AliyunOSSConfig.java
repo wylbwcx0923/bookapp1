@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 /**
- * @author wyl
+ * @author 不忘初心
  * 阿里云OSS配置
  */
 @Configuration

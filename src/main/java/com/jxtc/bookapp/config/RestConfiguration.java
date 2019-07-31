@@ -8,6 +8,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
+ * @author 不忘初心
  * 配置缓存的key和value的样式
  * 防止乱码
  */

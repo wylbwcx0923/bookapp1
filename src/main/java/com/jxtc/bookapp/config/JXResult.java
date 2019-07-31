@@ -1,7 +1,7 @@
 package com.jxtc.bookapp.config;
 
 /**
- * @author wyl
+ * @author 不忘初心
  * 本类用于结果返回
  */
 public class JXResult {

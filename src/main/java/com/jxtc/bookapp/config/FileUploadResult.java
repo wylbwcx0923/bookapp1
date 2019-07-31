@@ -1,7 +1,7 @@
 package com.jxtc.bookapp.config;
 
 /**
- * @author wyl
+ * @author 不忘初心
  * 文件上传结果类
  */
 public class FileUploadResult {

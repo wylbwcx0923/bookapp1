@@ -1,6 +1,7 @@
 package com.jxtc.bookapp.config;
 
 /**
+ * @author 不忘初心
  * 本类用于生成Redis的Key
  */
 public class RedisKey {

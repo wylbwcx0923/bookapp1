@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+/**
+ * @author 不忘初心
+ */
 @Api(value = "榜单接口", tags = "榜单接口")
 @RequestMapping("/jxapp/bangdan")
 @Controller

@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * @author 不忘初心
+ */
 @RestController
 @Api(tags = "支付宝支付接口", value = "支付宝支付接口")
 @RequestMapping("jxapp/alipay")

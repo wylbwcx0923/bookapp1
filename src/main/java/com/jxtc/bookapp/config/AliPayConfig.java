@@ -4,6 +4,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+/**
+ * @author 不忘初心
+ * 支付宝支付的配置类
+ */
 @Configuration
 @PropertySource(value = {"classpath:application-alipay.properties"})
 @ConfigurationProperties(prefix = "alipay")

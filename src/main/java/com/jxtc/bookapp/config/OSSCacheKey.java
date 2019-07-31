@@ -1,8 +1,8 @@
 package com.jxtc.bookapp.config;
 
 /**
+ * @author 不忘初心
  * 本类用于生成OSS文件访问对应的KEY
- * @author wyl
  */
 public class OSSCacheKey {
     public static String buildDownloadChapterKey(String bookId, String chapterId) {

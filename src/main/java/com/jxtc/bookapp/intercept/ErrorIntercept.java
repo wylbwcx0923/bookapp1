@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * @author wyl
+ * @author 不忘初心
  * 本类用于拦截所有的运行时异常
  */
 @ControllerAdvice

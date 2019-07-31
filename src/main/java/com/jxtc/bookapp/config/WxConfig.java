@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 /**
- * @author wyl
+ * @author 不忘初心
  * 本类用于加载微信开发的配置文件
  */
 @Configuration

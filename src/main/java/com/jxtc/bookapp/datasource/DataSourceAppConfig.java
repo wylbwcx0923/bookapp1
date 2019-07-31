@@ -16,6 +16,10 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
 
+/**
+ * @author 不忘初心
+ * SpringBoot多数据源的配置
+ */
 @Configuration
 @MapperScan(basePackages = "com.jxtc.bookapp.mapper.app", sqlSessionTemplateRef = "dbAppSqlSessionTemplate")
 public class DataSourceAppConfig {

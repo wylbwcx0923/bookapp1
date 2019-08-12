@@ -1,7 +1,11 @@
 package com.jxtc.bookapp.service;
 
 import com.jxtc.bookapp.entity.Order;
+import com.jxtc.bookapp.entity.OrderCount;
 import com.jxtc.bookapp.utils.PageResult;
+
+import java.util.List;
+import java.util.Map;
 
 public interface OrderService {
 
@@ -19,7 +23,6 @@ public interface OrderService {
      * @return
      */
     Order findOrderByOrderId(String orderId);
-
 
 
     /**
@@ -47,4 +50,13 @@ public interface OrderService {
      * @return
      */
     PageResult<Order> getOrderByStatus(int status, String startTime, String endTime, int pageIndex, int pageSize);
+
+    /**
+     * 根据查询时间查询区间内每天的订单列表
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<OrderCount> getOrderDayList(String startTime, String endTime);
 }

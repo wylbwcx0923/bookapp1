@@ -2,6 +2,7 @@ package com.jxtc.bookapp.controller;
 
 import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.config.JXResult;
+import com.jxtc.bookapp.entity.BookInfo;
 import com.jxtc.bookapp.entity.BookReview;
 import com.jxtc.bookapp.service.BookReviewService;
 import com.jxtc.bookapp.utils.PageResult;
@@ -81,5 +82,17 @@ public class BookReviewController {
                                      @RequestParam(value = "type", defaultValue = "", required = false) int type) {
         bookReviewService.praise(userId, id, type);
         return new JXResult(true, ApiConstant.StatusCode.OK, "点赞或取消赞成功");
+    }
+
+    @ApiOperation(value = "获得有书评的书", notes = "获得有书评的书", httpMethod = "GET")
+    @RequestMapping(value = "list/have/review", method = RequestMethod.GET)
+    public JXResult getHaveReviewBookList(@ApiParam(value = "书籍名", required = false)
+                                          @RequestParam(value = "bookName", defaultValue = "", required = false) String bookName,
+                                          @ApiParam(value = "当前页", required = false)
+                                          @RequestParam(value = "pageIndex", defaultValue = "1", required = false) int pageIndex,
+                                          @ApiParam(value = "每页显示数量", required = false)
+                                          @RequestParam(value = "pageSize", defaultValue = "20", required = false) int pageSize) {
+        PageResult<BookInfo> bookList = bookReviewService.getHaveReviewBookList(bookName, pageIndex, pageSize);
+        return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", bookList);
     }
 }

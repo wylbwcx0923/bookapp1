@@ -22,6 +22,7 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public Manager login(String username, String password) {
+        System.out.println(username + "\t" + password);
         ManagerExample example = new ManagerExample();
         example.createCriteria().andUsernameEqualTo(username).andPasswordEqualTo(password);
         List<Manager> managers = managerMapper.selectByExample(example);

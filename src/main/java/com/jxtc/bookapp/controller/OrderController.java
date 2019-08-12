@@ -3,6 +3,7 @@ package com.jxtc.bookapp.controller;
 import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.config.JXResult;
 import com.jxtc.bookapp.entity.Order;
+import com.jxtc.bookapp.entity.OrderCount;
 import com.jxtc.bookapp.service.OrderService;
 import com.jxtc.bookapp.utils.PageResult;
 import io.swagger.annotations.Api;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Api(tags = "订单接口", value = "订单接口")
 @RestController
@@ -62,5 +65,15 @@ public class OrderController {
                                        @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
         PageResult<Order> page = orderService.getOrderByStatus(status, startTime, endTime, pageIndex, pageSize);
         return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", page);
+    }
+
+    @ApiOperation(value = "获得每一天的充值金额", notes = "获得每一天的充值金额", httpMethod = "GET")
+    @RequestMapping(value = "day/list", method = RequestMethod.GET)
+    public JXResult getOrderListByPage(@ApiParam(value = "查询的起始时间(格式:yyyy-MM-dd)", required = false)
+                                       @RequestParam(value = "startTime", defaultValue = "", required = false) String startTime,
+                                       @ApiParam(value = "查询的结束时间(格式:yyyy-MM-dd)", required = false)
+                                       @RequestParam(value = "endTime", defaultValue = "", required = false) String endTime) {
+        List<OrderCount> orderDayList = orderService.getOrderDayList(startTime, endTime);
+        return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", orderDayList);
     }
 }

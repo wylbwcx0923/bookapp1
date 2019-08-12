@@ -23,9 +23,11 @@ public class RewardController {
     @ApiOperation(value = "用户打赏", notes = "用户打赏", httpMethod = "POST")
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public JXResult addReward(@ApiParam(value = "打赏对象", required = true)
-                              @RequestBody Reward reward) {
+                              @RequestBody Reward reward,
+                              @ApiParam(value = "优惠券Id", required = false)
+                              @RequestParam(value = "couponId", required = false) Integer couponId) {
         System.out.println(reward);
-        int flog = rewardService.insert(reward);
+        int flog = rewardService.insert(reward,couponId);
         if (flog == 0) {
             return new JXResult(false, ApiConstant.StatusCode.OK, "打赏失败");
         } else {

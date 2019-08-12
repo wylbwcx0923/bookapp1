@@ -24,16 +24,6 @@ public class BannerController {
     @Autowired
     private BannerService bannerService;
 
-    @ApiOperation(value = "上传轮播图素材接口", notes = "上传轮播图素材接口", httpMethod = "POST")
-    @ResponseBody
-    @RequestMapping(value = "upload/material", method = RequestMethod.POST)
-    public JXResult updateMaterial(@RequestParam("file") MultipartFile uploadFile,
-                                   @ApiParam(value = "素材名称", required = false)
-                                   @RequestParam(value = "materialName", defaultValue = "", required = false) String materialName) {
-        bannerService.materialUpload(uploadFile, materialName);
-        return new JXResult(true, ApiConstant.StatusCode.OK, "上传成功");
-    }
-
     @ApiOperation(value = "新建推荐位banner接口", notes = "新建推荐位banner接口", httpMethod = "POST")
     @ResponseBody
     @RequestMapping(value = "add", method = RequestMethod.POST)

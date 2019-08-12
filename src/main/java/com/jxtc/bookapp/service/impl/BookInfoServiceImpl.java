@@ -174,6 +174,7 @@ public class BookInfoServiceImpl implements BookInfoService {
     public Map<String, Object> readBook(Integer bookId, Integer chapterId, String userId) {
         if (StringUtils.isEmpty(userId)) {
             //如果为未登录状态
+            logger.info("用户未登录状态");
             Map<String, Object> map = getChapterInfo(bookId, chapterId);
             ChapterInfo chapterInfo = (ChapterInfo) map.get("chapterInfo");
             if (chapterInfo.getIsFree() != 1) {
@@ -186,20 +187,25 @@ public class BookInfoServiceImpl implements BookInfoService {
         int userType = userInfo.getType();
         //包年看所有
         if (userType == ApiConstant.UserType.VIP_YEAR_USER) {
+            logger.info("包年看所有");
             return getChapterInfo(bookId, chapterId);
         }
         //如果用户是包月或者包季VIP
         if (userType == ApiConstant.UserType.VIP_MONTH_USER || userType == ApiConstant.UserType.VIP_QUARTER_USER) {
+            logger.info("用户是包月或者包季用户");
             int isVIPBook = checkVIPBookByBookId(bookId);
             if (isVIPBook == ApiConstant.BookType.VIP_BOOK) {
+                logger.info("vip用户看了VIP书");
                 return getChapterInfo(bookId, chapterId);
             } else {
                 //付费阅读
+                logger.info("vip用户看了普通书");
                 return payRead(bookId, chapterId, userInfo);
             }
         }
         //普通用户阅币阅读
         if (userType == ApiConstant.UserType.GENNERAL_USER) {
+            logger.info("普通用户看书");
             return payRead(bookId, chapterId, userInfo);
         }
         return null;
@@ -287,6 +293,33 @@ public class BookInfoServiceImpl implements BookInfoService {
         return pageResult;
     }
 
+    @Override
+    public Map<String, Object> getChapterInfoForH5(int bookId, int chapterId) {
+        Map<String, Object> map = new HashMap<>();
+        //先从缓存中取章节的详情
+        String content = (String) redisService.get("H5chapterContent_" + bookId + "_" + chapterId);
+        //如果取不到就去OSS中取
+        if (StringUtils.isEmpty(content)) {
+            String url = download(bookId + "", chapterId + "");
+            String result = HttpClientUtil.doGet(url);
+            StringBuilder sb = new StringBuilder();
+            content = sb.append(result.replace("\r\n", "</p><p>").replace("\n", "</p><p>"))
+                    .append("<p>").toString();
+            //保存到redis中
+            redisService.set("H5chapterContent_" + bookId + "_" + chapterId, content, ApiConstant.Timer.THREE_DAY);
+        }
+        //从缓存中取章节的详情
+        ChapterInfo chapterInfo = getChapterInfoByRedis(bookId, chapterId);
+        //如果缓存取不到,那么去MySQL中取
+        if (chapterInfo == null) {
+            chapterInfo = chapterInfoMapper.selectByBookIdAndChapterId(bookId, chapterId);
+            savaChapterInfoInRedis(bookId, chapterId, chapterInfo);
+        }
+        map.put("chapterInfo", chapterInfo);
+        map.put("content", content);
+        return map;
+    }
+
     /**
      * 书币购买章节,付费阅读
      *
@@ -300,12 +333,14 @@ public class BookInfoServiceImpl implements BookInfoService {
         ChapterInfo chapter = (ChapterInfo) chapterInfo.get("chapterInfo");
         //免费章节直接看
         if (chapter.getIsFree() == 1) {
+            logger.info("免费章节直接看");
             return chapterInfo;
         }
         //如果购买过的章节,可以直接看
         Integer tableIndex = getTableIndex(userInfo.getUserId());
         UserAsset asset = userAssetMapper.selectByUserIdBookIdAndChapterId(userInfo.getUserId(), bookId, chapterId, tableIndex);
         if (asset != null) {
+            logger.info("用户资产里面有这个章节直接看");
             return chapterInfo;
         }
         //阅读章节的价格
@@ -322,11 +357,13 @@ public class BookInfoServiceImpl implements BookInfoService {
         chapterInfo.put("chapterprice", chapterPrice);
         chapterInfo.put("discountprice", discountPrice);
         if (isEnough == false) {
+            logger.info("用户阅币不足");
             chapterInfo.put("content", "您的阅币余额不足,请充值!");
             return chapterInfo;
         }
         //书币充足,解锁本章
         userCoinMapper.addCoinByUserId(userInfo.getUserId(), -discountPrice);
+        logger.info("书币充足,解锁本章");
         //统计消费
         consumeService.addConsume(userInfo.getUserId(), bookId, chapterId, discountPrice);
         //将用户阅读了该章节存入用户资产中
@@ -338,6 +375,7 @@ public class BookInfoServiceImpl implements BookInfoService {
         assetNew.setCreateTime(new Date());
         assetNew.setTableIndex(tableIndex);
         userAssetMapper.insertSelective(assetNew);
+        logger.info("将用户阅读了该章节存入用户资产中");
         return chapterInfo;
     }
 

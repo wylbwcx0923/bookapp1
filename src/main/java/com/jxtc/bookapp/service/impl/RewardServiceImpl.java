@@ -7,6 +7,7 @@ import com.jxtc.bookapp.mapper.app.UserCoinMapper;
 import com.jxtc.bookapp.service.ConsumeService;
 import com.jxtc.bookapp.service.RedisService;
 import com.jxtc.bookapp.service.RewardService;
+import com.jxtc.bookapp.service.UserCouponService;
 import com.jxtc.bookapp.utils.PageResult;
 import net.sf.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +28,11 @@ public class RewardServiceImpl implements RewardService {
     private ConsumeService consumeService;
     @Autowired
     private UserCoinMapper userCoinMapper;
+    @Autowired
+    private UserCouponService userCouponService;
 
     @Override
-    public int insert(Reward reward) {
+    public int insert(Reward reward, Integer couponId) {
         //判断用户的打赏类型
         int type = reward.getType();
         int cost = 0;//打赏花费
@@ -50,6 +53,17 @@ public class RewardServiceImpl implements RewardService {
             case ApiConstant.RewardType.CARS://豪车
                 cost = num * ApiConstant.RewardAmount.CARS;
                 break;
+        }
+        //如果打赏使用了优惠券
+        if (couponId != null && couponId != 0) {
+            System.out.println(couponId);
+            reward.setAmount(cost);
+            reward.setCreateTime(new Date());
+            //打赏成功,记录消费
+            userCouponService.useCouponById(couponId);
+            //清除打赏列表的缓存
+            redisService.remove(reward.getBookId() + "reward");
+            return rewardMapper.insert(reward);
         }
         //判断当前用户的余额是否能够本次打赏消费
         UserCoinExample example = new UserCoinExample();

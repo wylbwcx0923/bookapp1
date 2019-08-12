@@ -362,7 +362,11 @@ public class UserInfoServiceImpl implements UserInfoService {
         }
         page.setPageList(userInfos);
         UserInfoExample example = new UserInfoExample();
-        example.createCriteria();
+        if (StringUtils.isEmpty(userId)) {
+            example.createCriteria();
+        } else {
+            example.createCriteria().andUserIdEqualTo(userId);
+        }
         int total = userInfoMapper.countByExample(example);
         page.setTotal(total);
         return page;

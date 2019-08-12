@@ -1,6 +1,7 @@
 package com.jxtc.bookapp.service.impl;
 
 import com.jxtc.bookapp.config.ApiConstant;
+import com.jxtc.bookapp.entity.BookInfo;
 import com.jxtc.bookapp.entity.BookReview;
 import com.jxtc.bookapp.entity.BookReviewExample;
 import com.jxtc.bookapp.entity.UserInfo;
@@ -160,5 +161,26 @@ public class BookReviewServiceImpl implements BookReviewService {
         redisService.remove(bookReview.getBookId() + "review");
         redisService.remove(bookReview.getUserId() + "review");
         bookReviewMapper.praise(id, praise);
+    }
+
+    @Override
+    public PageResult<BookInfo> getHaveReviewBookList(String bookName, int pageIndex, int pageSize) {
+        PageResult<BookInfo> page = new PageResult<>();
+        page.setPageIndex(pageIndex);
+        page.setPageSize(pageSize);
+        int offset = (pageIndex - 1) * pageSize;
+        List<BookInfo> reviewList = bookReviewMapper.selectHaveReviewBookList(bookName, offset, pageSize);
+        if (reviewList != null && reviewList.size() > 0) {
+            BookReviewExample example = new BookReviewExample();
+            for (BookInfo bookInfo : reviewList) {
+                example.createCriteria().andBookIdEqualTo(bookInfo.getBookId());
+                int count = bookReviewMapper.countByExample(example);
+                bookInfo.setHitsCount(count);
+            }
+        }
+        int total = bookReviewMapper.countHaveReviewBook(bookName);
+        page.setTotal(total);
+        page.setPageList(reviewList);
+        return page;
     }
 }

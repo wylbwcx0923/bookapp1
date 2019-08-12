@@ -10,13 +10,7 @@ import java.util.List;
 
 public interface BannerService {
 
-    /**
-     * 轮播图素材上传
-     *
-     * @param uploadFile
-     * @param materialName
-     */
-    void materialUpload(MultipartFile uploadFile, String materialName);
+
 
     /**
      * 添加banner位

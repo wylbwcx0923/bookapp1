@@ -1,6 +1,7 @@
 package com.jxtc.bookapp.service.impl;
 
 import com.jxtc.bookapp.entity.Order;
+import com.jxtc.bookapp.entity.OrderCount;
 import com.jxtc.bookapp.entity.OrderExample;
 import com.jxtc.bookapp.entity.PageCountTotal;
 import com.jxtc.bookapp.mapper.app.OrderMapper;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -68,6 +70,12 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orders = orderMapper.selectOrderListByStatus(status, startTime, endTime, offset, pageSize);
         pageResult.setPageList(orders);
         return pageResult;
+    }
+
+    @Override
+    public List<OrderCount> getOrderDayList(String startTime, String endTime) {
+        List<OrderCount> orderCounts = orderMapper.selectOrderListByDay(3, startTime, endTime);
+        return orderCounts;
     }
 
 

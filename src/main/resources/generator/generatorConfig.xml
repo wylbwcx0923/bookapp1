@@ -28,11 +28,11 @@
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
         <!-- 生成DAO的包名和位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.jxtc.bookapp.mapper" targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.jxtc.bookapp.mapper.app" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
         <!-- 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名-->
-        <table tableName="vip_user" domainObjectName="UserVip" enableCountByExample="true"
+        <table tableName="material" domainObjectName="Material" enableCountByExample="true"
                enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
                selectByExampleQueryId="true"></table>
     </context>

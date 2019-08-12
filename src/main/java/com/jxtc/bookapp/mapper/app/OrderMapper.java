@@ -1,6 +1,7 @@
 package com.jxtc.bookapp.mapper.app;
 
 import com.jxtc.bookapp.entity.Order;
+import com.jxtc.bookapp.entity.OrderCount;
 import com.jxtc.bookapp.entity.OrderExample;
 import com.jxtc.bookapp.entity.PageCountTotal;
 import org.apache.ibatis.annotations.Param;
@@ -37,4 +38,6 @@ public interface OrderMapper {
     int countStatusOrders(@Param("status") int status, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
     List<Order> selectOrderListByStatus(@Param("status") int status, @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("offset") int offset, @Param("size") int size);
+
+    List<OrderCount> selectOrderListByDay(@Param("type") Integer type, @Param("startTime") String startTime, @Param("endTime") String endTime);
 }

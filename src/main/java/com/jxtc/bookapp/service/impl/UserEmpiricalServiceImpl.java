@@ -95,6 +95,7 @@ public class UserEmpiricalServiceImpl implements UserEmpiricalService {
         }
         //修改用户的经验值和等级和折扣
         userEmpiricalMapper.updateByExampleSelective(empiricalUp, empiricalExample);
+        redisService.remove("EMPIRICAL_" + userId);
     }
 
 

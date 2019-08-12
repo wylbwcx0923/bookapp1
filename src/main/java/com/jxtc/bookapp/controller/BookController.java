@@ -39,6 +39,16 @@ public class BookController {
         return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", map);
     }
 
+    @ApiOperation(value = "获取章节详情H5调用", notes = "获取章节详情H5调用", httpMethod = "GET")
+    @RequestMapping(value = "getchapterinfo/h5", method = RequestMethod.GET)
+    @ResponseBody
+    public JXResult getChapterInfoForH5(@ApiParam(value = "书籍id", required = false)
+                                        @RequestParam(value = "bookId", defaultValue = "", required = false) int bookId,
+                                        @ApiParam(value = "章节id", required = false)
+                                        @RequestParam(value = "chapterId", defaultValue = "", required = false) int chapterId) {
+        Map<String, Object> map = bookInfoService.getChapterInfoForH5(bookId, chapterId);
+        return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", map);
+    }
 
     @ApiOperation(value = "获取图书详情", notes = "获取图书详情", httpMethod = "GET")
     @RequestMapping(value = "getbookinfo", method = RequestMethod.GET)

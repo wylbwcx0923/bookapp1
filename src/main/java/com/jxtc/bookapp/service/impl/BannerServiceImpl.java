@@ -37,56 +37,6 @@ public class BannerServiceImpl implements BannerService {
     @Autowired
     private RedisService redisService;
 
-
-    @Override
-    public void materialUpload(MultipartFile uploadFile, String materialName) {
-        if (uploadFile == null) {
-            return;
-        }
-        InputStream inputStream = null;
-        try {
-            inputStream = uploadFile.getInputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        final String ENDPOINT = "oss-cn-hangzhou.aliyuncs.com";
-        final String ACCESSKEYID = "KtH6vdN2XMCqoYDi";
-        final String ACCESSKEYSECRET = "3ZPnJ6JVvdUdO1rv4X5GzKiIxmV9Rq";
-        final String BUCKETNAME = "jxxs-app-img";
-        String url = null;
-        String key = "banner/" + TimeUtil.getTime().get("year") + "/" + TimeUtil.getTime().get("month") + "/" + TimeUtil.getTime().get("day") + "/" + System.currentTimeMillis() + ".jpg";
-        OSSClient ossClient = new OSSClient(ENDPOINT, ACCESSKEYID, ACCESSKEYSECRET);
-        try {
-            // 带进度条的上传
-            ossClient.putObject(new PutObjectRequest(BUCKETNAME, key, inputStream));
-        } catch (OSSException oe) {
-            oe.printStackTrace();
-            key = null;
-        } catch (ClientException ce) {
-            ce.printStackTrace();
-            key = null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            key = null;
-        } finally {
-            ossClient.shutdown();
-        }
-        if (key != null) {
-            // 拼接文件访问路径。由于拼接的字符串大多为String对象，而不是""的形式，所以直接用+拼接的方式没有优势
-            StringBuffer sb = new StringBuffer();
-            sb.append("http://").append(BUCKETNAME).append(".").append(ENDPOINT
-            ).append("/").append(key);
-            url = sb.toString();
-        }
-        //将上传到oss的素材的路径保存到数据库
-        Material material = new Material();
-        material.setName(materialName);
-        material.setUrl(url);
-        material.setCreateTime(new Date());
-        materialMapper.insertSelective(material);
-        logger.info("图片上传成功");
-    }
-
     @Override
     public void insertBanner(Banner banner) {
         bannerMapper.insertSelective(banner);

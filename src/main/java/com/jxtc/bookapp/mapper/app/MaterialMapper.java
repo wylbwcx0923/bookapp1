@@ -2,9 +2,10 @@ package com.jxtc.bookapp.mapper.app;
 
 import com.jxtc.bookapp.entity.Material;
 import com.jxtc.bookapp.entity.MaterialExample;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 
 public interface MaterialMapper {
     int countByExample(MaterialExample example);
@@ -28,4 +29,8 @@ public interface MaterialMapper {
     int updateByPrimaryKeySelective(Material record);
 
     int updateByPrimaryKey(Material record);
+
+    List<Material> selectListByPage(@Param("name") String name, @Param("offset") int offset, @Param("size") int size);
+
+    int countByName(@Param("name") String name);
 }

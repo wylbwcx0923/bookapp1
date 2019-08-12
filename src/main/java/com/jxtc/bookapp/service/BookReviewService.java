@@ -1,6 +1,7 @@
 package com.jxtc.bookapp.service;
 
-import com.jxtc.bookapp.entity.BookReview;
+
+import com.jxtc.bookapp.entity.*;
 import com.jxtc.bookapp.utils.PageResult;
 
 /**
@@ -59,6 +60,16 @@ public interface BookReviewService {
      * @param type
      */
     void praise(String userId, int id, int type);
+
+    /**
+     * 获得有书评的书籍列表
+     *
+     * @param bookName
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    PageResult<BookInfo> getHaveReviewBookList(String bookName, int pageIndex, int pageSize);
 
 
 }

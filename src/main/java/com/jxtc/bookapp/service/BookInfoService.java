@@ -31,4 +31,7 @@ public interface BookInfoService {
 
     //根据不同的筛选条件查询图书列表
     PageResult<BookInfo> getBookInfoListByParam(Integer bookId, String bookName, String author, Integer status, int pageIndex, int pageSize);
+
+    //获得章节详情,供H5调用
+    Map<String, Object> getChapterInfoForH5(int bookId, int chapterId);
 }

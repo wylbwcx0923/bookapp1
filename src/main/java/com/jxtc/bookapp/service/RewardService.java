@@ -17,7 +17,7 @@ public interface RewardService {
      * @param reward
      */
     @Transactional
-    int insert(Reward reward);
+    int insert(Reward reward,Integer couponId);
 
     /**
      * 获得打赏排行

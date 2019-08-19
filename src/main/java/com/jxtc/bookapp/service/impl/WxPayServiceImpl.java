@@ -404,6 +404,12 @@ public class WxPayServiceImpl implements WxPayService {
             calendar.setTime(vip.getExpireTime());
             calendar.add(Calendar.DAY_OF_YEAR, -1);//过期的前一天扣费
             vip.setPayTime(calendar.getTime());//签约成功
+            //修改用户的类型
+            UserInfo userInfoUp = new UserInfo();
+            userInfoUp.setType(vip.getVipType());
+            UserInfoExample exampleUser = new UserInfoExample();
+            exampleUser.createCriteria().andUserIdEqualTo(vip.getUserId());
+            userInfoMapper.updateByExampleSelective(userInfoUp, exampleUser);
         }
         if ("DELETE".equals(changeType)) {
             //此时为解约

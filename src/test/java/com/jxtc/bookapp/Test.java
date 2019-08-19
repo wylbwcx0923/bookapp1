@@ -9,6 +9,7 @@ public class Test {
      * @param args
      */
     public static void main(String[] args) {
+
         System.out.print("请您输入一个算术式:");
         String formula = new Scanner(System.in).next();
         int result = compute(formula);

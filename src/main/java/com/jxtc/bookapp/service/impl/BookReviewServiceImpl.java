@@ -171,10 +171,8 @@ public class BookReviewServiceImpl implements BookReviewService {
         int offset = (pageIndex - 1) * pageSize;
         List<BookInfo> reviewList = bookReviewMapper.selectHaveReviewBookList(bookName, offset, pageSize);
         if (reviewList != null && reviewList.size() > 0) {
-            BookReviewExample example = new BookReviewExample();
             for (BookInfo bookInfo : reviewList) {
-                example.createCriteria().andBookIdEqualTo(bookInfo.getBookId());
-                int count = bookReviewMapper.countByExample(example);
+                int count = bookReviewMapper.countByBookId(bookInfo.getBookId());
                 bookInfo.setHitsCount(count);
             }
         }

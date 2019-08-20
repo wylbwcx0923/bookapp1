@@ -29,8 +29,6 @@ import java.util.List;
 public class BannerServiceImpl implements BannerService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
-    private MaterialMapper materialMapper;
-    @Autowired
     private BannerMapper bannerMapper;
     @Autowired
     private BannerImgsMapper bannerImgsMapper;

@@ -25,7 +25,7 @@ import java.net.UnknownHostException;
 import java.util.*;
 
 /**
- * @author wyl
+ * @author 不忘初心
  * spring boot定时任务配置
  */
 @Service

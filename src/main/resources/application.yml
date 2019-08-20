@@ -5,13 +5,13 @@ spring:
   #配置MYSQL数据库
   datasource:
     dbapp:
-      url: jdbc:mysql://192.168.0.114:3306/bookapp
+      url: jdbc:mysql://192.168.0.119:3306/bookapp
       username: root
       password: root
       type: com.alibaba.druid.pool.DruidDataSource
       driver-class-name: com.mysql.jdbc.Driver
     dbbook:
-      url: jdbc:mysql://192.168.0.114:3306/bc_source
+      url: jdbc:mysql://192.168.0.119:3306/bc_source
       username: root
       password: root
       type: com.alibaba.druid.pool.DruidDataSource

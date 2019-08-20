@@ -39,6 +39,7 @@ public class ApiConstant {
     //时间间隔
     public class Timer {
         public static final long ONE_MIN = 60;//一分钟
+        public static final long TEN_MIN = 60 * 10;//十分钟
         public static final long ONE_DAY = 86400;//一天
         public static final long THREE_DAY = 86400 * 3;//三天
 

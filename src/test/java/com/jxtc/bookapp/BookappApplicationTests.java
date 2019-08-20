@@ -21,10 +21,7 @@ public class BookappApplicationTests {
 
     @Test
     public void contextLoads() {
-        List<OrderCount> orderCounts = orderMapper.selectOrderListByDay(3, null, null);
-        for (OrderCount orderCount : orderCounts) {
-            System.out.println(orderCount);
-        }
+
     }
 
 }

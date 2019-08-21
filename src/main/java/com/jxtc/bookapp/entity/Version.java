@@ -11,6 +11,8 @@ public class Version {
 
     private String des;
 
+    private String appSize;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateTime;
 
@@ -54,5 +56,13 @@ public class Version {
 
     public void setDownloadUrl(String downloadUrl) {
         this.downloadUrl = downloadUrl == null ? null : downloadUrl.trim();
+    }
+
+    public String getAppSize() {
+        return appSize;
+    }
+
+    public void setAppSize(String appSize) {
+        this.appSize = appSize;
     }
 }

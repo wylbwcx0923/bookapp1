@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,41 +28,46 @@ public class VersionServiceImpl implements VersionService {
     private VersionMapper versionMapper;
     @Autowired
     private RedisService redisService;
+
     @Override
     public Version getBestNewVersion() {
-        Version version=new Version();
+        Version version = new Version();
         //从缓存中取最新的系统版本
-        String redisVersion= (String) redisService.get("new_jxapp_version");
-        if (StringUtils.isEmpty(redisVersion)){
+        String redisVersion = (String) redisService.get("new_jxapp_version");
+        if (StringUtils.isEmpty(redisVersion)) {
             //缓存取不到的话去MySQL中取
             version = versionMapper.selectBaseNewVersion();
+            String[] versionAndSize = version.getVersion().split(",");
+            version.setAppSize(versionAndSize[0]);
+            version.setVersion(versionAndSize[1]);
             //将取得的版本对象放入redis中
-            String versionStr=JSONObject.fromObject(version).toString();
-            redisService.set("new_jxapp_version",versionStr);
-        }else {
+            String versionStr = JSONObject.fromObject(version).toString();
+            redisService.set("new_jxapp_version", versionStr);
+        } else {
             //直接从redis中取
-            JSONObject object=JSONObject.fromObject(redisVersion);
-            version= (Version) JSONObject.toBean(object,Version.class);
+            JSONObject object = JSONObject.fromObject(redisVersion);
+            version = (Version) JSONObject.toBean(object, Version.class);
         }
         return version;
     }
 
     @Override
-    public boolean updateAppToOss(MultipartFile file,Version version) {
-        Map<String,Object> uploadRes=apkUpload(file);
-        int rows=0;
-        if (uploadRes != null&&uploadRes.size()>0) {
-            boolean flag= (boolean) uploadRes.get("flag");
-            if (flag){
+    public boolean updateAppToOss(MultipartFile file, Version version) {
+        Map<String, Object> uploadRes = apkUpload(file);
+        int rows = 0;
+        if (uploadRes != null && uploadRes.size() > 0) {
+            boolean flag = (boolean) uploadRes.get("flag");
+            if (flag) {
                 //程序执行至此,说明文件上传成功
-                String apkUrl= (String) uploadRes.get("url");
+                String apkUrl = (String) uploadRes.get("url");
                 System.out.println(apkUrl);
                 version.setDownloadUrl(apkUrl);
                 version.setUpdateTime(new Date());
+                version.setVersion(uploadRes.get("appsize") + "," + version.getVersion());
                 rows = versionMapper.insertSelective(version);
             }
         }
-        if (rows>0){
+        if (rows > 0) {
             redisService.remove("new_jxapp_version");
             return true;
         }
@@ -70,19 +76,27 @@ public class VersionServiceImpl implements VersionService {
 
     /**
      * 上传apk文件的方法
+     *
      * @param file
      * @return
      */
-    private Map<String,Object> apkUpload(MultipartFile file) {
-        Map<String,Object> result=new HashMap<>();
+    private Map<String, Object> apkUpload(MultipartFile file) {
+        Map<String, Object> result = new HashMap<>();
         if (file == null) {
-            result.put("flag",false);
-            result.put("msg","文件为空请重新选择");
+            result.put("flag", false);
+            result.put("msg", "文件为空请重新选择");
             return result;
         }
         InputStream inputStream = null;
         try {
             inputStream = file.getInputStream();
+            double available = inputStream.available();//获取的是文件的字节大小
+            System.out.println("上传文件的大小为:" + available);
+            //将文件大小转化为兆B级别
+            double sizeDouble = available / 1024 / 1024;
+            //定义数字格式化
+            String size = String.format("%.2f",sizeDouble) + "MB";
+            result.put("appsize", size);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -115,8 +129,8 @@ public class VersionServiceImpl implements VersionService {
             ).append("/").append(key);
             url = sb.toString();
         }
-        result.put("flag",true);
-        result.put("url",url);
+        result.put("flag", true);
+        result.put("url", url);
         System.out.println(url);
         return result;
     }

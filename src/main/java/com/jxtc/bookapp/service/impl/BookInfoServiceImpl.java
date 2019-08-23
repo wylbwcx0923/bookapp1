@@ -172,11 +172,11 @@ public class BookInfoServiceImpl implements BookInfoService {
      */
     @Override
     public Map<String, Object> readBook(Integer bookId, Integer chapterId, String userId) {
+        Map<String, Object> map = getChapterInfo(bookId, chapterId);
+        ChapterInfo chapterInfo = (ChapterInfo) map.get("chapterInfo");
         if (StringUtils.isEmpty(userId)) {
             //如果为未登录状态
             logger.info("用户未登录状态");
-            Map<String, Object> map = getChapterInfo(bookId, chapterId);
-            ChapterInfo chapterInfo = (ChapterInfo) map.get("chapterInfo");
             if (chapterInfo.getIsFree() != 1) {
                 map.put("content", "您还没有登录,登录即可阅读更多章节!");
             }
@@ -184,6 +184,14 @@ public class BookInfoServiceImpl implements BookInfoService {
         }
         //先判断用户类型,如果包年用户直接阅读
         UserInfo userInfo = userInfoService.getUserInfoByLocal(userId);
+        //迎新活动,新用户三天免费阅读
+        Date createTime = userInfo.getCreateTime();
+        if (new Date().getTime() - createTime.getTime() <= ApiConstant.Timer.THREE_DAY_MSEC) {
+            logger.info("新用户注册,三天限免阅读");
+            chapterInfo.setIsFree((byte) 1);
+            map.put("chapterInfo",chapterInfo);
+            return map;
+        }
         int userType = userInfo.getType();
         //包年看所有
         if (userType == ApiConstant.UserType.VIP_YEAR_USER) {

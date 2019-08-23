@@ -147,7 +147,6 @@ public class BookReviewServiceImpl implements BookReviewService {
     public void praise(String userId, int id, int type) {
         BookReview bookReview = bookReviewMapper.selectByPrimaryKey(id);
         int praise = bookReview.getPraise() == null ? 0 : bookReview.getPraise();
-
         //如果是点赞
         if (type == ApiConstant.BookReviewPraiseType.LIKE) {
             //用户点赞完毕记录点赞的用户

@@ -62,6 +62,7 @@ public class BangDanServiceImpl implements BangDanService {
 
     @Override
     public int updateBangDan(Bangdan bangdan) {
+        redisService.remove(bangdan.getBangdanId() + "bangdan");
         return bangdanMapper.updateByPrimaryKeySelective(bangdan);
     }
 

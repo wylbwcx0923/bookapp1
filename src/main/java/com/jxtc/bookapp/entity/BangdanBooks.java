@@ -1,5 +1,6 @@
 package com.jxtc.bookapp.entity;
 
+
 import java.util.Date;
 
 public class BangdanBooks {
@@ -10,7 +11,7 @@ public class BangdanBooks {
     private Integer bookId;
 
     private Integer sort;
-    
+
     private Date createTime;
 
     private Date updateTime;

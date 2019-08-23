@@ -1,7 +1,5 @@
 package com.jxtc.bookapp.service;
 
-import java.util.Map;
-
 /**
  * 短信验证服务
  */

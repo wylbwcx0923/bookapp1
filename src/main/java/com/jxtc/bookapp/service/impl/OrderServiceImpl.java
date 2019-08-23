@@ -51,6 +51,7 @@ public class OrderServiceImpl implements OrderService {
         pageResult.setTotal(pageCountTotal.getTotal());
         //获得该页显示的所有数据
         int offset = (pageIndex - 1) * pageSize;
+        System.out.println("书名搜索的书名为:"+bookName);
         List<Order> orders = orderMapper.selectOrderListByParams(userId, bookName, startTime, endTime, offset, pageSize);
         pageResult.setPageList(orders);
         //设置查询的总金额

@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -95,7 +94,7 @@ public class VersionServiceImpl implements VersionService {
             //将文件大小转化为兆B级别
             double sizeDouble = available / 1024 / 1024;
             //定义数字格式化
-            String size = String.format("%.2f",sizeDouble) + "MB";
+            String size = String.format("%.2f", sizeDouble) + "MB";
             result.put("appsize", size);
         } catch (IOException e) {
             e.printStackTrace();
@@ -125,8 +124,7 @@ public class VersionServiceImpl implements VersionService {
         if (key != null) {
             // 拼接文件访问路径。由于拼接的字符串大多为String对象，而不是""的形式，所以直接用+拼接的方式没有优势
             StringBuffer sb = new StringBuffer();
-            sb.append("http://").append(BUCKETNAME).append(".").append(ENDPOINT
-            ).append("/").append(key);
+            sb.append("http://").append(BUCKETNAME).append(".").append(ENDPOINT).append("/").append(key);
             url = sb.toString();
         }
         result.put("flag", true);

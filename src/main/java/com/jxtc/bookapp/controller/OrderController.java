@@ -39,7 +39,8 @@ public class OrderController {
                                  @RequestParam(value = "pageIndex", defaultValue = "1", required = false) int pageIndex,
                                  @ApiParam(value = "每页显示数量", required = false)
                                  @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
-        PageResult<Order> page = orderService.getOrderByParams(bookName, startTime, endTime, userId, pageIndex, pageSize);
+        System.out.println("书名为:"+bookName);
+        PageResult<Order> page = orderService.getOrderByParams(userId,bookName,startTime,endTime,pageIndex,pageSize);
         return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", page);
     }
 

@@ -1,5 +1,6 @@
 package com.jxtc.bookapp.service.impl;
 
+import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.entity.Order;
 import com.jxtc.bookapp.entity.OrderCount;
 import com.jxtc.bookapp.entity.OrderExample;
@@ -10,9 +11,8 @@ import com.jxtc.bookapp.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 @Service
@@ -51,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
         pageResult.setTotal(pageCountTotal.getTotal());
         //获得该页显示的所有数据
         int offset = (pageIndex - 1) * pageSize;
-        System.out.println("书名搜索的书名为:"+bookName);
+        System.out.println("书名搜索的书名为:" + bookName);
         List<Order> orders = orderMapper.selectOrderListByParams(userId, bookName, startTime, endTime, offset, pageSize);
         pageResult.setPageList(orders);
         //设置查询的总金额
@@ -74,9 +74,56 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderCount> getOrderDayList(String startTime, String endTime) {
-        List<OrderCount> orderCounts = orderMapper.selectOrderListByDay(3, startTime, endTime);
-        return orderCounts;
+    public PageResult<OrderCount> getOrderDayList(String startTime, String endTime, int pageIndex, int pageSize) {
+        PageResult<OrderCount> page = new PageResult<>();
+        page.setPageIndex(pageIndex);
+        page.setPageSize(pageSize);
+        int total = orderMapper.countDays(startTime, endTime);
+        page.setTotal(total);
+        //普通订单列表
+        int offset = (pageIndex - 1) * pageSize;
+        List<OrderCount> orderCounts = orderMapper.selectOrderListByDay(3, startTime, endTime, offset, pageSize);
+        page.setPageList(orderCounts);
+        return page;
+    }
+
+    @Override
+    public Map<String, Object> getMonthOrder() {
+        Map<String, Object> map = new HashMap<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        //查询当日
+        List<Order> todayOrders = orderMapper.selectOrderByCreateTime(sdf.format(calendar.getTime()));
+        //查询昨日
+        calendar.add(Calendar.DAY_OF_YEAR, -1);
+        List<Order> yesterdayOrders = orderMapper.selectOrderByCreateTime(sdf.format(calendar.getTime()));
+        //查询本月
+        SimpleDateFormat sdfMonth = new SimpleDateFormat("yyyy-MM");
+        List<Order> monthOrders = orderMapper.selectOrderByCreateTime(sdfMonth.format(new Date()));
+        Map<String, Object> today = getOrderSumAndCount(todayOrders);
+        map.put("today", today);
+        Map<String, Object> yesterday = getOrderSumAndCount(yesterdayOrders);
+        map.put("yesterday", yesterday);
+        Map<String, Object> month = getOrderSumAndCount(monthOrders);
+        map.put("month", month);
+        return map;
+    }
+
+    private Map<String, Object> getOrderSumAndCount(List<Order> orders) {
+        Map<String, Object> map = new HashMap<>();
+        if (orders != null && orders.size() > 0) {
+            map.put("count", orders.size());
+            double sum = 0;
+            for (Order order : orders) {
+                sum += order.getAmount();
+            }
+            map.put("sum", sum / 100);
+        } else {
+            map.put("count", 0);
+            map.put("sum", 0.0);
+        }
+        return map;
     }
 
 

@@ -3,6 +3,7 @@ package com.jxtc.bookapp.service;
 import com.jxtc.bookapp.entity.BookInfo;
 import com.jxtc.bookapp.entity.ChapterInfo;
 import com.jxtc.bookapp.utils.PageResult;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -34,4 +35,15 @@ public interface BookInfoService {
 
     //获得章节详情,供H5调用
     Map<String, Object> getChapterInfoForH5(int bookId, int chapterId);
+
+    //修改图书信息
+    void updateBookInfo(BookInfo bookInfo);
+
+    //上传图书封面
+    String uploadBookPic(String bookId, MultipartFile file);
+
+    //修改章节内容
+    void updateChapterContent(int bookId,int chapterId,String content);
+
+
 }

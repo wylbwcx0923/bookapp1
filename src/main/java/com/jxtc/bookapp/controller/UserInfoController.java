@@ -129,4 +129,13 @@ public class UserInfoController {
         userInfoService.sendCoin(userId, coin);
         return new JXResult(true, ApiConstant.StatusCode.OK, "赠送成功");
     }
+
+    @RequestMapping(value = "/verb/user", method = RequestMethod.PUT)
+    @ApiOperation(value = "重置用户", notes = "重置用户", httpMethod = "PUT")
+    @ResponseBody
+    public JXResult verbUserByUserId(@ApiParam(value = "用户Id", required = false)
+                             @RequestParam(value = "userId", defaultValue = "", required = false) String userId) {
+        userInfoService.verbUser(userId);
+        return new JXResult(true, ApiConstant.StatusCode.OK, "用户重置成功");
+    }
 }

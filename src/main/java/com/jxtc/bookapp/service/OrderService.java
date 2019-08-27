@@ -58,5 +58,12 @@ public interface OrderService {
      * @param endTime
      * @return
      */
-    List<OrderCount> getOrderDayList(String startTime, String endTime);
+    PageResult<OrderCount> getOrderDayList(String startTime, String endTime, int pageIndex, int pageSize);
+
+    /**
+     * 获得当天.昨天.当月的订单统计
+     *
+     * @return
+     */
+    Map<String, Object> getMonthOrder();
 }

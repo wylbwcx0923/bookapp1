@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @Api(tags = "订单接口", value = "订单接口")
 @RestController
@@ -39,8 +40,8 @@ public class OrderController {
                                  @RequestParam(value = "pageIndex", defaultValue = "1", required = false) int pageIndex,
                                  @ApiParam(value = "每页显示数量", required = false)
                                  @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
-        System.out.println("书名为:"+bookName);
-        PageResult<Order> page = orderService.getOrderByParams(userId,bookName,startTime,endTime,pageIndex,pageSize);
+        System.out.println("书名为:" + bookName);
+        PageResult<Order> page = orderService.getOrderByParams(userId, bookName, startTime, endTime, pageIndex, pageSize);
         return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", page);
     }
 
@@ -73,8 +74,19 @@ public class OrderController {
     public JXResult getOrderListByPage(@ApiParam(value = "查询的起始时间(格式:yyyy-MM-dd)", required = false)
                                        @RequestParam(value = "startTime", defaultValue = "", required = false) String startTime,
                                        @ApiParam(value = "查询的结束时间(格式:yyyy-MM-dd)", required = false)
-                                       @RequestParam(value = "endTime", defaultValue = "", required = false) String endTime) {
-        List<OrderCount> orderDayList = orderService.getOrderDayList(startTime, endTime);
+                                       @RequestParam(value = "endTime", defaultValue = "", required = false) String endTime,
+                                       @ApiParam(value = "当前页", required = false)
+                                       @RequestParam(value = "pageIndex", defaultValue = "1", required = false) int pageIndex,
+                                       @ApiParam(value = "每页显示数量", required = false)
+                                       @RequestParam(value = "pageSize", defaultValue = "30", required = false) int pageSize) {
+        PageResult<OrderCount> orderDayList = orderService.getOrderDayList(startTime, endTime, pageIndex, pageSize);
         return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", orderDayList);
+    }
+
+    @ApiOperation(value = "获得今日,昨日,本月的订单统计", notes = "获得今日,昨日,本月的订单统计", httpMethod = "GET")
+    @RequestMapping(value = "count/order", method = RequestMethod.GET)
+    public JXResult getOrderCountByTime() {
+        Map<String, Object> map = orderService.getMonthOrder();
+        return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", map);
     }
 }

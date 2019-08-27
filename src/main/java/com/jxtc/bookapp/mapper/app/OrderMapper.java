@@ -39,5 +39,10 @@ public interface OrderMapper {
 
     List<Order> selectOrderListByStatus(@Param("status") int status, @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("offset") int offset, @Param("size") int size);
 
-    List<OrderCount> selectOrderListByDay(@Param("type") Integer type, @Param("startTime") String startTime, @Param("endTime") String endTime);
+    List<OrderCount> selectOrderListByDay(@Param("type") Integer type, @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("offset") int offset, @Param("size") int size);
+
+    List<Order> selectOrderByCreateTime(@Param("createTime") String createTime);
+
+    int countDays(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
 }

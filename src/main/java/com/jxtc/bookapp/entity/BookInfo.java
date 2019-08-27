@@ -1,9 +1,10 @@
 package com.jxtc.bookapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
-public class BookInfo {
+public class BookInfo  {
 
     private Integer id;
 

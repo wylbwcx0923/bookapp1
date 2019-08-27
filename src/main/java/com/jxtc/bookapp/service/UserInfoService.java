@@ -98,4 +98,7 @@ public interface UserInfoService {
      * @param coin
      */
     void sendCoin(String userId, int coin);
+
+    //重置用户
+    void verbUser(String userId);
 }

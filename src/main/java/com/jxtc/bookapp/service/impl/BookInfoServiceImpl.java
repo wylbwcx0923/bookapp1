@@ -1,5 +1,10 @@
 package com.jxtc.bookapp.service.impl;
 
+import com.aliyun.oss.ClientException;
+import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.OSSException;
+import com.aliyun.oss.model.PutObjectRequest;
+import com.jxtc.bookapp.config.AliyunOSSConfig;
 import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.config.OSSCacheKey;
 import com.jxtc.bookapp.config.RedisKey;
@@ -13,6 +18,7 @@ import com.jxtc.bookapp.mapper.book.ChapterInfoMapper;
 import com.jxtc.bookapp.service.*;
 import com.jxtc.bookapp.utils.HttpClientUtil;
 import com.jxtc.bookapp.utils.PageResult;
+import com.jxtc.bookapp.utils.TimeUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -22,7 +28,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -53,6 +62,10 @@ public class BookInfoServiceImpl implements BookInfoService {
     private UserCoinMapper userCoinMapper;
     @Autowired
     private UserEmpiricalService userEmpiricalService;
+    @Autowired
+    private AliyunOSSConfig aliyunOSSConfig;
+    @Autowired
+    private SearchKeywordsService searchKeywordsService;
 
     /**
      * 获得章节详情
@@ -110,7 +123,7 @@ public class BookInfoServiceImpl implements BookInfoService {
                 int vipBook = checkVIPBookByBookId(bookId);
                 bookInfo.setIsVIP(vipBook);
                 String infoStr = JSONObject.fromObject(bookInfo).toString();
-                redisService.set(bookId + "", infoStr, ApiConstant.Timer.ONE_DAY);
+                redisService.set(bookId + "_BOOKINFO", infoStr, ApiConstant.Timer.ONE_DAY);
             }
         }
         return bookInfo;
@@ -189,7 +202,7 @@ public class BookInfoServiceImpl implements BookInfoService {
         if (new Date().getTime() - createTime.getTime() <= ApiConstant.Timer.THREE_DAY_MSEC) {
             logger.info("新用户注册,三天限免阅读");
             chapterInfo.setIsFree((byte) 1);
-            map.put("chapterInfo",chapterInfo);
+            map.put("chapterInfo", chapterInfo);
             return map;
         }
         int userType = userInfo.getType();
@@ -227,6 +240,7 @@ public class BookInfoServiceImpl implements BookInfoService {
      */
     @Override
     public List<BookInfo> searchBook(String keyWords, int pageIndex, int pageSize) {
+        System.out.println(keyWords);
         List<BookInfo> bookInfos = new ArrayList<>();
         //先从关键字库中查询
         bookInfos.addAll(bookInfoMapper.selectBooksLikeKeyWords(keyWords));
@@ -240,6 +254,8 @@ public class BookInfoServiceImpl implements BookInfoService {
             bookInfos.get(i).setPicUrl(ApiConstant.Config.IMGPATH + bookInfos.get(i).getPicUrl());
             books.add(bookInfos.get(i));
         }
+        //记录用户搜索的关键词
+        searchKeywordsService.addKeyWords(keyWords);
         return books;
     }
 
@@ -314,7 +330,7 @@ public class BookInfoServiceImpl implements BookInfoService {
             content = sb.append(result.replace("\r\n", "</p><p>").replace("\n", "</p><p>"))
                     .append("<p>").toString();
             //保存到redis中
-            redisService.set("H5chapterContent_" + bookId + "_" + chapterId, content, ApiConstant.Timer.THREE_DAY);
+            redisService.set("H5chapterContent_" + bookId + "_" + chapterId, content);
         }
         //从缓存中取章节的详情
         ChapterInfo chapterInfo = getChapterInfoByRedis(bookId, chapterId);
@@ -326,6 +342,63 @@ public class BookInfoServiceImpl implements BookInfoService {
         map.put("chapterInfo", chapterInfo);
         map.put("content", content);
         return map;
+    }
+
+    @Override
+    public void updateBookInfo(BookInfo bookInfo) {
+        bookInfoMapper.updateByPrimaryKeySelective(bookInfo);
+        redisService.remove("*bangdan");
+        redisService.remove(bookInfo.getBookId() + "_BOOKINFO");
+    }
+
+    @Override
+    public String uploadBookPic(String bookId, MultipartFile file) {
+        if (file == null) {
+            return "文件为空请重新选择";
+        }
+        InputStream inputStream = null;
+        try {
+            inputStream = file.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        final String ENDPOINT = aliyunOSSConfig.getEndpoint();
+        final String ACCESSKEYID = aliyunOSSConfig.getAccessKeyId();
+        final String ACCESSKEYSECRET = aliyunOSSConfig.getAccessKeySecret();
+        final String BUCKETNAME = "jxxs-pic";
+        String url = null;
+        String key = "pic/" + bookId + "/" + bookId + ".jpg";
+        OSSClient ossClient = new OSSClient(ENDPOINT, ACCESSKEYID, ACCESSKEYSECRET);
+        try {
+            // 带进度条的上传
+            ossClient.putObject(new PutObjectRequest(BUCKETNAME, key, inputStream));
+        } catch (OSSException oe) {
+            oe.printStackTrace();
+            key = null;
+        } catch (ClientException ce) {
+            ce.printStackTrace();
+            key = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            key = null;
+        } finally {
+            ossClient.shutdown();
+        }
+        if (key != null) {
+            // 拼接文件访问路径。由于拼接的字符串大多为String对象，而不是""的形式，所以直接用+拼接的方式没有优势
+            StringBuffer sb = new StringBuffer();
+            sb.append("http://").append(BUCKETNAME).append(".").append(ENDPOINT
+            ).append("/").append(key);
+            url = sb.toString();
+        }
+        logger.info("图片上传成功");
+        return url;
+    }
+
+    @Override
+    public void updateChapterContent(int bookId, int chapterId, String content) {
+        saveChapterContentInRedis(bookId, chapterId, content);
+        redisService.set("H5chapterContent_" + bookId + "_" + chapterId, content);
     }
 
     /**
@@ -408,7 +481,7 @@ public class BookInfoServiceImpl implements BookInfoService {
     private void savaChapterInfoInRedis(Integer bookId, Integer chapterId, ChapterInfo chapterInfo) {
         String getChapterInfoKey = RedisKey.getChapterInfoKey(bookId, chapterId);
         String chapterStr = JSONObject.fromObject(chapterInfo).toString();
-        redisService.set(getChapterInfoKey, chapterStr, ApiConstant.Timer.ONE_DAY);
+        redisService.set(getChapterInfoKey, chapterStr);
     }
 
     /**
@@ -420,7 +493,7 @@ public class BookInfoServiceImpl implements BookInfoService {
      */
     private void saveChapterContentInRedis(Integer bookId, Integer chapterId, String content) {
         String getChapterContentKey = RedisKey.getChapterContentKey(bookId, chapterId);
-        redisService.set(getChapterContentKey, content, ApiConstant.Timer.ONE_DAY);
+        redisService.set(getChapterContentKey, content);
     }
 
     /**

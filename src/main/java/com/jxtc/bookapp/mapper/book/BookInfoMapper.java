@@ -15,7 +15,7 @@ public interface BookInfoMapper {
 
     BookInfoWithBLOBs selectByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(BookInfoWithBLOBs record);
+    int updateByPrimaryKeySelective(BookInfo record);
 
     int updateByPrimaryKeyWithBLOBs(BookInfoWithBLOBs record);
 
@@ -36,4 +36,6 @@ public interface BookInfoMapper {
     int countBooksByParams(@Param("bookId") Integer bookId, @Param("bookName") String bookName, @Param("author") String author, @Param("status") Integer status);
 
     List<BookInfo> selectBooksByParams(@Param("bookId") Integer bookId, @Param("bookName") String bookName, @Param("author") String author, @Param("status") Integer status, @Param("offset") int offset, @Param("size") int size);
+
+    int updateBookInfoByBookId(BookInfo bookInfo);
 }

@@ -11,10 +11,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -134,5 +132,37 @@ public class BookController {
         System.out.println("author = [" + author + "], bookName = [" + bookName + "], bookId = [" + bookId + "], status = [" + status + "], pageIndex = [" + pageIndex + "], pageSize = [" + pageSize + "]");
         PageResult<BookInfo> pageResult = bookInfoService.getBookInfoListByParam(bookId, bookName, author, status, pageIndex, pageSize);
         return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", pageResult);
+    }
+
+    @ApiOperation(value = "上传图书封面接口", notes = "上传图书封面接口", httpMethod = "POST")
+    @ResponseBody
+    @RequestMapping(value = "upload/book/pic", method = RequestMethod.POST)
+    public JXResult uploadBookPic(@ApiParam(value = "书id", required = false)
+                                  @RequestParam(value = "bookId", required = false) String bookId,
+                                  @RequestParam("file") MultipartFile uploadFile) {
+        String result = bookInfoService.uploadBookPic(bookId, uploadFile);
+        return new JXResult(true, ApiConstant.StatusCode.OK, "上传成功", result);
+    }
+
+    @ApiOperation(value = "修改图书信息接口", notes = "修改图书信息接口", httpMethod = "PUT")
+    @ResponseBody
+    @RequestMapping(value = "update/book/info", method = RequestMethod.PUT)
+    public JXResult updateBookInfo(@ApiParam(value = "图书对象", required = true)
+                                   @RequestBody BookInfo bookInfo) {
+        bookInfoService.updateBookInfo(bookInfo);
+        return new JXResult(true, ApiConstant.StatusCode.OK, "修改成功");
+    }
+
+    @ApiOperation(value = "修改章节内容接口", notes = "修改章节内容接口", httpMethod = "PUT")
+    @ResponseBody
+    @RequestMapping(value = "update/chapter/content", method = RequestMethod.PUT)
+    public JXResult updateChapterContent(@ApiParam(value = "书籍id", required = false)
+                                         @RequestParam(value = "bookId", defaultValue = "", required = false) int bookId,
+                                         @ApiParam(value = "章节id", required = false)
+                                         @RequestParam(value = "chapterId", defaultValue = "", required = false) int chapterId,
+                                         @ApiParam(value = "章节内容", required = false)
+                                         @RequestParam(value = "content", defaultValue = "", required = false) String content) {
+        bookInfoService.updateChapterContent(bookId, chapterId, content);
+        return new JXResult(true, ApiConstant.StatusCode.OK, "修改成功");
     }
 }

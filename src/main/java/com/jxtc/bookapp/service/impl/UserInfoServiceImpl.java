@@ -376,4 +376,13 @@ public class UserInfoServiceImpl implements UserInfoService {
     public void sendCoin(String userId, int coin) {
         userCoinMapper.addCoinByUserId(userId, coin);
     }
+
+    @Override
+    public void verbUser(String userId) {
+        UserCoinExample example = new UserCoinExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        UserCoin userCoinUp = new UserCoin();
+        userCoinUp.setCoin(0);
+        userCoinMapper.updateByExampleSelective(userCoinUp, example);
+    }
 }

@@ -337,7 +337,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.jxtc.bookapp.entity.BookInfoWithBLOBs">
+    <update id="updateByPrimaryKeySelective" parameterType="com.jxtc.bookapp.entity.BookInfo">
         update book_info
         <set>
             <if test="bookId != null">
@@ -606,4 +606,11 @@
         order by book_id desc
         limit #{offset} ,#{size}
     </select>
+
+    <update id="updateBookInfoByBookId" parameterType="com.jxtc.bookapp.entity.BookInfo">
+        update user_info set author=#{author,jdbcType=VARCHAR},
+        pic_url=#{picUrl}
+        book_name=#{bookName,jdbcType=VARCHAR}
+        where book_id=#{bookId,jdbcType=INTEGER}
+    </update>
 </mapper>

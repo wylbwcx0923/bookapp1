@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxtc.bookapp.mapper.app.SearchKeywordsMapper">
+    <resultMap id="BaseResultMap" type="com.jxtc.bookapp.entity.SearchKeywords">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="key_words" property="keyWords" jdbcType="VARCHAR"/>
+        <result column="search_time" property="searchTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    id, key_words, search_time
+  </sql>
+    <select id="selectByExample" resultMap="BaseResultMap"
+            parameterType="com.jxtc.bookapp.entity.SearchKeywordsExample">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        'true' as QUERYID,
+        <include refid="Base_Column_List"/>
+        from search_keywords
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from search_keywords
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from search_keywords
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteByExample" parameterType="com.jxtc.bookapp.entity.SearchKeywordsExample">
+        delete from search_keywords
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.jxtc.bookapp.entity.SearchKeywords">
+    insert into search_keywords (id, key_words, search_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{keyWords,jdbcType=VARCHAR}, #{searchTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.jxtc.bookapp.entity.SearchKeywords">
+        insert into search_keywords
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="keyWords != null">
+                key_words,
+            </if>
+            <if test="searchTime != null">
+                search_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="keyWords != null">
+                #{keyWords,jdbcType=VARCHAR},
+            </if>
+            <if test="searchTime != null">
+                #{searchTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.jxtc.bookapp.entity.SearchKeywordsExample"
+            resultType="java.lang.Integer">
+        select count(*) from search_keywords
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update search_keywords
+        <set>
+            <if test="record.id != null">
+                id = #{record.id,jdbcType=INTEGER},
+            </if>
+            <if test="record.keyWords != null">
+                key_words = #{record.keyWords,jdbcType=VARCHAR},
+            </if>
+            <if test="record.searchTime != null">
+                search_time = #{record.searchTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update search_keywords
+        set id = #{record.id,jdbcType=INTEGER},
+        key_words = #{record.keyWords,jdbcType=VARCHAR},
+        search_time = #{record.searchTime,jdbcType=TIMESTAMP}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.jxtc.bookapp.entity.SearchKeywords">
+        update search_keywords
+        <set>
+            <if test="keyWords != null">
+                key_words = #{keyWords,jdbcType=VARCHAR},
+            </if>
+            <if test="searchTime != null">
+                search_time = #{searchTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.SearchKeywords">
+    update search_keywords
+    set key_words = #{keyWords,jdbcType=VARCHAR},
+      search_time = #{searchTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="countKeywords" parameterType="java.lang.String" resultType="int">
+        select count(distinct(key_words)) from search_keywords
+        <where>
+            <if test="keywords!=null and keywords!=''">
+                and key_words like concat('%',#{keywords,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectSearchKeywordsCounts" resultType="com.jxtc.bookapp.entity.SearchKeywords">
+        select key_words as keyWords,
+        ifnull(count(*),0) as secrchCount
+        from search_keywords
+        <where>
+            <if test="keywords!=null and keywords!=''">
+                and key_words like concat('%',#{keywords,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+        group by key_words
+        order by count(*) desc
+        limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
+    </select>
+</mapper>

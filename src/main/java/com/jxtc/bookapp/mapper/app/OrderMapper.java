@@ -45,4 +45,6 @@ public interface OrderMapper {
 
     int countDays(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
+    OrderCount countOrdersByCanalId(@Param("canalId") Integer canalId, @Param("oneDay") String oneDay);
+
 }

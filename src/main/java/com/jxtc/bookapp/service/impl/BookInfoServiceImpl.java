@@ -197,6 +197,12 @@ public class BookInfoServiceImpl implements BookInfoService {
         }
         //先判断用户类型,如果包年用户直接阅读
         UserInfo userInfo = userInfoService.getUserInfoByLocal(userId);
+        String isUpdate = (String) redisService.get("isUpdate_" + userId);
+        if (StringUtils.isEmpty(isUpdate)) {
+            //修改用户的活动时间
+            userInfoMapper.updateUserUpdateTime(userId, new Date());
+            redisService.set("isUpdate_" + userId, "true");
+        }
         //迎新活动,新用户三天免费阅读
         Date createTime = userInfo.getCreateTime();
         if (new Date().getTime() - createTime.getTime() <= ApiConstant.Timer.THREE_DAY_MSEC) {
@@ -391,8 +397,8 @@ public class BookInfoServiceImpl implements BookInfoService {
             ).append("/").append(key);
             url = sb.toString();
         }
-        logger.info("图片上传成功");
-        return url;
+        logger.info("图片上传成功" + url);
+        return key;
     }
 
     @Override

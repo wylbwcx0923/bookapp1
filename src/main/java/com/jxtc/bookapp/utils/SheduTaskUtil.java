@@ -3,9 +3,8 @@ package com.jxtc.bookapp.utils;
 import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.config.WxConfig;
 import com.jxtc.bookapp.entity.*;
-import com.jxtc.bookapp.mapper.app.OrderMapper;
-import com.jxtc.bookapp.mapper.app.UserInfoMapper;
-import com.jxtc.bookapp.mapper.app.UserVipMapper;
+import com.jxtc.bookapp.mapper.app.*;
+import com.jxtc.bookapp.service.CanalPopularizeService;
 import com.jxtc.bookapp.service.UserInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -43,6 +43,10 @@ public class SheduTaskUtil {
     private OrderMapper orderMapper;
     @Autowired
     private WxConfig config;
+    @Autowired
+    private CanalPopularizeService canalPopularizeService;
+    @Autowired
+    private CanalPopularizeCountMapper canalPopularizeCountMapper;
 
     /**
      * 该方法为定时执行任务
@@ -188,6 +192,29 @@ public class SheduTaskUtil {
         }
         String port = objectNames.iterator().next().getKeyProperty("port");
         return port;
+    }
+
+    @Scheduled(cron = "0 0 0 */1 * ?") //每天o:oo分执行
+    public void addCanalPopularizeCount() {
+        String port = getLocalPort();
+        if (!"9991".equals(port)) {
+            //只在正式环境的其中一个服务器中执行定时任务
+            return;
+        }
+        logger.info("执行了插入渠道推广统计");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String oneDay = sdf.format(new Date());
+        List<Canal> canals = canalPopularizeService.getCanalList();
+        if (canals != null && canals.size() > 0) {
+            for (Canal canal : canals) {
+                CanalPopularizeCount count = new CanalPopularizeCount();
+                count.setOneDay(oneDay);
+                count.setNounId(canal.getId());
+                count.setDownCount(0);
+                count.setPayCount(0);
+                canalPopularizeCountMapper.insertSelective(count);
+            }
+        }
     }
 
 }

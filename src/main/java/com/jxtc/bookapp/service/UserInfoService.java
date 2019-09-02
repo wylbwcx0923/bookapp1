@@ -1,6 +1,7 @@
 package com.jxtc.bookapp.service;
 
 import com.jxtc.bookapp.entity.UserInfo;
+import com.jxtc.bookapp.mapper.app.UserCount;
 import com.jxtc.bookapp.utils.PageResult;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,7 +90,7 @@ public interface UserInfoService {
      * @param pageSize
      * @return
      */
-    PageResult<UserInfo> getUserList(int pageIndex, int pageSize, String userId);
+    PageResult<UserInfo> getUserList(int pageIndex, int pageSize, String userId, String startTime, String endTime);
 
     /**
      * 赠送给用户阅币
@@ -101,4 +102,16 @@ public interface UserInfoService {
 
     //重置用户
     void verbUser(String userId);
+
+    //用户留存统计
+    Map<String, Object> userKeepCount();
+
+    /**
+     * 每日的用户留存
+     *
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    PageResult<UserCount> getUserCounts(int pageIndex, int pageSize);
 }

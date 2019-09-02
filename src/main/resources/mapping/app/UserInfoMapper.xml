@@ -415,9 +415,65 @@
             <if test="userId != null and userId != ''">
                 and user_id=#{userId,jdbcType=VARCHAR}
             </if>
+            <if test="startTime != null and startTime != '' and endTime !=null and endTime !=''">
+                and create_time between concat('',#{startTime,jdbcType=VARCHAR},' 00:00:00')
+                and concat('',#{endTime,jdbcType=VARCHAR},' 23:59:59')
+            </if>
         </where>
         order by create_time desc
         limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
     </select>
 
+    <select id="countUserList" resultType="int">
+        select count(*) from user_info
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id=#{userId,jdbcType=VARCHAR}
+            </if>
+            <if test="startTime != null and startTime != '' and endTime !=null and endTime !=''">
+                and create_time between concat('',#{startTime,jdbcType=VARCHAR},' 00:00:00')
+                and concat('',#{endTime,jdbcType=VARCHAR},' 23:59:59')
+            </if>
+        </where>
+    </select>
+
+    <select id="countActiviteUser" resultType="int">
+        select count(*) from user_info
+        <where>
+            <if test="startTime != null and startTime != '' and endTime !=null and endTime !=''">
+                and update_time between concat('',#{startTime,jdbcType=VARCHAR},' 00:00:00')
+                and concat('',#{endTime,jdbcType=VARCHAR},' 23:59:59')
+            </if>
+        </where>
+    </select>
+    <select id="selectUserCountList" resultType="com.jxtc.bookapp.mapper.app.UserCount">
+        select date(create_time) as oneDay,
+        ifnull(count(*),0) as downUser
+        from user_info
+        group by date(create_time)
+        order by date(create_time) desc
+        limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
+    </select>
+
+    <select id="countDays" resultType="int">
+        select count(DISTINCT(date(create_time))) from user_info
+    </select>
+    <select id="countDownloadByCanalIdAndCreateTime" resultType="java.lang.Integer">
+        select ifnull(count(*),0)
+        from user_info
+        <where>
+            <if test="canalId!=null and canalId!=0">
+                and coin=#{canalId,jdbcType=INTEGER}
+            </if>
+            <if test="oneDay!=null and oneDay!=''">
+                and create_time like concat('%',#{oneDay},'%')
+            </if>
+        </where>
+    </select>
+
+    <update id="updateUserUpdateTime">
+        update user_info
+        set update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where user_id=#{userId,jdbcType=VARCHAR}
+    </update>
 </mapper>

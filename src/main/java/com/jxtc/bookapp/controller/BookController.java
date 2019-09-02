@@ -156,12 +156,11 @@ public class BookController {
     @ApiOperation(value = "修改章节内容接口", notes = "修改章节内容接口", httpMethod = "PUT")
     @ResponseBody
     @RequestMapping(value = "update/chapter/content", method = RequestMethod.PUT)
-    public JXResult updateChapterContent(@ApiParam(value = "书籍id", required = false)
-                                         @RequestParam(value = "bookId", defaultValue = "", required = false) int bookId,
-                                         @ApiParam(value = "章节id", required = false)
-                                         @RequestParam(value = "chapterId", defaultValue = "", required = false) int chapterId,
-                                         @ApiParam(value = "章节内容", required = false)
-                                         @RequestParam(value = "content", defaultValue = "", required = false) String content) {
+    public JXResult updateChapterContent(@ApiParam(value = "章节对象", required = true)
+                                         @RequestBody Map<String, Object> map) {
+        int bookId = (int) map.get("bookId");
+        int chapterId = (int) map.get("chapterId");
+        String content = (String) map.get("content");
         bookInfoService.updateChapterContent(bookId, chapterId, content);
         return new JXResult(true, ApiConstant.StatusCode.OK, "修改成功");
     }

@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxtc.bookapp.mapper.app.OrderMapper">
+    <resultMap id="BaseResultMap" type="com.jxtc.bookapp.entity.Order">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="order_id" property="orderId" jdbcType="VARCHAR"/>
+        <result column="order_type" property="orderType" jdbcType="INTEGER"/>
+        <result column="amount" property="amount" jdbcType="INTEGER"/>
+        <result column="book_id" property="bookId" jdbcType="INTEGER"/>
+        <result column="des" property="des" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+        id
+        ,
+        user_id,
+        order_id,
+        order_type,
+        amount,
+        book_id,
+        des,
+        status,
+        create_time,
+        update_time
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.jxtc.bookapp.entity.OrderExample">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        'true' as QUERYID,
+        <include refid="Base_Column_List"/>
+        from `order`
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from `order`
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from `order`
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <delete id="deleteByExample" parameterType="com.jxtc.bookapp.entity.OrderExample">
+        delete from `order`
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.jxtc.bookapp.entity.Order">
+        insert into `order` (id, user_id, order_id,
+                             order_type, amount, book_id,
+                             des, status, create_time,
+                             update_time)
+        values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR},
+                #{orderType,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER}, #{bookId,jdbcType=INTEGER},
+                #{des,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+                #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.jxtc.bookapp.entity.Order">
+        insert into `order`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="orderType != null">
+                order_type,
+            </if>
+            <if test="amount != null">
+                amount,
+            </if>
+            <if test="bookId != null">
+                book_id,
+            </if>
+            <if test="des != null">
+                des,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="orderId != null">
+                #{orderId,jdbcType=VARCHAR},
+            </if>
+            <if test="orderType != null">
+                #{orderType,jdbcType=INTEGER},
+            </if>
+            <if test="amount != null">
+                #{amount,jdbcType=INTEGER},
+            </if>
+            <if test="bookId != null">
+                #{bookId,jdbcType=INTEGER},
+            </if>
+            <if test="des != null">
+                #{des,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.jxtc.bookapp.entity.OrderExample" resultType="java.lang.Integer">
+        select count(*) from `order`
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update `order`
+        <set>
+            <if test="record.id != null">
+                id = #{record.id,jdbcType=INTEGER},
+            </if>
+            <if test="record.userId != null">
+                user_id = #{record.userId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.orderId != null">
+                order_id = #{record.orderId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.orderType != null">
+                order_type = #{record.orderType,jdbcType=INTEGER},
+            </if>
+            <if test="record.amount != null">
+                amount = #{record.amount,jdbcType=INTEGER},
+            </if>
+            <if test="record.bookId != null">
+                book_id = #{record.bookId,jdbcType=INTEGER},
+            </if>
+            <if test="record.des != null">
+                des = #{record.des,jdbcType=VARCHAR},
+            </if>
+            <if test="record.status != null">
+                status = #{record.status,jdbcType=INTEGER},
+            </if>
+            <if test="record.createTime != null">
+                create_time = #{record.createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.updateTime != null">
+                update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update `order`
+        set id = #{record.id,jdbcType=INTEGER},
+        user_id = #{record.userId,jdbcType=VARCHAR},
+        order_id = #{record.orderId,jdbcType=VARCHAR},
+        order_type = #{record.orderType,jdbcType=INTEGER},
+        amount = #{record.amount,jdbcType=INTEGER},
+        book_id = #{record.bookId,jdbcType=INTEGER},
+        des = #{record.des,jdbcType=VARCHAR},
+        status = #{record.status,jdbcType=INTEGER},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.jxtc.bookapp.entity.Order">
+        update `order`
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="orderId != null">
+                order_id = #{orderId,jdbcType=VARCHAR},
+            </if>
+            <if test="orderType != null">
+                order_type = #{orderType,jdbcType=INTEGER},
+            </if>
+            <if test="amount != null">
+                amount = #{amount,jdbcType=INTEGER},
+            </if>
+            <if test="bookId != null">
+                book_id = #{bookId,jdbcType=INTEGER},
+            </if>
+            <if test="des != null">
+                des = #{des,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.Order">
+        update `order`
+        set user_id     = #{userId,jdbcType=VARCHAR},
+            order_id    = #{orderId,jdbcType=VARCHAR},
+            order_type  = #{orderType,jdbcType=INTEGER},
+            amount      = #{amount,jdbcType=INTEGER},
+            book_id     = #{bookId,jdbcType=INTEGER},
+            des         = #{des,jdbcType=VARCHAR},
+            status      = #{status,jdbcType=INTEGER},
+            create_time = #{createTime,jdbcType=TIMESTAMP},
+            update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <select id="selectOrderListByParams" resultType="com.jxtc.bookapp.entity.Order">
+        select o.id as id,
+        o.user_id as userId,
+        o.order_id as orderId,
+        o.order_type as orderType,
+        o.amount as amount,
+        o.book_id as bookId,
+        b.book_name as bookName,
+        o.des as des,
+        o.create_time as createTime
+        from `order` o,
+        bc_source.book_info b
+        where o.book_id=b.book_id and o.status=1
+        <if test="userId != null and userId != ''">
+            and o.user_id=#{userId,jdbcType=VARCHAR}
+        </if>
+        <if test="bookName != null and bookName != ''">
+            and b.book_name=#{bookName,jdbcType=VARCHAR}
+        </if>
+        <if test="startTime != null and startTime != '' and endTime !=null and endTime !=''">
+            and o.create_time between concat('',#{startTime,jdbcType=VARCHAR},' 00:00:00')
+            and concat('',#{endTime,jdbcType=VARCHAR},' 23:59:59')
+        </if>
+        order by o.create_time desc
+        limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
+    </select>
+
+    <select id="countAndSumOrders" resultType="com.jxtc.bookapp.entity.PageCountTotal">
+        select ifnull(count(o.id),0) as total,
+        ifnull(sum(o.amount),0) as amount
+        from `order` o,
+        bc_source.book_info b
+        where o.book_id=b.book_id and o.status=1
+        <if test="userId != null and userId != ''">
+            and o.user_id=#{userId,jdbcType=VARCHAR}
+        </if>
+        <if test="bookName != null and bookName != ''">
+            and b.book_name=#{bookName,jdbcType=VARCHAR}
+        </if>
+        <if test="startTime != null and startTime != '' and endTime !=null and endTime !=''">
+            and o.create_time between concat('',#{startTime,jdbcType=VARCHAR},' 00:00:00')
+            and concat('',#{endTime,jdbcType=VARCHAR},' 23:59:59')
+        </if>
+    </select>
+
+    <select id="countStatusOrders" resultType="int">
+        select count(*)
+        from `order`
+        <where>
+            <if test="status != 3">
+                and status=#{status,jdbcType=INTEGER}
+            </if>
+            <if test="startTime != null and startTime != '' and endTime !=null and endTime !=''">
+                and o.create_time between concat('',#{startTime,jdbcType=VARCHAR},' 00:00:00')
+                and concat('',#{endTime,jdbcType=VARCHAR},' 23:59:59')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOrderListByStatus" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from `order`
+        <where>
+            <if test="status != 3">
+                and status=#{status,jdbcType=INTEGER}
+            </if>
+            <if test="startTime != null and startTime != '' and endTime !=null and endTime !=''">
+                and o.create_time between concat('',#{startTime,jdbcType=VARCHAR},' 00:00:00')
+                and concat('',#{endTime,jdbcType=VARCHAR},' 23:59:59')
+            </if>
+        </where>
+        order by create_time desc
+        limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectOrderListByDay" resultType="com.jxtc.bookapp.entity.OrderCount">
+        select ifnull(sum(amount),0)/100 as amount,
+        count(*) as countOrder,
+        date(create_time) as createTime
+        from `order`
+        where status = 1
+        <if test="type==1">
+            and order_type in(1,2,3,4)
+        </if>
+        <if test="type==2">
+            and order_type in(5,6,7)
+        </if>
+        <if test="startTime != null and startTime != '' and endTime !=null and endTime !=''">
+            and create_time between concat('',#{startTime,jdbcType=VARCHAR},' 00:00:00')
+            and concat('',#{endTime,jdbcType=VARCHAR},' 23:59:59')
+        </if>
+        group by date(create_time)
+        order by date(create_time) desc
+        limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectOrderByCreateTime" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from `order`
+        where create_time like concat('%',#{createTime,jdbcType=VARCHAR},'%')
+        and status=1
+    </select>
+
+    <select id="countDays" resultType="int">
+        select count(DISTINCT(date(create_time))) from `order` where status=1
+        <if test="startTime != null and startTime != '' and endTime !=null and endTime !=''">
+            and create_time between concat('',#{startTime,jdbcType=VARCHAR},' 00:00:00')
+            and concat('',#{endTime,jdbcType=VARCHAR},' 23:59:59')
+        </if>
+    </select>
+
+    <select id="countOrdersByCanalId" resultType="com.jxtc.bookapp.entity.OrderCount">
+        select ifnull(count(o.id),0) as countOrder,
+        ifnull(sum(o.amount),0) as amount
+        from `order` o,`user_info` u
+        where o.user_id=u.user_id
+        and o.status=1
+        and u.coin=#{canalId,jdbcType=INTEGER}
+        and o.create_time like concat('%',#{oneDay,jdbcType=VARCHAR},'%')
+    </select>
+
+
+</mapper>

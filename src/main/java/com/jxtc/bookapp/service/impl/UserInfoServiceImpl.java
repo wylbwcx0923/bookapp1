@@ -3,10 +3,7 @@ package com.jxtc.bookapp.service.impl;
 import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.config.WxConfig;
 import com.jxtc.bookapp.entity.*;
-import com.jxtc.bookapp.mapper.app.UserCoinMapper;
-import com.jxtc.bookapp.mapper.app.UserEmpiricalMapper;
-import com.jxtc.bookapp.mapper.app.UserInfoMapper;
-import com.jxtc.bookapp.mapper.app.UserVipMapper;
+import com.jxtc.bookapp.mapper.app.*;
 import com.jxtc.bookapp.service.RedisService;
 import com.jxtc.bookapp.service.UserEmpiricalService;
 import com.jxtc.bookapp.service.UserInfoService;
@@ -24,10 +21,7 @@ import weixin.popular.bean.sns.SnsToken;
 import weixin.popular.bean.user.User;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author 用户服务
@@ -347,12 +341,12 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public PageResult<UserInfo> getUserList(int pageIndex, int pageSize, String userId) {
+    public PageResult<UserInfo> getUserList(int pageIndex, int pageSize, String userId, String startTime, String endTime) {
         PageResult<UserInfo> page = new PageResult<>();
         page.setPageIndex(pageIndex);
         page.setPageSize(pageSize);
         int offset = (pageIndex - 1) * pageSize;
-        List<UserInfo> userInfos = userInfoMapper.selectUserListByPage(offset, pageSize, userId);
+        List<UserInfo> userInfos = userInfoMapper.selectUserListByPage(offset, pageSize, userId, startTime, endTime);
         if (userInfos != null && userInfos.size() > 0) {
             for (UserInfo userInfo : userInfos) {
                 Integer coin = userCoinMapper.getCoinByUserId(userInfo.getUserId());
@@ -361,13 +355,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             }
         }
         page.setPageList(userInfos);
-        UserInfoExample example = new UserInfoExample();
-        if (StringUtils.isEmpty(userId)) {
-            example.createCriteria();
-        } else {
-            example.createCriteria().andUserIdEqualTo(userId);
-        }
-        int total = userInfoMapper.countByExample(example);
+        int total = userInfoMapper.countUserList(userId, startTime, endTime);
         page.setTotal(total);
         return page;
     }
@@ -384,5 +372,53 @@ public class UserInfoServiceImpl implements UserInfoService {
         UserCoin userCoinUp = new UserCoin();
         userCoinUp.setCoin(0);
         userCoinMapper.updateByExampleSelective(userCoinUp, example);
+    }
+
+    @Override
+    public Map<String, Object> userKeepCount() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        //查询今日下载人数
+        int todayDown = userInfoMapper.countUserList(null, sdf.format(new Date()), sdf.format(new Date()));
+        int todayActi = userInfoMapper.countActiviteUser(sdf.format(new Date()), sdf.format(new Date()));
+        //昨日下载人数
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_YEAR, -1);
+        int yesterdayDown = userInfoMapper.countUserList(null, sdf.format(calendar.getTime()), sdf.format(calendar.getTime()));
+        int yesterdayActi = userInfoMapper.countActiviteUser(sdf.format(calendar.getTime()), sdf.format(calendar.getTime()));
+        //本月人数
+        calendar.setTime(new Date());
+        int year = calendar.getWeekYear();
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int monthDown = userInfoMapper.countUserList(null, year + "-" + month + "-" + "01", sdf.format(new Date()));
+        int monthActi = userInfoMapper.countActiviteUser(year + "-" + month + "-" + "01", sdf.format(new Date()));
+        int total = userInfoMapper.countUserList(null, null, null);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("todayDown", todayDown);
+        map.put("yesterdayDown", yesterdayDown);
+        map.put("monthDown", monthDown);
+        map.put("total", total);
+        map.put("todayActi", todayActi);
+        map.put("yesterdayActi", yesterdayActi);
+        map.put("monthActi", monthActi);
+        return map;
+    }
+
+    @Override
+    public PageResult<UserCount> getUserCounts(int pageIndex, int pageSize) {
+        PageResult<UserCount> page = new PageResult<>();
+        page.setPageIndex(pageIndex);
+        page.setPageSize(pageSize);
+        int total = userInfoMapper.countDays();
+        page.setTotal(total);
+        int offset = (pageIndex - 1) * pageSize;
+        List<UserCount> userCounts = userInfoMapper.selectUserCountList(offset, pageSize);
+        if (userCounts != null && userCounts.size() > 0) {
+            for (UserCount userCount : userCounts) {
+                userCount.setActiUser(userInfoMapper.countActiviteUser(userCount.getOneDay(), userCount.getOneDay()));
+            }
+        }
+        page.setPageList(userCounts);
+        return page;
     }
 }

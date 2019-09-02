@@ -5,6 +5,7 @@ import com.jxtc.bookapp.entity.UserInfoExample;
 import com.jxtc.bookapp.entity.UserInfoKey;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface UserInfoMapper {
@@ -32,6 +33,17 @@ public interface UserInfoMapper {
 
     int getMaxId();
 
-    List<UserInfo> selectUserListByPage(@Param("offset") int offset, @Param("size") int size, @Param("userId") String userId);
+    List<UserInfo> selectUserListByPage(@Param("offset") int offset, @Param("size") int size, @Param("userId") String userId, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
+    int countUserList(@Param("userId") String userId, @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    int countActiviteUser(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    List<UserCount> selectUserCountList(@Param("offset") int offset, @Param("size") int size);
+
+    int countDays();
+
+    void updateUserUpdateTime(@Param("userId") String userId, @Param("updateTime") Date updateTime);
+
+    int countDownloadByCanalIdAndCreateTime(@Param("canalId") Integer canalId, @Param("oneDay") String oneDay);
 }

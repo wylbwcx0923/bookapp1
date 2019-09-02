@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxtc.bookapp.mapper.app.CanalPopularizeCountMapper">
+    <resultMap id="BaseResultMap" type="com.jxtc.bookapp.entity.CanalPopularizeCount">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="one_day" property="oneDay" jdbcType="VARCHAR"/>
+        <result column="noun_id" property="nounId" jdbcType="INTEGER"/>
+        <result column="down_count" property="downCount" jdbcType="INTEGER"/>
+        <result column="pay_count" property="payCount" jdbcType="INTEGER"/>
+        <result column="pay_money" property="payMoney" jdbcType="DOUBLE"/>
+        <result column="cost" property="cost" jdbcType="DOUBLE"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    id, one_day, noun_id, down_count, pay_count, pay_money, cost, remark
+  </sql>
+    <select id="selectByExample" resultMap="BaseResultMap"
+            parameterType="com.jxtc.bookapp.entity.CanalPopularizeCountExample">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        'true' as QUERYID,
+        <include refid="Base_Column_List"/>
+        from canal_popularize_count
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from canal_popularize_count
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from canal_popularize_count
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteByExample" parameterType="com.jxtc.bookapp.entity.CanalPopularizeCountExample">
+        delete from canal_popularize_count
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.jxtc.bookapp.entity.CanalPopularizeCount">
+    insert into canal_popularize_count (id, one_day, noun_id, 
+      down_count, pay_count, pay_money, 
+      cost, remark)
+    values (#{id,jdbcType=INTEGER}, #{oneDay,jdbcType=VARCHAR}, #{nounId,jdbcType=INTEGER}, 
+      #{downCount,jdbcType=INTEGER}, #{payCount,jdbcType=INTEGER}, #{payMoney,jdbcType=DOUBLE}, 
+      #{cost,jdbcType=DOUBLE}, #{remark,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.jxtc.bookapp.entity.CanalPopularizeCount">
+        insert into canal_popularize_count
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="oneDay != null">
+                one_day,
+            </if>
+            <if test="nounId != null">
+                noun_id,
+            </if>
+            <if test="downCount != null">
+                down_count,
+            </if>
+            <if test="payCount != null">
+                pay_count,
+            </if>
+            <if test="payMoney != null">
+                pay_money,
+            </if>
+            <if test="cost != null">
+                cost,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="oneDay != null">
+                #{oneDay,jdbcType=VARCHAR},
+            </if>
+            <if test="nounId != null">
+                #{nounId,jdbcType=INTEGER},
+            </if>
+            <if test="downCount != null">
+                #{downCount,jdbcType=INTEGER},
+            </if>
+            <if test="payCount != null">
+                #{payCount,jdbcType=INTEGER},
+            </if>
+            <if test="payMoney != null">
+                #{payMoney,jdbcType=DOUBLE},
+            </if>
+            <if test="cost != null">
+                #{cost,jdbcType=DOUBLE},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.jxtc.bookapp.entity.CanalPopularizeCountExample"
+            resultType="java.lang.Integer">
+        select count(*) from canal_popularize_count
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update canal_popularize_count
+        <set>
+            <if test="record.id != null">
+                id = #{record.id,jdbcType=INTEGER},
+            </if>
+            <if test="record.oneDay != null">
+                one_day = #{record.oneDay,jdbcType=VARCHAR},
+            </if>
+            <if test="record.nounId != null">
+                noun_id = #{record.nounId,jdbcType=INTEGER},
+            </if>
+            <if test="record.downCount != null">
+                down_count = #{record.downCount,jdbcType=INTEGER},
+            </if>
+            <if test="record.payCount != null">
+                pay_count = #{record.payCount,jdbcType=INTEGER},
+            </if>
+            <if test="record.payMoney != null">
+                pay_money = #{record.payMoney,jdbcType=DOUBLE},
+            </if>
+            <if test="record.cost != null">
+                cost = #{record.cost,jdbcType=DOUBLE},
+            </if>
+            <if test="record.remark != null">
+                remark = #{record.remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update canal_popularize_count
+        set id = #{record.id,jdbcType=INTEGER},
+        one_day = #{record.oneDay,jdbcType=VARCHAR},
+        noun_id = #{record.nounId,jdbcType=INTEGER},
+        down_count = #{record.downCount,jdbcType=INTEGER},
+        pay_count = #{record.payCount,jdbcType=INTEGER},
+        pay_money = #{record.payMoney,jdbcType=DOUBLE},
+        cost = #{record.cost,jdbcType=DOUBLE},
+        remark = #{record.remark,jdbcType=VARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.jxtc.bookapp.entity.CanalPopularizeCount">
+        update canal_popularize_count
+        <set>
+            <if test="oneDay != null">
+                one_day = #{oneDay,jdbcType=VARCHAR},
+            </if>
+            <if test="nounId != null">
+                noun_id = #{nounId,jdbcType=INTEGER},
+            </if>
+            <if test="downCount != null">
+                down_count = #{downCount,jdbcType=INTEGER},
+            </if>
+            <if test="payCount != null">
+                pay_count = #{payCount,jdbcType=INTEGER},
+            </if>
+            <if test="payMoney != null">
+                pay_money = #{payMoney,jdbcType=DOUBLE},
+            </if>
+            <if test="cost != null">
+                cost = #{cost,jdbcType=DOUBLE},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.CanalPopularizeCount">
+    update canal_popularize_count
+    set one_day = #{oneDay,jdbcType=VARCHAR},
+      noun_id = #{nounId,jdbcType=INTEGER},
+      down_count = #{downCount,jdbcType=INTEGER},
+      pay_count = #{payCount,jdbcType=INTEGER},
+      pay_money = #{payMoney,jdbcType=DOUBLE},
+      cost = #{cost,jdbcType=DOUBLE},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="countCanalPopularize" resultType="int">
+        select ifnull(count(*),0) from canal_popularize_count
+        <where>
+            <if test="canalId!=null and canalId!=0">
+                and noun_id = #{canalId,jdbcType=INTEGER}
+            </if>
+            <if test="startTime!=null and startTime!='' and endTime!=null and endTime!=''">
+                and one_day between #{startTime,jdbcType=VARCHAR} and #{endTime,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+    <select id="selectCanalPopularizeList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from canal_popularize_count
+        <where>
+            <if test="canalId!=null and canalId!=0">
+                and noun_id = #{canalId,jdbcType=INTEGER}
+            </if>
+            <if test="startTime!=null and startTime!='' and endTime!=null and endTime!=''">
+                and one_day between #{startTime,jdbcType=VARCHAR} and #{endTime,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by one_day desc
+        limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
+    </select>
+</mapper>

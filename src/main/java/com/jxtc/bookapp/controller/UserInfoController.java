@@ -3,6 +3,7 @@ package com.jxtc.bookapp.controller;
 import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.config.JXResult;
 import com.jxtc.bookapp.entity.UserInfo;
+import com.jxtc.bookapp.mapper.app.UserCount;
 import com.jxtc.bookapp.service.UserInfoService;
 import com.jxtc.bookapp.utils.PageResult;
 import io.swagger.annotations.Api;
@@ -114,8 +115,12 @@ public class UserInfoController {
                                 @ApiParam(value = "每页显示数量", required = false)
                                 @RequestParam(value = "pageSize", defaultValue = "20", required = false) int pageSize,
                                 @ApiParam(value = "用户Id", required = false)
-                                @RequestParam(value = "userId", defaultValue = "", required = false) String userId) {
-        PageResult<UserInfo> page = userInfoService.getUserList(pageIndex, pageSize, userId);
+                                @RequestParam(value = "userId", defaultValue = "", required = false) String userId,
+                                @ApiParam(value = "开始时间", required = false, defaultValue = "")
+                                @RequestParam(value = "startTime", defaultValue = "", required = false) String startTime,
+                                @ApiParam(value = "结束时间", required = false, defaultValue = "")
+                                @RequestParam(value = "endTime", defaultValue = "", required = false) String endTime) {
+        PageResult<UserInfo> page = userInfoService.getUserList(pageIndex, pageSize, userId, startTime, endTime);
         return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", page);
     }
 
@@ -134,8 +139,27 @@ public class UserInfoController {
     @ApiOperation(value = "重置用户", notes = "重置用户", httpMethod = "PUT")
     @ResponseBody
     public JXResult verbUserByUserId(@ApiParam(value = "用户Id", required = false)
-                             @RequestParam(value = "userId", defaultValue = "", required = false) String userId) {
+                                     @RequestParam(value = "userId", defaultValue = "", required = false) String userId) {
         userInfoService.verbUser(userId);
         return new JXResult(true, ApiConstant.StatusCode.OK, "用户重置成功");
+    }
+
+    @RequestMapping(value = "/keep/userCount", method = RequestMethod.GET)
+    @ApiOperation(value = "获取用户留存统计信息", notes = "获取用户留存统计信息", httpMethod = "GET")
+    @ResponseBody
+    public JXResult userKeepCount() {
+        Map<String, Object> map = userInfoService.userKeepCount();
+        return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", map);
+    }
+
+    @RequestMapping(value = "/keep/userCount/list", method = RequestMethod.GET)
+    @ApiOperation(value = "获取用户留存统计列表", notes = "获取用户留存统计列表", httpMethod = "GET")
+    @ResponseBody
+    public JXResult userKeepCountList(@ApiParam(value = "当前页", required = false)
+                                      @RequestParam(value = "pageIndex", defaultValue = "1", required = false) int pageIndex,
+                                      @ApiParam(value = "每页显示数量", required = false)
+                                      @RequestParam(value = "pageSize", defaultValue = "20", required = false) int pageSize) {
+        PageResult<UserCount> userCounts = userInfoService.getUserCounts(pageIndex, pageSize);
+        return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", userCounts);
     }
 }

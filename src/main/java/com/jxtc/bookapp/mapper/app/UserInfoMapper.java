@@ -46,4 +46,6 @@ public interface UserInfoMapper {
     void updateUserUpdateTime(@Param("userId") String userId, @Param("updateTime") Date updateTime);
 
     int countDownloadByCanalIdAndCreateTime(@Param("canalId") Integer canalId, @Param("oneDay") String oneDay);
+
+    int countUserKeepByTime(@Param("days") Integer days, @Param("nowTime") String nowTime);
 }

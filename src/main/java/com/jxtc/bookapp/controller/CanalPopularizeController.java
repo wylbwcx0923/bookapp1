@@ -4,7 +4,9 @@ import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.config.JXResult;
 import com.jxtc.bookapp.entity.Canal;
 import com.jxtc.bookapp.entity.CanalPopularizeCount;
+import com.jxtc.bookapp.entity.Equipment;
 import com.jxtc.bookapp.service.CanalPopularizeService;
+import com.jxtc.bookapp.service.EquipmentService;
 import com.jxtc.bookapp.utils.PageResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +24,8 @@ public class CanalPopularizeController {
 
     @Autowired
     private CanalPopularizeService canalPopularizeService;
+    @Autowired
+    private EquipmentService equipmentService;
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
     @ApiOperation(value = "添加渠道", notes = "添加渠道", httpMethod = "POST")
@@ -89,4 +93,11 @@ public class CanalPopularizeController {
         return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", map);
     }
 
+    @RequestMapping(value = "equipment/add", method = RequestMethod.POST)
+    @ApiOperation(value = "添加用户的手机编号", notes = "添加用户的手机编号", httpMethod = "POST")
+    public JXResult addEquipment(@ApiParam(value = "手机编号对象", required = true, defaultValue = "")
+                                 @RequestBody Equipment equipment) {
+        equipmentService.addEquipment(equipment);
+        return new JXResult(true, ApiConstant.StatusCode.OK, "添加成功");
+    }
 }

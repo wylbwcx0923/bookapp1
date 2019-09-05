@@ -27,4 +27,6 @@ public interface CanalMapper {
     int updateByPrimaryKeySelective(Canal record);
 
     int updateByPrimaryKey(Canal record);
+
+    Canal selectNewCanal();
 }

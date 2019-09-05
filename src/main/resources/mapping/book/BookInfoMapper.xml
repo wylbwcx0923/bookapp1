@@ -607,10 +607,19 @@
         limit #{offset} ,#{size}
     </select>
 
+
     <update id="updateBookInfoByBookId" parameterType="com.jxtc.bookapp.entity.BookInfo">
         update user_info set author=#{author,jdbcType=VARCHAR},
         pic_url=#{picUrl}
         book_name=#{bookName,jdbcType=VARCHAR}
         where book_id=#{bookId,jdbcType=INTEGER}
     </update>
+
+    <select id="selectBooksByDes" resultMap="ResultMapWithBLOBs">
+        select book_id,book_name,author,pic_url,complete_state,category,description
+        from book_info
+        where description like concat('%', #{keyWords,jdbcType=VARCHAR}, '%')
+          and putaway = 1
+          and open_search = 1
+    </select>
 </mapper>

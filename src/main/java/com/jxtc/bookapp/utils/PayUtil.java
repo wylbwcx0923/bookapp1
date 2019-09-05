@@ -44,8 +44,9 @@ public class PayUtil {
      * @return
      */
     public static String getIp(HttpServletRequest request) {
-        if (request == null)
+        if (request == null) {
             return "";
+        }
         String ip = request.getHeader("X-Requested-For");
         if (StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("X-Forwarded-For");

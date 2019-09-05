@@ -11,6 +11,8 @@ import java.util.Map;
  */
 public class TimeUtil {
 
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
     /**
      * 获取当前的年月日
      *
@@ -46,5 +48,17 @@ public class TimeUtil {
      */
     public static String getTimestamp() {
         return System.currentTimeMillis() + "";
+    }
+
+    /**
+     * 获取年月日
+     *
+     * @return
+     */
+    public static String getYearMonthDay(Date date) {
+        if (sdf != null) {
+            return sdf.format(date);
+        }
+        return new SimpleDateFormat("yyyy-MM-dd").format(date);
     }
 }

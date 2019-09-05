@@ -6,11 +6,14 @@ import com.jxtc.bookapp.mapper.app.CanalPopularizeCountMapper;
 import com.jxtc.bookapp.mapper.app.OrderMapper;
 import com.jxtc.bookapp.mapper.app.UserInfoMapper;
 import com.jxtc.bookapp.service.CanalPopularizeService;
+import com.jxtc.bookapp.service.EquipmentService;
 import com.jxtc.bookapp.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,10 +29,19 @@ public class CanalPopularizeServiceImpl implements CanalPopularizeService {
     private OrderMapper orderMapper;
     @Autowired
     private UserInfoMapper userInfoMapper;
+    @Autowired
+    private EquipmentService equipmentService;
 
     @Override
     public void addCanal(Canal canal) {
         canalMapper.insert(canal);
+        Canal canalNew = canalMapper.selectNewCanal();
+        CanalPopularizeCount count = new CanalPopularizeCount();
+        count.setCanalName(canal.getNounName());
+        count.setNounId(canalNew.getId());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        count.setOneDay(sdf.format(new Date()));
+        canalPopularizeCountMapper.insertSelective(count);
     }
 
     @Override
@@ -68,35 +80,41 @@ public class CanalPopularizeServiceImpl implements CanalPopularizeService {
         Integer total = canalPopularizeCountMapper.countCanalPopularize(canalId, startTime, endTime);
         pageResult.setTotal(total);
         int offset = (pageIndex - 1) * pageSize;
-        DecimalFormat df = new DecimalFormat("#.00");
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(2);
         List<CanalPopularizeCount> canalPopularizeCounts = canalPopularizeCountMapper.selectCanalPopularizeList(canalId, startTime, endTime, offset, pageSize);
         if (canalPopularizeCounts != null && canalPopularizeCounts.size() > 0) {
             for (CanalPopularizeCount count : canalPopularizeCounts) {
+                int downCount = equipmentService.getEquipmentCountByCanalIdAndCreateTime(count.getNounId(), count.getOneDay());
+                count.setDownCount(downCount);//下载数
                 count.setCanalName(findCanalNameById(count.getNounId()));
                 OrderCount orderCount = orderMapper.countOrdersByCanalId(count.getNounId(), count.getOneDay());
                 count.setPayCount(orderCount.getCountOrder());//支付订单数
                 count.setPayMoney(orderCount.getAmount());//支付订单总金额
-                int downCount = userInfoMapper.countDownloadByCanalIdAndCreateTime(count.getNounId(), count.getOneDay());
-                count.setDownCount(downCount);//下载数
+                int registerCount = userInfoMapper.countDownloadByCanalIdAndCreateTime(count.getNounId(), count.getOneDay());
+                count.setRegisterCount(registerCount);//注册数
                 //保留两位小数
-                if (downCount != 0) {
-                    double downOrderProportion = orderCount.getCountOrder() / downCount;
-                    count.setDownOrderProportion(Double.valueOf(df.format(downOrderProportion)));//下单比例
+                if (registerCount != 0) {
+                    String downOrderProportion = numberFormat.format((double) orderCount.getCountOrder() / (double) registerCount * 100) + "%";
+                    count.setDownOrderProportion(downOrderProportion);//下单比例
                 } else {
-                    count.setDownOrderProportion(0);//下单比例
+                    count.setDownOrderProportion("0%");//下单比例
                 }
                 //回本
                 Double cose = count.getCost();
                 if (cose != null && cose > 0) {
                     //回本金额
-                    double reecoverMoney = orderCount.getAmount() - cose;
-                    count.setRecoverMoney(reecoverMoney);//回本金额
+                    double recoverMoney = orderCount.getAmount() - cose;
+                    count.setRecoverMoney(recoverMoney);//回本金额
                     //回本比例
-                    double recoverProportion = reecoverMoney / cose;
-                    count.setRecoverProportion(Double.valueOf(df.format(recoverProportion)));
+                    String recoverProportion = numberFormat.format(orderCount.getAmount() / cose * 100) + "%";
+                    if (orderCount.getAmount() / cose >= 1) {
+                        count.setRecoverProportion("100%");
+                    }
+                    count.setRecoverProportion(recoverProportion);
                 } else {
-                    count.setRecoverMoney(0);//回本金额
-                    count.setRecoverProportion(0);
+                    count.setRecoverMoney((double) 0);//回本金额
+                    count.setRecoverProportion("0%");
                 }
 
             }

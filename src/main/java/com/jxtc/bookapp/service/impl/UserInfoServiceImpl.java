@@ -7,8 +7,8 @@ import com.jxtc.bookapp.mapper.app.*;
 import com.jxtc.bookapp.service.RedisService;
 import com.jxtc.bookapp.service.UserEmpiricalService;
 import com.jxtc.bookapp.service.UserInfoService;
-
 import com.jxtc.bookapp.utils.PageResult;
+
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
@@ -48,10 +48,11 @@ public class UserInfoServiceImpl implements UserInfoService {
      * 微信登录服务
      *
      * @param code
+     * @param canalId
      * @return
      */
     @Override
-    public String wxLogin(String code) {
+    public String wxLogin(String code, Integer canalId) {
         String appid = wxConfig.getAppid();//获得app在微信开放平台的唯一标识
         String secret = wxConfig.getSecret();//获得该appid对应的secret
         //获得access_token
@@ -82,8 +83,10 @@ public class UserInfoServiceImpl implements UserInfoService {
                 } else {
                     userInfo.setHeadimgurl(user.getHeadimgurl());
                 }
+                //设置渠道Id
+                canalId = canalId == null ? 0 : canalId;
+                userInfo.setCoin(canalId);
                 userInfo.setProvince(user.getProvince());
-                userInfo.setCoin(0);
                 userInfo.setSex(user.getSex() == null ? 1 : user.getSex());
                 userInfo.setType(ApiConstant.UserType.GENNERAL_USER);
                 userInfoMapper.insert(userInfo);
@@ -122,7 +125,8 @@ public class UserInfoServiceImpl implements UserInfoService {
                 userInfo.setPassword(userInfo.getNickname());
                 userInfo.setUserId(userId);
                 userInfo.setType(ApiConstant.UserType.GENNERAL_USER);
-                userInfo.setCoin(0);
+                int canalId = userInfo.getCoin() == null ? 0 : userInfo.getCoin();
+                userInfo.setCoin(canalId);
                 userInfo.setCreateTime(new Date());
                 userInfo.setUpdateTime(new Date());
                 userInfoMapper.insert(userInfo);
@@ -288,7 +292,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Map<String, Object> smsVerify(String phoneNumber, String code) {
+    public Map<String, Object> smsVerify(String phoneNumber, String code, Integer canalId) {
         Map<String, Object> result = new HashMap<>();
         //判断用户的验证码是否过期
         String flagCode = (String) redisService.get("SMS_" + phoneNumber);
@@ -327,7 +331,9 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setNickname("用户" + userId);
         userInfo.setUpdateTime(new Date());
         userInfo.setHeadimgurl(ApiConstant.Config.DEFULT_HEAD);
-        userInfo.setCoin(0);
+        //设置渠道Id
+        canalId = canalId == null ? 0 : canalId;
+        userInfo.setCoin(canalId);
         userInfo.setSex(1);//默认设置为男生
         userInfo.setType(ApiConstant.UserType.GENNERAL_USER);
         userInfoMapper.insert(userInfo);
@@ -420,5 +426,21 @@ public class UserInfoServiceImpl implements UserInfoService {
         }
         page.setPageList(userCounts);
         return page;
+    }
+
+    @Override
+    public Map<String, Object> getUserKeepOneSevenAndMounth() {
+        Map<String, Object> map = new HashMap<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //次日留存:注册时间在昨日,活动时间在今日的称为次日留存
+        int nextDay = userInfoMapper.countUserKeepByTime(ApiConstant.KeepTime.NEXT_DAY, sdf.format(new Date()));
+        //七日留存.注册时间和活动时间相差7日及以上称为7日留存
+        int sevenDay = userInfoMapper.countUserKeepByTime(ApiConstant.KeepTime.SEVEN_DAY, sdf.format(new Date()));
+        //三十日日留存.注册时间和活动时间相差7日及以上称为30日留存
+        int monthDay = userInfoMapper.countUserKeepByTime(ApiConstant.KeepTime.MONTH_DAY, sdf.format(new Date()));
+        map.put("nextDay", nextDay);
+        map.put("sevenDay", sevenDay);
+        map.put("monthDay", monthDay);
+        return map;
     }
 }

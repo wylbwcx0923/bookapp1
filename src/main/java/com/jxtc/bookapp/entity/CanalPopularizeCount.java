@@ -7,6 +7,8 @@ public class CanalPopularizeCount {
 
     private Integer nounId;
 
+    private Integer registerCount;
+
     private Integer downCount;
 
     private Integer payCount;
@@ -19,11 +21,19 @@ public class CanalPopularizeCount {
 
     private String canalName;
 
-    private double downOrderProportion;//下单比例
+    private String downOrderProportion;//下单比例
 
-    private double recoverMoney;//回本金额
+    private Double recoverMoney;//回本金额
 
-    private double recoverProportion;//回本比例
+    private String recoverProportion;//回本比例
+
+    public Integer getRegisterCount() {
+        return registerCount;
+    }
+
+    public void setRegisterCount(Integer registerCount) {
+        this.registerCount = registerCount;
+    }
 
     public String getCanalName() {
         return canalName;
@@ -33,27 +43,27 @@ public class CanalPopularizeCount {
         this.canalName = canalName;
     }
 
-    public double getDownOrderProportion() {
+    public String getDownOrderProportion() {
         return downOrderProportion;
     }
 
-    public void setDownOrderProportion(double downOrderProportion) {
+    public void setDownOrderProportion(String downOrderProportion) {
         this.downOrderProportion = downOrderProportion;
     }
 
-    public double getRecoverMoney() {
+    public Double getRecoverMoney() {
         return recoverMoney;
     }
 
-    public void setRecoverMoney(double recoverMoney) {
+    public void setRecoverMoney(Double recoverMoney) {
         this.recoverMoney = recoverMoney;
     }
 
-    public double getRecoverProportion() {
+    public String getRecoverProportion() {
         return recoverProportion;
     }
 
-    public void setRecoverProportion(double recoverProportion) {
+    public void setRecoverProportion(String recoverProportion) {
         this.recoverProportion = recoverProportion;
     }
 

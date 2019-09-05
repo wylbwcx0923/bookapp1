@@ -181,4 +181,14 @@ public class ApiConstant {
         public static final int REWARD = 4;//打赏券
 
     }
+
+    /**
+     * 定义留存时间常量
+     */
+    public class KeepTime {
+        public static final int NEXT_DAY = 1;//次日留存
+        public static final int SEVEN_DAY = 7;//七日留存
+        public static final int MONTH_DAY = 30;//月留存
+
+    }
 }

@@ -78,9 +78,11 @@ public class JSONUtil {
                     map.put(k.toString(), list);
                 } else {
                     Map<String, Object> m = parseJSON2Map(v.toString());
-                    if (m == null) map.put(k.toString(), v);
-                    else
+                    if (m == null) {
+                        map.put(k.toString(), v);
+                    } else {
                         map.put(k.toString(), m);
+                    }
                 }
             }
             return map;

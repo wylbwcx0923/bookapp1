@@ -32,8 +32,10 @@ public class UserInfoController {
     @ApiOperation(value = "通过微信登录", notes = "通过微信登录", httpMethod = "GET")
     @ResponseBody
     public JXResult wxLogin(@ApiParam(value = "微信授权的临时票据", required = true)
-                            @RequestParam(value = "code", defaultValue = "", required = false) String code) {
-        String userId = userInfoService.wxLogin(code);
+                            @RequestParam(value = "code", defaultValue = "", required = false) String code,
+                            @ApiParam(value = "渠道Id", required = false)
+                            @RequestParam(value = "canalId", defaultValue = "", required = false) Integer canalId) {
+        String userId = userInfoService.wxLogin(code, canalId);
         if (StringUtils.isEmpty(userId)) {
             return new JXResult(false, ApiConstant.StatusCode.LOGINERROR, "微信授权失败!请重试!");
         }
@@ -98,8 +100,10 @@ public class UserInfoController {
     public JXResult smsLogin(@ApiParam(value = "手机号", required = false)
                              @RequestParam(value = "phoneNumber", defaultValue = "", required = false) String phoneNumber,
                              @ApiParam(value = "验证码", required = true)
-                             @RequestParam(value = "code", defaultValue = "", required = false) String code) {
-        Map<String, Object> map = userInfoService.smsVerify(phoneNumber, code);
+                             @RequestParam(value = "code", defaultValue = "", required = false) String code,
+                             @ApiParam(value = "渠道Id", required = false)
+                             @RequestParam(value = "canalId", defaultValue = "", required = false) Integer canalId) {
+        Map<String, Object> map = userInfoService.smsVerify(phoneNumber, code, canalId);
         int errorCode = (int) map.get("errorCode");
         if (errorCode == 200) {
             return new JXResult(true, ApiConstant.StatusCode.OK, "手机号登录成功", map);
@@ -145,7 +149,7 @@ public class UserInfoController {
     }
 
     @RequestMapping(value = "/keep/userCount", method = RequestMethod.GET)
-    @ApiOperation(value = "获取用户留存统计信息", notes = "获取用户留存统计信息", httpMethod = "GET")
+    @ApiOperation(value = "DAU(注册量,活跃量统计)", notes = "DAU(注册量,活跃量统计)", httpMethod = "GET")
     @ResponseBody
     public JXResult userKeepCount() {
         Map<String, Object> map = userInfoService.userKeepCount();
@@ -161,5 +165,13 @@ public class UserInfoController {
                                       @RequestParam(value = "pageSize", defaultValue = "20", required = false) int pageSize) {
         PageResult<UserCount> userCounts = userInfoService.getUserCounts(pageIndex, pageSize);
         return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", userCounts);
+    }
+
+    @RequestMapping(value = "/keep/user/day", method = RequestMethod.GET)
+    @ApiOperation(value = "用户次日,七日,三十日留存统计", notes = "用户次日,七日,三十日留存统计", httpMethod = "GET")
+    @ResponseBody
+    public JXResult userKeepDays() {
+        Map<String, Object> map = userInfoService.getUserKeepOneSevenAndMounth();
+        return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", map);
     }
 }

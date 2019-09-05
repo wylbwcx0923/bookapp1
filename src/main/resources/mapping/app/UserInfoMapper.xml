@@ -476,4 +476,10 @@
         set update_time = #{updateTime,jdbcType=TIMESTAMP}
         where user_id=#{userId,jdbcType=VARCHAR}
     </update>
+
+    <select id="countUserKeepByTime" resultType="java.lang.Integer">
+        select ifnull(count(*),0) from user_info
+        where TIMESTAMPDIFF(DAY, create_time, update_time) &gt;= #{days,jdbcType=INTEGER}
+        and TIMESTAMPDIFF(DAY, update_time, #{nowTime,jdbcType=VARCHAR}) &lt;= 30
+    </select>
 </mapper>

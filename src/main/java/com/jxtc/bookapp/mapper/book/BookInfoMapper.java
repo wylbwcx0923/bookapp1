@@ -4,6 +4,7 @@ import com.jxtc.bookapp.entity.BookInfo;
 import com.jxtc.bookapp.entity.BookInfoWithBLOBs;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface BookInfoMapper {
@@ -38,4 +39,6 @@ public interface BookInfoMapper {
     List<BookInfo> selectBooksByParams(@Param("bookId") Integer bookId, @Param("bookName") String bookName, @Param("author") String author, @Param("status") Integer status, @Param("offset") int offset, @Param("size") int size);
 
     int updateBookInfoByBookId(BookInfo bookInfo);
+
+    List<BookInfo> selectBooksByDes(@Param("keyWords") String keyWords);
 }

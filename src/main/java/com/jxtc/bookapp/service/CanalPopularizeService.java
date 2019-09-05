@@ -3,6 +3,7 @@ package com.jxtc.bookapp.service;
 import com.jxtc.bookapp.entity.Canal;
 import com.jxtc.bookapp.entity.CanalPopularizeCount;
 import com.jxtc.bookapp.utils.PageResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ public interface CanalPopularizeService {
      *
      * @param canal
      */
+    @Transactional
     void addCanal(Canal canal);
 
     /**

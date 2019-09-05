@@ -12,10 +12,11 @@ public interface UserInfoService {
      * 微信登录
      *
      * @param code
+     * @param canalId
      * @return
      */
     @Transactional
-    String wxLogin(String code);
+    String wxLogin(String code, Integer canalId);
 
     /**
      * qq登录
@@ -78,10 +79,11 @@ public interface UserInfoService {
      *
      * @param phoneNumber
      * @param code
+     * @param canalId
      * @return
      */
     @Transactional
-    Map<String, Object> smsVerify(String phoneNumber, String code);
+    Map<String, Object> smsVerify(String phoneNumber, String code, Integer canalId);
 
     /**
      * 获得用户列表
@@ -114,4 +116,11 @@ public interface UserInfoService {
      * @return
      */
     PageResult<UserCount> getUserCounts(int pageIndex, int pageSize);
+
+    /**
+     * 获得用户次日,7日,30日的留存
+     *
+     * @return
+     */
+    Map<String, Object> getUserKeepOneSevenAndMounth();
 }

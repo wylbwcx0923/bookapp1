@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -197,11 +198,11 @@ public class BookInfoServiceImpl implements BookInfoService {
         }
         //先判断用户类型,如果包年用户直接阅读
         UserInfo userInfo = userInfoService.getUserInfoByLocal(userId);
-        String isUpdate = (String) redisService.get("isUpdate_" + userId);
+        String isUpdate = (String) redisService.get(TimeUtil.getYearMonthDay(new Date()) + "_update_" + userId);
         if (StringUtils.isEmpty(isUpdate)) {
             //修改用户的活动时间
             userInfoMapper.updateUserUpdateTime(userId, new Date());
-            redisService.set("isUpdate_" + userId, "true");
+            redisService.set(TimeUtil.getYearMonthDay(new Date()) + "_update_" + userId, "true", ApiConstant.Timer.ONE_DAY);
         }
         //迎新活动,新用户三天免费阅读
         Date createTime = userInfo.getCreateTime();
@@ -252,6 +253,8 @@ public class BookInfoServiceImpl implements BookInfoService {
         bookInfos.addAll(bookInfoMapper.selectBooksLikeKeyWords(keyWords));
         //再根据书名相似查
         bookInfos.addAll(bookInfoMapper.selectBooksLikeBookName(keyWords));
+        //搜索简介相似查
+        bookInfos.addAll(bookInfoMapper.selectBooksByDes(keyWords));
         List<BookInfo> books = new ArrayList<>();
         pageSize = bookInfos.size() < pageSize ? bookInfos.size() : pageSize;
         for (int i = (pageIndex - 1) * pageSize; i < pageSize; i++) {

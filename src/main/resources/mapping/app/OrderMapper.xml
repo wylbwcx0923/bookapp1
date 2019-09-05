@@ -416,12 +416,12 @@
 
     <select id="countOrdersByCanalId" resultType="com.jxtc.bookapp.entity.OrderCount">
         select ifnull(count(o.id),0) as countOrder,
-        ifnull(sum(o.amount),0) as amount
+        ifnull(sum(o.amount),0)/100 as amount
         from `order` o,`user_info` u
         where o.user_id=u.user_id
         and o.status=1
         and u.coin=#{canalId,jdbcType=INTEGER}
-        and o.create_time like concat('%',#{oneDay,jdbcType=VARCHAR},'%')
+        and u.create_time like concat('%',#{oneDay,jdbcType=VARCHAR},'%')
     </select>
 
 

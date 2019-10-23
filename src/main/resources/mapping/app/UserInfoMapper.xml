@@ -438,7 +438,7 @@
     </select>
 
     <select id="countActiviteUser" resultType="int">
-        select count(*) from user_info
+        select ifnull(count(*),0) from user_info
         <where>
             <if test="startTime != null and startTime != '' and endTime !=null and endTime !=''">
                 and update_time between concat('',#{startTime,jdbcType=VARCHAR},' 00:00:00')
@@ -446,6 +446,18 @@
             </if>
         </where>
     </select>
+
+    <select id="countDownUser" resultType="int">
+        select ifnull(count(*),0) from user_info
+        <where>
+            <if test="startTime != null and startTime != '' and endTime !=null and endTime !=''">
+                and create_time between concat('',#{startTime,jdbcType=VARCHAR},' 00:00:00')
+                and concat('',#{endTime,jdbcType=VARCHAR},' 23:59:59')
+            </if>
+        </where>
+    </select>
+
+
     <select id="selectUserCountList" resultType="com.jxtc.bookapp.mapper.app.UserCount">
         select date(create_time) as oneDay,
         ifnull(count(*),0) as downUser
@@ -482,4 +494,17 @@
         where TIMESTAMPDIFF(DAY, create_time, update_time) &gt;= #{days,jdbcType=INTEGER}
         and TIMESTAMPDIFF(DAY, update_time, #{nowTime,jdbcType=VARCHAR}) &lt;= 30
     </select>
+    <select id="countUserRegistByTime" resultType="java.lang.Integer">
+        select ifnull(count(*),0) from user_info
+        where TIMESTAMPDIFF(DAY, create_time, #{nowTime,jdbcType=VARCHAR}) &lt;= #{days,jdbcType=INTEGER}
+    </select>
+    <select id="selectUserCountActisList" resultType="com.jxtc.bookapp.mapper.app.UserCount">
+        select date(update_time) as oneDay,
+        ifnull(count(*),0) as actiUser
+        from user_info
+        group by date(update_time)
+        order by date(update_time) desc
+        limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
+    </select>
+
 </mapper>

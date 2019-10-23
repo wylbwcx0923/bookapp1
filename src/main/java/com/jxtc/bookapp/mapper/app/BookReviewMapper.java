@@ -33,7 +33,7 @@ public interface BookReviewMapper {
 
     List<BookReview> selectPageBookReviews(@Param("bookId") int bookId, @Param("offset") int offset, @Param("size") int size);
 
-    int praise(@Param("id") int id, @Param("praise") int praise);
+    void praise(@Param("id") int id, @Param("praise") int praise);
 
     List<BookReview> selectPageUserBookReviews(@Param("userId") String userId, @Param("offset") int offset, @Param("size") int size);
 

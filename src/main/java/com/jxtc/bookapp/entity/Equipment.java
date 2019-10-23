@@ -11,6 +11,16 @@ public class Equipment {
 
     private Date createTime;
 
+    private String imei;
+
+    public String getImei() {
+        return imei;
+    }
+
+    public void setImei(String imei) {
+        this.imei = imei;
+    }
+
     public Integer getId() {
         return id;
     }

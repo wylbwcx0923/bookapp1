@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxtc.bookapp.mapper.app.ToutiaoCountMapper" >
+  <resultMap id="BaseResultMap" type="com.jxtc.bookapp.entity.ToutiaoCount" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="adid" property="adid" jdbcType="VARCHAR" />
+    <result column="cdid" property="cdid" jdbcType="VARCHAR" />
+    <result column="imei" property="imei" jdbcType="VARCHAR" />
+    <result column="mac" property="mac" jdbcType="VARCHAR" />
+    <result column="androidid" property="androidid" jdbcType="VARCHAR" />
+    <result column="os" property="os" jdbcType="VARCHAR" />
+    <result column="timestamp" property="timestamp" jdbcType="VARCHAR" />
+    <result column="callback_url" property="callbackUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, adid, cdid, imei, mac, androidid, os, timestamp, callback_url
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.jxtc.bookapp.entity.ToutiaoCountExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from toutiao_count
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from toutiao_count
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from toutiao_count
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.jxtc.bookapp.entity.ToutiaoCountExample" >
+    delete from toutiao_count
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.jxtc.bookapp.entity.ToutiaoCount" >
+    insert into toutiao_count (id, adid, cdid, 
+      imei, mac, androidid, 
+      os, timestamp, callback_url
+      )
+    values (#{id,jdbcType=INTEGER}, #{adid,jdbcType=VARCHAR}, #{cdid,jdbcType=VARCHAR}, 
+      #{imei,jdbcType=VARCHAR}, #{mac,jdbcType=VARCHAR}, #{androidid,jdbcType=VARCHAR}, 
+      #{os,jdbcType=VARCHAR}, #{timestamp,jdbcType=VARCHAR}, #{callbackUrl,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxtc.bookapp.entity.ToutiaoCount" >
+    insert into toutiao_count
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="adid != null" >
+        adid,
+      </if>
+      <if test="cdid != null" >
+        cdid,
+      </if>
+      <if test="imei != null" >
+        imei,
+      </if>
+      <if test="mac != null" >
+        mac,
+      </if>
+      <if test="androidid != null" >
+        androidid,
+      </if>
+      <if test="os != null" >
+        os,
+      </if>
+      <if test="timestamp != null" >
+        timestamp,
+      </if>
+      <if test="callbackUrl != null" >
+        callback_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="adid != null" >
+        #{adid,jdbcType=VARCHAR},
+      </if>
+      <if test="cdid != null" >
+        #{cdid,jdbcType=VARCHAR},
+      </if>
+      <if test="imei != null" >
+        #{imei,jdbcType=VARCHAR},
+      </if>
+      <if test="mac != null" >
+        #{mac,jdbcType=VARCHAR},
+      </if>
+      <if test="androidid != null" >
+        #{androidid,jdbcType=VARCHAR},
+      </if>
+      <if test="os != null" >
+        #{os,jdbcType=VARCHAR},
+      </if>
+      <if test="timestamp != null" >
+        #{timestamp,jdbcType=VARCHAR},
+      </if>
+      <if test="callbackUrl != null" >
+        #{callbackUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.jxtc.bookapp.entity.ToutiaoCountExample" resultType="java.lang.Integer" >
+    select count(*) from toutiao_count
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update toutiao_count
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.adid != null" >
+        adid = #{record.adid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cdid != null" >
+        cdid = #{record.cdid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imei != null" >
+        imei = #{record.imei,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mac != null" >
+        mac = #{record.mac,jdbcType=VARCHAR},
+      </if>
+      <if test="record.androidid != null" >
+        androidid = #{record.androidid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.os != null" >
+        os = #{record.os,jdbcType=VARCHAR},
+      </if>
+      <if test="record.timestamp != null" >
+        timestamp = #{record.timestamp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.callbackUrl != null" >
+        callback_url = #{record.callbackUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update toutiao_count
+    set id = #{record.id,jdbcType=INTEGER},
+      adid = #{record.adid,jdbcType=VARCHAR},
+      cdid = #{record.cdid,jdbcType=VARCHAR},
+      imei = #{record.imei,jdbcType=VARCHAR},
+      mac = #{record.mac,jdbcType=VARCHAR},
+      androidid = #{record.androidid,jdbcType=VARCHAR},
+      os = #{record.os,jdbcType=VARCHAR},
+      timestamp = #{record.timestamp,jdbcType=VARCHAR},
+      callback_url = #{record.callbackUrl,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxtc.bookapp.entity.ToutiaoCount" >
+    update toutiao_count
+    <set >
+      <if test="adid != null" >
+        adid = #{adid,jdbcType=VARCHAR},
+      </if>
+      <if test="cdid != null" >
+        cdid = #{cdid,jdbcType=VARCHAR},
+      </if>
+      <if test="imei != null" >
+        imei = #{imei,jdbcType=VARCHAR},
+      </if>
+      <if test="mac != null" >
+        mac = #{mac,jdbcType=VARCHAR},
+      </if>
+      <if test="androidid != null" >
+        androidid = #{androidid,jdbcType=VARCHAR},
+      </if>
+      <if test="os != null" >
+        os = #{os,jdbcType=VARCHAR},
+      </if>
+      <if test="timestamp != null" >
+        timestamp = #{timestamp,jdbcType=VARCHAR},
+      </if>
+      <if test="callbackUrl != null" >
+        callback_url = #{callbackUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.ToutiaoCount" >
+    update toutiao_count
+    set adid = #{adid,jdbcType=VARCHAR},
+      cdid = #{cdid,jdbcType=VARCHAR},
+      imei = #{imei,jdbcType=VARCHAR},
+      mac = #{mac,jdbcType=VARCHAR},
+      androidid = #{androidid,jdbcType=VARCHAR},
+      os = #{os,jdbcType=VARCHAR},
+      timestamp = #{timestamp,jdbcType=VARCHAR},
+      callback_url = #{callbackUrl,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

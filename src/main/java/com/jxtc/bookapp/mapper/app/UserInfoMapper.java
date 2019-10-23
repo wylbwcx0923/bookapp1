@@ -39,6 +39,8 @@ public interface UserInfoMapper {
 
     int countActiviteUser(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
+    int countDownUser(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
     List<UserCount> selectUserCountList(@Param("offset") int offset, @Param("size") int size);
 
     int countDays();
@@ -48,4 +50,8 @@ public interface UserInfoMapper {
     int countDownloadByCanalIdAndCreateTime(@Param("canalId") Integer canalId, @Param("oneDay") String oneDay);
 
     int countUserKeepByTime(@Param("days") Integer days, @Param("nowTime") String nowTime);
+
+    int countUserRegistByTime(@Param("days") Integer days, @Param("nowTime") String nowTime);
+
+    List<UserCount> selectUserCountActisList(@Param("offset") int offset,@Param("size") int size);
 }

@@ -65,7 +65,7 @@ public class BookReviewServiceImpl implements BookReviewService {
         } else {
             JSONArray array = JSONArray.fromObject(isExists);
             bookReviews = (List<BookReview>) JSONArray.toCollection(array, BookReview.class);
-            logger.info("书评来自缓存");
+            logger.info("书评来自Redis");
         }
         if (bookReviews != null && bookReviews.size() > 0) {
             for (BookReview bookReview : bookReviews) {

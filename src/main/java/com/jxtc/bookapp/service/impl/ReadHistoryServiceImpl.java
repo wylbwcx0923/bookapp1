@@ -32,7 +32,7 @@ public class ReadHistoryServiceImpl implements ReadHistoryService {
         if (readHistories != null && readHistories.size() > 0) {//在用户的阅读记录中找到了这本书
             //判断用户当前加入的章节是否比原历史记录中的大
             ReadHistory history = readHistories.get(0);//历史的阅读记录
-            if (history.getLastReadChapter() <= readHistory.getLastReadChapter()) {
+            if (history.getLastReadChapter() < readHistory.getLastReadChapter()) {
                 ReadHistory his = new ReadHistory();
                 his.setUpdateTime(new Date());
                 his.setLastReadChapter(readHistory.getLastReadChapter());

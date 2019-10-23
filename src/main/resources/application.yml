@@ -47,6 +47,11 @@ spring:
       enabled: true
       max-file-size: 30MB
       max-request-size: 30MB
+  thymeleaf:
+    cache: false # 开发时关闭缓存,不然没法看到实时页面
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
 #配置mybatis使用
 mybatis:
   mapper-locations: classpath:mapping/*.xml  #注意：一定要对应mapper映射xml文件的所在路径

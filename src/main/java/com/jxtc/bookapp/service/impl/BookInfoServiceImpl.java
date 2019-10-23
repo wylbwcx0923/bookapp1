@@ -206,8 +206,8 @@ public class BookInfoServiceImpl implements BookInfoService {
         }
         //迎新活动,新用户三天免费阅读
         Date createTime = userInfo.getCreateTime();
-        if (new Date().getTime() - createTime.getTime() <= ApiConstant.Timer.THREE_DAY_MSEC) {
-            logger.info("新用户注册,三天限免阅读");
+        if (new Date().getTime() - createTime.getTime() <= ApiConstant.Timer.ONE_DAY_MSEC) {
+            logger.info("新用户注册,一天限免阅读");
             chapterInfo.setIsFree((byte) 1);
             map.put("chapterInfo", chapterInfo);
             return map;
@@ -216,7 +216,9 @@ public class BookInfoServiceImpl implements BookInfoService {
         //包年看所有
         if (userType == ApiConstant.UserType.VIP_YEAR_USER) {
             logger.info("包年看所有");
-            return getChapterInfo(bookId, chapterId);
+            chapterInfo.setIsFree((byte) 1);
+            map.put("chapterInfo", chapterInfo);
+            return map;
         }
         //如果用户是包月或者包季VIP
         if (userType == ApiConstant.UserType.VIP_MONTH_USER || userType == ApiConstant.UserType.VIP_QUARTER_USER) {

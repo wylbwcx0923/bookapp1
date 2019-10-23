@@ -7,11 +7,14 @@ import com.jxtc.bookapp.mapper.app.*;
 import com.jxtc.bookapp.service.RedisService;
 import com.jxtc.bookapp.service.UserEmpiricalService;
 import com.jxtc.bookapp.service.UserInfoService;
+import com.jxtc.bookapp.utils.HttpClientUtil;
 import com.jxtc.bookapp.utils.PageResult;
 
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,7 @@ import weixin.popular.bean.BaseResult;
 import weixin.popular.bean.sns.SnsToken;
 import weixin.popular.bean.user.User;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -29,6 +33,7 @@ import java.util.*;
 @Service(value = "userInfoService")
 public class UserInfoServiceImpl implements UserInfoService {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private WxConfig wxConfig;
     @Autowired
@@ -100,6 +105,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         }
         return null;
     }
+
 
     /**
      * 初始化用户的阅币
@@ -334,7 +340,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         //设置渠道Id
         canalId = canalId == null ? 0 : canalId;
         userInfo.setCoin(canalId);
-        userInfo.setSex(1);//默认设置为男生
+        userInfo.setSex(2);//默认设置为女生
         userInfo.setType(ApiConstant.UserType.GENNERAL_USER);
         userInfoMapper.insert(userInfo);
         //在用户经验值的表中插入一条该用户的数据
@@ -418,13 +424,13 @@ public class UserInfoServiceImpl implements UserInfoService {
         int total = userInfoMapper.countDays();
         page.setTotal(total);
         int offset = (pageIndex - 1) * pageSize;
-        List<UserCount> userCounts = userInfoMapper.selectUserCountList(offset, pageSize);
-        if (userCounts != null && userCounts.size() > 0) {
-            for (UserCount userCount : userCounts) {
-                userCount.setActiUser(userInfoMapper.countActiviteUser(userCount.getOneDay(), userCount.getOneDay()));
+        List<UserCount> userActiOneDays = userInfoMapper.selectUserCountActisList(offset, pageSize);
+        if (userActiOneDays != null && userActiOneDays.size() > 0) {
+            for (UserCount userActiOneDay : userActiOneDays) {
+                userActiOneDay.setDownUser(userInfoMapper.countDownUser(userActiOneDay.getOneDay(), userActiOneDay.getOneDay()));
             }
         }
-        page.setPageList(userCounts);
+        page.setPageList(userActiOneDays);
         return page;
     }
 
@@ -438,9 +444,24 @@ public class UserInfoServiceImpl implements UserInfoService {
         int sevenDay = userInfoMapper.countUserKeepByTime(ApiConstant.KeepTime.SEVEN_DAY, sdf.format(new Date()));
         //三十日日留存.注册时间和活动时间相差7日及以上称为30日留存
         int monthDay = userInfoMapper.countUserKeepByTime(ApiConstant.KeepTime.MONTH_DAY, sdf.format(new Date()));
+        //留存率
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(2);
+        //次日留存率
+        int nextDayRegis = userInfoMapper.countUserList(null, null, null);
+        String nextDayRate = numberFormat.format((double) nextDay / (double) nextDayRegis * 3 * 100) + "%";
+        //七日留存率
+        int sevenDayRegis = userInfoMapper.countUserRegistByTime(ApiConstant.KeepTime.SEVEN_DAY, sdf.format(new Date()));
+        String sevenDayRate = numberFormat.format((double) sevenDay / (double) sevenDayRegis / 10 * 100) + "%";
+        //月留存率
+        int monthDayRegis = userInfoMapper.countUserRegistByTime(ApiConstant.KeepTime.MONTH_DAY, sdf.format(new Date()));
+        String monthDayRate = numberFormat.format((double) monthDay / (double) monthDayRegis * 100) + "%";
         map.put("nextDay", nextDay);
+        map.put("nextDayRate", nextDayRate);
         map.put("sevenDay", sevenDay);
+        map.put("sevenDayRate", sevenDayRate);
         map.put("monthDay", monthDay);
+        map.put("monthDayRate", monthDayRate);
         return map;
     }
 }

@@ -184,7 +184,7 @@ public class FileUploadService {
         bucketName = fileType.equals("img") ? aliyunOSSConfig.getBucketNameImg() : aliyunOSSConfig.getBucketNameChapter();
         OSSClient ossClient = new OSSClient(aliyunOSSConfig.getEndpoint(), aliyunOSSConfig.getAccessKeyId(), aliyunOSSConfig.getAccessKeySecret());
         // 设置URL过期时间为5分钟
-        Date expiration = new Date(new Date().getTime() + 5 * 60 * 1000);
+        Date expiration = new Date(System.currentTimeMillis() + 5 * 60 * 1000);
         // 生成URL
         URL url = ossClient.generatePresignedUrl(bucketName, key, expiration);
         ossClient.shutdown();

@@ -43,6 +43,7 @@ public class ApiConstant {
         public static final long ONE_DAY = 86400;//一天
         public static final long THREE_DAY = 86400 * 3;//三天
         public static final long THREE_DAY_MSEC = 86400 * 1000 * 3;//三天的毫秒值
+        public static final long ONE_DAY_MSEC = 86400 * 1000;//一天的毫秒值
     }
 
     //常用的一些配置

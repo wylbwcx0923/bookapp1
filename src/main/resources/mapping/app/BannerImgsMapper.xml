@@ -238,5 +238,6 @@
         select *
         from banner_imgs
         where banner_id = #{bannerId,jdbcType=INTEGER}
+        order by sort asc
     </select>
 </mapper>

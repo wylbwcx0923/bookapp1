@@ -295,7 +295,7 @@
                  limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
     </select>
 
-    <select id="praise" resultType="int">
+    <select id="praise">
         update book_review
         set praise=#{praise,jdbcType=INTEGER}
         where id = #{id,jdbcType=INTEGER}
@@ -321,7 +321,7 @@
     </select>
 
     <select id="countHaveReviewBook" resultType="int">
-        select count(distinct (r.book_id))
+        select ifnull(count(distinct (r.book_id)),0)
         from bc_source.book_info b,
         bookapp.book_review r
         <where>
@@ -332,7 +332,7 @@
         </where>
     </select>
     <select id="countByBookId" resultType="int">
-        select count(*)
+        select ifnull(count(*),0)
         from book_review
         where book_id = #{bookId,jdbcType=INTEGER}
     </select>

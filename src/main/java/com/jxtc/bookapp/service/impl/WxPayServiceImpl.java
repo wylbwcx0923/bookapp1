@@ -185,7 +185,7 @@ public class WxPayServiceImpl implements WxPayService {
             }
             if (productId == ApiConstant.OrderType.VIP_YEAR_ORDER) {
                 //包年会员
-                userVip.setVipType(ApiConstant.OrderType.VIP_YEAR_ORDER);
+                userVip.setVipType(ApiConstant.UserType.VIP_YEAR_USER);
                 calendar.add(Calendar.DAY_OF_YEAR, 365);
                 userUp.setType(ApiConstant.UserType.VIP_YEAR_USER);
             }

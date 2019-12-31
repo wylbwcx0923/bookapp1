@@ -112,9 +112,9 @@
     </delete>
     <insert id="insert" parameterType="com.jxtc.bookapp.entity.Consume">
         insert into consume_#{tableIndex,jdbcType=INTEGER} (id, user_id, book_id,
-                                                            chapter_id, amount, create_time)
+        chapter_id, amount, create_time)
         values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{bookId,jdbcType=INTEGER},
-                #{chapterId,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+        #{chapterId,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.jxtc.bookapp.entity.Consume">
         insert into consume_#{tableIndex,jdbcType=INTEGER}
@@ -226,11 +226,11 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.Consume">
         update consume_#{tableIndex,jdbcType=INTEGER}
-        set user_id     = #{userId,jdbcType=VARCHAR},
-            book_id     = #{bookId,jdbcType=INTEGER},
-            chapter_id  = #{chapterId,jdbcType=INTEGER},
-            amount      = #{amount,jdbcType=INTEGER},
-            create_time = #{createTime,jdbcType=TIMESTAMP}
+        set user_id = #{userId,jdbcType=VARCHAR},
+        book_id = #{bookId,jdbcType=INTEGER},
+        chapter_id = #{chapterId,jdbcType=INTEGER},
+        amount = #{amount,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP}
         where id = #{id,jdbcType=INTEGER}
     </update>
 
@@ -239,7 +239,7 @@
         from consume_#{tableIndex,jdbcType=INTEGER}
         where user_id = #{userId,jdbcType=VARCHAR}
         order by create_time DESC
-                 limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
+        limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
     </select>
 
     <select id="selectBookConsumeList" resultType="com.jxtc.bookapp.entity.ConsumeCount">
@@ -275,19 +275,19 @@
     </select>
 
     <select id="selectBookChapterConsumesList" resultType="com.jxtc.bookapp.entity.ConsumeCount">
-        select s.book_id      as bookId,
-               s.chapter_id   as chapterId,
-               c.chapter_name as chapterName,
-               count(s.id)    as consumeCount,
-               sum(s.amount)  as consumeAmount
+        select s.book_id as bookId,
+        s.chapter_id as chapterId,
+        c.chapter_name as chapterName,
+        count(s.id) as consumeCount,
+        sum(s.amount) as consumeAmount
         from consume_#{tableIndex,jdbcType=INTEGER} s,
-             bc_source.chapter_info c
+        bc_source.chapter_info c
         where c.book_id = s.book_id
-          and s.book_id = #{bookId,jdbcType=INTEGER}
-          and c.chapter_id = s.chapter_id
+        and s.book_id = #{bookId,jdbcType=INTEGER}
+        and c.chapter_id = s.chapter_id
         group by s.chapter_id
         order by s.chapter_id asc
-                 limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
+        limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
     </select>
 
     <select id="countBookChapterConsumes" resultType="int">

@@ -174,4 +174,16 @@ public class UserInfoController {
         Map<String, Object> map = userInfoService.getUserKeepOneSevenAndMounth();
         return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", map);
     }
+
+    @RequestMapping(value = "/google/login", method = RequestMethod.POST)
+    @ApiOperation(value = "谷歌登录接口", notes = "谷歌登录接口", httpMethod = "POST")
+    @ResponseBody
+    public JXResult googleLogin(@ApiParam(value = "谷歌Id", required = true)
+                                @RequestParam(value = "googleId", defaultValue = "", required = true) String googleId,
+                                @ApiParam(value = "用户昵称", required = false)
+                                @RequestParam(value = "nickName", defaultValue = "", required = false) String nickName,
+                                @ApiParam(value = "头像", required = false)
+                                @RequestParam(value = "photo", defaultValue = "", required = false) String photo) {
+        return new JXResult(true, ApiConstant.StatusCode.OK, "登录成功", userInfoService.googleLogin(googleId, nickName, photo));
+    }
 }

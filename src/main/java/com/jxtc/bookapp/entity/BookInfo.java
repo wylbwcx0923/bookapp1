@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 
-public class BookInfo  {
+public class BookInfo {
 
     private Integer id;
 
@@ -99,7 +99,7 @@ public class BookInfo  {
     }
 
     public void setIsVIP(int isVIP) {
-        this.isVIP=isVIP;
+        this.isVIP = isVIP;
     }
 
     public Integer getId() {

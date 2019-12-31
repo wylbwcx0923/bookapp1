@@ -78,6 +78,7 @@ public interface BangDanService {
 
     /**
      * 根据分类获得榜单的名字
+     *
      * @param type
      * @return
      */

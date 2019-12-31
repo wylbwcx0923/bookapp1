@@ -6,9 +6,11 @@ import com.jxtc.bookapp.entity.Product;
 import com.jxtc.bookapp.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -23,8 +25,9 @@ public class ProductController {
 
     @ApiOperation(value = "获得普通充值的产品列表", notes = "获得普通充值的产品列表", httpMethod = "GET")
     @RequestMapping(value = "list", method = RequestMethod.GET)
-    public JXResult getList() {
-        List<Product> productList = productService.getProductList();
+    public JXResult getList(@ApiParam(value = "是否是繁体", required = false)
+                            @RequestParam(value = "isComplex", defaultValue = "", required = false) String isComplex) {
+        List<Product> productList = productService.getProductList(isComplex);
         return new JXResult(true, ApiConstant.StatusCode.OK, "请求成功", productList);
     }
 

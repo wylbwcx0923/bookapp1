@@ -10,20 +10,23 @@ import com.jxtc.bookapp.utils.PageResult;
 public interface IdeaService {
     /**
      * 添加意见
+     *
      * @param idea
      */
     void insertIdea(Idea idea);
 
     /**
      * 获得意见的列表
+     *
      * @param pageIndex
      * @param pageSize
      * @return
      */
-    PageResult<Idea> getIdeaList(int pageIndex,int pageSize);
+    PageResult<Idea> getIdeaList(int pageIndex, int pageSize);
 
     /**
      * 通过id获得意见的详情
+     *
      * @param id
      * @return
      */
@@ -31,6 +34,7 @@ public interface IdeaService {
 
     /**
      * 删除意见
+     *
      * @param ids
      */
     void deleteIdea(int[] ids);

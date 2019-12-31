@@ -108,9 +108,9 @@
     </delete>
     <insert id="insert" parameterType="com.jxtc.bookapp.entity.Material">
         insert into material (id, name, url,
-                              create_time)
+        create_time)
         values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR},
-                #{createTime,jdbcType=TIMESTAMP})
+        #{createTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.jxtc.bookapp.entity.Material">
         insert into material
@@ -196,9 +196,9 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.Material">
         update material
-        set name        = #{name,jdbcType=VARCHAR},
-            url         = #{url,jdbcType=VARCHAR},
-            create_time = #{createTime,jdbcType=TIMESTAMP}
+        set name = #{name,jdbcType=VARCHAR},
+        url = #{url,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP}
         where id = #{id,jdbcType=INTEGER}
     </update>
     <select id="selectListByPage" resultType="com.jxtc.bookapp.entity.Material">

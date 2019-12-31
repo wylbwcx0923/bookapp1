@@ -123,4 +123,11 @@ public interface UserInfoService {
      * @return
      */
     Map<String, Object> getUserKeepOneSevenAndMounth();
+
+    /**
+     * 谷歌用户登录
+     *
+     * @return
+     */
+    String googleLogin(String googleId,String nickname,String photo);
 }

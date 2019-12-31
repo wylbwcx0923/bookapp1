@@ -112,9 +112,9 @@
     </delete>
     <insert id="insert" parameterType="com.jxtc.bookapp.entity.BannerImgs">
         insert into banner_imgs (id, banner_id, img_url,
-                                 book_id, sort, create_time)
+        book_id, sort, create_time)
         values (#{id,jdbcType=INTEGER}, #{bannerId,jdbcType=INTEGER}, #{imgUrl,jdbcType=VARCHAR},
-                #{bookId,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+        #{bookId,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.jxtc.bookapp.entity.BannerImgs">
         insert into banner_imgs
@@ -227,11 +227,11 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.BannerImgs">
         update banner_imgs
-        set banner_id   = #{bannerId,jdbcType=INTEGER},
-            img_url     = #{imgUrl,jdbcType=VARCHAR},
-            book_id     = #{bookId,jdbcType=INTEGER},
-            sort        = #{sort,jdbcType=INTEGER},
-            create_time = #{createTime,jdbcType=TIMESTAMP}
+        set banner_id = #{bannerId,jdbcType=INTEGER},
+        img_url = #{imgUrl,jdbcType=VARCHAR},
+        book_id = #{bookId,jdbcType=INTEGER},
+        sort = #{sort,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP}
         where id = #{id,jdbcType=INTEGER}
     </update>
     <select id="selectBannerImgs" resultMap="BaseResultMap">

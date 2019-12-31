@@ -15,10 +15,11 @@ public interface MaterialService {
 
     /**
      * 保存素材到Mysql
+     *
      * @param url
      * @param materialName
      */
-    void insertMaterialToMysql(String url,String materialName);
+    void insertMaterialToMysql(String url, String materialName);
 
     /**
      * 分页获取素材列表

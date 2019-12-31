@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface VersionService {
     //获取当前的最新版本
     Version getBestNewVersion();
+
     //上传最新的版本到服务器
     boolean updateAppToOss(MultipartFile file, Version version);
 }

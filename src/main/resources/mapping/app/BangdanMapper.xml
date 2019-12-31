@@ -179,16 +179,16 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.Bangdan">
         update bangdan
-        set bangdan_id   = #{bangdanId,jdbcType=INTEGER},
-            bangdan_name = #{bangdanName,jdbcType=VARCHAR}
+        set bangdan_id = #{bangdanId,jdbcType=INTEGER},
+        bangdan_name = #{bangdanName,jdbcType=VARCHAR}
         where id = #{id,jdbcType=INTEGER}
     </update>
 
     <select id="selectBangDanList" resultMap="BaseResultMap">
         select *
         from bangdan limit
-             #{offset,jdbcType=INTEGER},
-             #{size,jdbcType=INTEGER}
+        #{offset,jdbcType=INTEGER},
+        #{size,jdbcType=INTEGER}
     </select>
 
     <select id="selectBandanByBangDanId" resultMap="BaseResultMap">

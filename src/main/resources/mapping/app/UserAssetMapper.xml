@@ -112,9 +112,9 @@
     </delete>
     <insert id="insert" parameterType="com.jxtc.bookapp.entity.UserAsset">
         insert into user_asset (id, user_id, book_id,
-                                chapter_id, amount, create_time)
+        chapter_id, amount, create_time)
         values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{bookId,jdbcType=INTEGER},
-                #{chapterId,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+        #{chapterId,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.jxtc.bookapp.entity.UserAsset">
         insert into user_asset_#{tableIndex,jdbcType=INTEGER}
@@ -226,19 +226,19 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.UserAsset">
         update user_asset
-        set user_id     = #{userId,jdbcType=VARCHAR},
-            book_id     = #{bookId,jdbcType=INTEGER},
-            chapter_id  = #{chapterId,jdbcType=INTEGER},
-            amount      = #{amount,jdbcType=INTEGER},
-            create_time = #{createTime,jdbcType=TIMESTAMP}
+        set user_id = #{userId,jdbcType=VARCHAR},
+        book_id = #{bookId,jdbcType=INTEGER},
+        chapter_id = #{chapterId,jdbcType=INTEGER},
+        amount = #{amount,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP}
         where id = #{id,jdbcType=INTEGER}
     </update>
     <select id="selectByUserIdBookIdAndChapterId" resultType="com.jxtc.bookapp.entity.UserAsset">
         select
-          <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List"/>
         from user_asset_#{tableIndex,jdbcType=INTEGER}
         where user_id = #{userId,jdbcType=VARCHAR}
-          and book_id = #{bookId,jdbcType=INTEGER}
-          and chapter_id = #{chapterId,jdbcType=INTEGER}
+        and book_id = #{bookId,jdbcType=INTEGER}
+        and chapter_id = #{chapterId,jdbcType=INTEGER}
     </select>
 </mapper>

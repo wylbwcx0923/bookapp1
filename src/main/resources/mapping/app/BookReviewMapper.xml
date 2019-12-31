@@ -114,11 +114,11 @@
     </delete>
     <insert id="insert" parameterType="com.jxtc.bookapp.entity.BookReview">
         insert into book_review (id, user_id, book_id,
-                                 grade, praise, content,
-                                 create_time)
+        grade, praise, content,
+        create_time)
         values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{bookId,jdbcType=INTEGER},
-                #{grade,jdbcType=INTEGER}, #{praise,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR},
-                #{createTime,jdbcType=TIMESTAMP})
+        #{grade,jdbcType=INTEGER}, #{praise,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.jxtc.bookapp.entity.BookReview">
         insert into book_review
@@ -244,55 +244,55 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.BookReview">
         update book_review
-        set user_id     = #{userId,jdbcType=VARCHAR},
-            book_id     = #{bookId,jdbcType=INTEGER},
-            grade       = #{grade,jdbcType=INTEGER},
-            praise      = #{praise,jdbcType=INTEGER},
-            content     = #{content,jdbcType=VARCHAR},
-            create_time = #{createTime,jdbcType=TIMESTAMP}
+        set user_id = #{userId,jdbcType=VARCHAR},
+        book_id = #{bookId,jdbcType=INTEGER},
+        grade = #{grade,jdbcType=INTEGER},
+        praise = #{praise,jdbcType=INTEGER},
+        content = #{content,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP}
         where id = #{id,jdbcType=INTEGER}
     </update>
 
     <select id="selectPageBookReviews" resultType="com.jxtc.bookapp.entity.BookReview">
-        select r.id          as id,
-               r.book_id     as bookId,
-               r.user_id     as userId,
-               r.grade       as grade,
-               r.praise      as praise,
-               r.content     as content,
-               r.create_time as createTime,
-               u.headimgurl  as headImg,
-               u.nickname    as nickname,
-               b.book_name   as bookname
+        select r.id as id,
+        r.book_id as bookId,
+        r.user_id as userId,
+        r.grade as grade,
+        r.praise as praise,
+        r.content as content,
+        r.create_time as createTime,
+        u.headimgurl as headImg,
+        u.nickname as nickname,
+        b.book_name as bookname
         from user_info u,
-             book_review r,
-             bc_source.book_info b
+        book_review r,
+        bc_source.book_info b
         where r.book_id = b.book_id
-          and r.user_id = u.user_id
-          and r.book_id = #{bookId,jdbcType=INTEGER}
+        and r.user_id = u.user_id
+        and r.book_id = #{bookId,jdbcType=INTEGER}
         order by r.create_time desc
-                 limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
+        limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
     </select>
 
     <select id="selectPageUserBookReviews" resultType="com.jxtc.bookapp.entity.BookReview">
-        select r.id          as id,
-               r.book_id     as bookId,
-               r.user_id     as userId,
-               r.grade       as grade,
-               r.praise      as praise,
-               r.content     as content,
-               r.create_time as createTime,
-               u.headimgurl  as headImg,
-               u.nickname    as nickname,
-               b.book_name   as bookname
+        select r.id as id,
+        r.book_id as bookId,
+        r.user_id as userId,
+        r.grade as grade,
+        r.praise as praise,
+        r.content as content,
+        r.create_time as createTime,
+        u.headimgurl as headImg,
+        u.nickname as nickname,
+        b.book_name as bookname
         from user_info u,
-             book_review r,
-             bc_source.book_info b
+        book_review r,
+        bc_source.book_info b
         where r.book_id = b.book_id
-          and r.user_id = u.user_id
-          and r.user_id = #{userId,jdbcType=VARCHAR}
+        and r.user_id = u.user_id
+        and r.user_id = #{userId,jdbcType=VARCHAR}
         order by r.create_time desc
-                 limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
+        limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
     </select>
 
     <select id="praise">

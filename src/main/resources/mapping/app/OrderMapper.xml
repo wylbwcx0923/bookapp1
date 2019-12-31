@@ -120,13 +120,13 @@
     </delete>
     <insert id="insert" parameterType="com.jxtc.bookapp.entity.Order">
         insert into `order` (id, user_id, order_id,
-                             order_type, amount, book_id,
-                             des, status, create_time,
-                             update_time)
+        order_type, amount, book_id,
+        des, status, create_time,
+        update_time)
         values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR},
-                #{orderType,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER}, #{bookId,jdbcType=INTEGER},
-                #{des,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
-                #{updateTime,jdbcType=TIMESTAMP})
+        #{orderType,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER}, #{bookId,jdbcType=INTEGER},
+        #{des,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.jxtc.bookapp.entity.Order">
         insert into `order`
@@ -290,15 +290,15 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.Order">
         update `order`
-        set user_id     = #{userId,jdbcType=VARCHAR},
-            order_id    = #{orderId,jdbcType=VARCHAR},
-            order_type  = #{orderType,jdbcType=INTEGER},
-            amount      = #{amount,jdbcType=INTEGER},
-            book_id     = #{bookId,jdbcType=INTEGER},
-            des         = #{des,jdbcType=VARCHAR},
-            status      = #{status,jdbcType=INTEGER},
-            create_time = #{createTime,jdbcType=TIMESTAMP},
-            update_time = #{updateTime,jdbcType=TIMESTAMP}
+        set user_id = #{userId,jdbcType=VARCHAR},
+        order_id = #{orderId,jdbcType=VARCHAR},
+        order_type = #{orderType,jdbcType=INTEGER},
+        amount = #{amount,jdbcType=INTEGER},
+        book_id = #{bookId,jdbcType=INTEGER},
+        des = #{des,jdbcType=VARCHAR},
+        status = #{status,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
         where id = #{id,jdbcType=INTEGER}
     </update>
     <select id="selectOrderListByParams" resultType="com.jxtc.bookapp.entity.Order">

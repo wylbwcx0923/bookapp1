@@ -67,8 +67,8 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, key_words, search_time
-  </sql>
+        id, key_words, search_time
+    </sql>
     <select id="selectByExample" resultMap="BaseResultMap"
             parameterType="com.jxtc.bookapp.entity.SearchKeywordsExample">
         select
@@ -92,9 +92,9 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from search_keywords
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
+        delete from search_keywords
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
     <delete id="deleteByExample" parameterType="com.jxtc.bookapp.entity.SearchKeywordsExample">
         delete from search_keywords
         <if test="_parameter != null">
@@ -102,11 +102,11 @@
         </if>
     </delete>
     <insert id="insert" parameterType="com.jxtc.bookapp.entity.SearchKeywords">
-    insert into search_keywords (id, key_words, search_time
-      )
-    values (#{id,jdbcType=INTEGER}, #{keyWords,jdbcType=VARCHAR}, #{searchTime,jdbcType=TIMESTAMP}
-      )
-  </insert>
+        insert into search_keywords (id, key_words, search_time
+        )
+        values (#{id,jdbcType=INTEGER}, #{keyWords,jdbcType=VARCHAR}, #{searchTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
     <insert id="insertSelective" parameterType="com.jxtc.bookapp.entity.SearchKeywords">
         insert into search_keywords
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -178,11 +178,11 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.SearchKeywords">
-    update search_keywords
-    set key_words = #{keyWords,jdbcType=VARCHAR},
-      search_time = #{searchTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+        update search_keywords
+        set key_words = #{keyWords,jdbcType=VARCHAR},
+        search_time = #{searchTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
 
     <select id="countKeywords" parameterType="java.lang.String" resultType="int">
         select count(distinct(key_words)) from search_keywords

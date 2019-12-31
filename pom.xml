@@ -126,6 +126,8 @@
             <artifactId>swagger-annotations</artifactId>
             <version>1.5.22</version>
         </dependency>
+
+
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-models</artifactId>
@@ -157,6 +159,14 @@
             <artifactId>commons-logging</artifactId>
             <version>1.1.1</version>
         </dependency>
+
+        <!--中文简繁体转化-->
+        <dependency>
+            <groupId>com.github.houbb</groupId>
+            <artifactId>opencc4j</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
         <!--集成支付宝支付的依赖-->
         <!-- https://mvnrepository.com/artifact/com.alipay.sdk/alipay-sdk-java -->
         <dependency>
@@ -183,6 +193,7 @@
             <artifactId>jsch</artifactId>
             <version>0.1.54</version>
         </dependency>
+
         <!--解决jdk12中有些类不存在的依赖-->
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -204,6 +215,13 @@
             <artifactId>activation</artifactId>
             <version>1.1.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>18.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
     <build>
         <extensions>

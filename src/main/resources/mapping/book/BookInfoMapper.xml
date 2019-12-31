@@ -96,29 +96,29 @@
     </delete>
     <insert id="insert" parameterType="com.jxtc.bookapp.entity.BookInfoWithBLOBs">
         insert into book_info (id, book_id, book_name,
-                               subtitle, author, keywords,
-                               words, category, parent_category_id,
-                               child_category_id, valid, complete_state,
-                               producer, last_chapter_id, level_code,
-                               book_type, copyright_code, fee_unit,
-                               pub_type, copy_belong, price,
-                               putaway_date, create_time, update_time,
-                               category_name, pic_url, down_count,
-                               hits_count, cp_book_id, source,
-                               open_search, recommend_url, putaway,
-                               description, search_key_field)
+        subtitle, author, keywords,
+        words, category, parent_category_id,
+        child_category_id, valid, complete_state,
+        producer, last_chapter_id, level_code,
+        book_type, copyright_code, fee_unit,
+        pub_type, copy_belong, price,
+        putaway_date, create_time, update_time,
+        category_name, pic_url, down_count,
+        hits_count, cp_book_id, source,
+        open_search, recommend_url, putaway,
+        description, search_key_field)
         values (#{id,jdbcType=INTEGER}, #{bookId,jdbcType=INTEGER}, #{bookName,jdbcType=VARCHAR},
-                #{subtitle,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, #{keywords,jdbcType=VARCHAR},
-                #{words,jdbcType=INTEGER}, #{category,jdbcType=VARCHAR}, #{parentCategoryId,jdbcType=INTEGER},
-                #{childCategoryId,jdbcType=INTEGER}, #{valid,jdbcType=INTEGER}, #{completeState,jdbcType=INTEGER},
-                #{producer,jdbcType=VARCHAR}, #{lastChapterId,jdbcType=INTEGER}, #{levelCode,jdbcType=INTEGER},
-                #{bookType,jdbcType=INTEGER}, #{copyrightCode,jdbcType=VARCHAR}, #{feeUnit,jdbcType=INTEGER},
-                #{pubType,jdbcType=INTEGER}, #{copyBelong,jdbcType=INTEGER}, #{price,jdbcType=REAL},
-                #{putawayDate,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
-                #{categoryName,jdbcType=VARCHAR}, #{picUrl,jdbcType=VARCHAR}, #{downCount,jdbcType=INTEGER},
-                #{hitsCount,jdbcType=INTEGER}, #{cpBookId,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR},
-                #{openSearch,jdbcType=INTEGER}, #{recommendUrl,jdbcType=VARCHAR}, #{putaway,jdbcType=INTEGER},
-                #{description,jdbcType=LONGVARCHAR}, #{searchKeyField,jdbcType=LONGVARCHAR})
+        #{subtitle,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, #{keywords,jdbcType=VARCHAR},
+        #{words,jdbcType=INTEGER}, #{category,jdbcType=VARCHAR}, #{parentCategoryId,jdbcType=INTEGER},
+        #{childCategoryId,jdbcType=INTEGER}, #{valid,jdbcType=INTEGER}, #{completeState,jdbcType=INTEGER},
+        #{producer,jdbcType=VARCHAR}, #{lastChapterId,jdbcType=INTEGER}, #{levelCode,jdbcType=INTEGER},
+        #{bookType,jdbcType=INTEGER}, #{copyrightCode,jdbcType=VARCHAR}, #{feeUnit,jdbcType=INTEGER},
+        #{pubType,jdbcType=INTEGER}, #{copyBelong,jdbcType=INTEGER}, #{price,jdbcType=REAL},
+        #{putawayDate,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+        #{categoryName,jdbcType=VARCHAR}, #{picUrl,jdbcType=VARCHAR}, #{downCount,jdbcType=INTEGER},
+        #{hitsCount,jdbcType=INTEGER}, #{cpBookId,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR},
+        #{openSearch,jdbcType=INTEGER}, #{recommendUrl,jdbcType=VARCHAR}, #{putaway,jdbcType=INTEGER},
+        #{description,jdbcType=LONGVARCHAR}, #{searchKeyField,jdbcType=LONGVARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.jxtc.bookapp.entity.BookInfoWithBLOBs">
         insert into book_info
@@ -447,76 +447,76 @@
     </update>
     <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.jxtc.bookapp.entity.BookInfoWithBLOBs">
         update book_info
-        set book_id            = #{bookId,jdbcType=INTEGER},
-            book_name          = #{bookName,jdbcType=VARCHAR},
-            subtitle           = #{subtitle,jdbcType=VARCHAR},
-            author             = #{author,jdbcType=VARCHAR},
-            keywords           = #{keywords,jdbcType=VARCHAR},
-            words              = #{words,jdbcType=INTEGER},
-            category           = #{category,jdbcType=VARCHAR},
-            parent_category_id = #{parentCategoryId,jdbcType=INTEGER},
-            child_category_id  = #{childCategoryId,jdbcType=INTEGER},
-            valid              = #{valid,jdbcType=INTEGER},
-            complete_state     = #{completeState,jdbcType=INTEGER},
-            producer           = #{producer,jdbcType=VARCHAR},
-            last_chapter_id    = #{lastChapterId,jdbcType=INTEGER},
-            level_code         = #{levelCode,jdbcType=INTEGER},
-            book_type          = #{bookType,jdbcType=INTEGER},
-            copyright_code     = #{copyrightCode,jdbcType=VARCHAR},
-            fee_unit           = #{feeUnit,jdbcType=INTEGER},
-            pub_type           = #{pubType,jdbcType=INTEGER},
-            copy_belong        = #{copyBelong,jdbcType=INTEGER},
-            price              = #{price,jdbcType=REAL},
-            putaway_date       = #{putawayDate,jdbcType=TIMESTAMP},
-            create_time        = #{createTime,jdbcType=TIMESTAMP},
-            update_time        = #{updateTime,jdbcType=TIMESTAMP},
-            category_name      = #{categoryName,jdbcType=VARCHAR},
-            pic_url            = #{picUrl,jdbcType=VARCHAR},
-            down_count         = #{downCount,jdbcType=INTEGER},
-            hits_count         = #{hitsCount,jdbcType=INTEGER},
-            cp_book_id         = #{cpBookId,jdbcType=VARCHAR},
-            source             = #{source,jdbcType=VARCHAR},
-            open_search        = #{openSearch,jdbcType=INTEGER},
-            recommend_url      = #{recommendUrl,jdbcType=VARCHAR},
-            putaway            = #{putaway,jdbcType=INTEGER},
-            description        = #{description,jdbcType=LONGVARCHAR},
-            search_key_field   = #{searchKeyField,jdbcType=LONGVARCHAR}
+        set book_id = #{bookId,jdbcType=INTEGER},
+        book_name = #{bookName,jdbcType=VARCHAR},
+        subtitle = #{subtitle,jdbcType=VARCHAR},
+        author = #{author,jdbcType=VARCHAR},
+        keywords = #{keywords,jdbcType=VARCHAR},
+        words = #{words,jdbcType=INTEGER},
+        category = #{category,jdbcType=VARCHAR},
+        parent_category_id = #{parentCategoryId,jdbcType=INTEGER},
+        child_category_id = #{childCategoryId,jdbcType=INTEGER},
+        valid = #{valid,jdbcType=INTEGER},
+        complete_state = #{completeState,jdbcType=INTEGER},
+        producer = #{producer,jdbcType=VARCHAR},
+        last_chapter_id = #{lastChapterId,jdbcType=INTEGER},
+        level_code = #{levelCode,jdbcType=INTEGER},
+        book_type = #{bookType,jdbcType=INTEGER},
+        copyright_code = #{copyrightCode,jdbcType=VARCHAR},
+        fee_unit = #{feeUnit,jdbcType=INTEGER},
+        pub_type = #{pubType,jdbcType=INTEGER},
+        copy_belong = #{copyBelong,jdbcType=INTEGER},
+        price = #{price,jdbcType=REAL},
+        putaway_date = #{putawayDate,jdbcType=TIMESTAMP},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        category_name = #{categoryName,jdbcType=VARCHAR},
+        pic_url = #{picUrl,jdbcType=VARCHAR},
+        down_count = #{downCount,jdbcType=INTEGER},
+        hits_count = #{hitsCount,jdbcType=INTEGER},
+        cp_book_id = #{cpBookId,jdbcType=VARCHAR},
+        source = #{source,jdbcType=VARCHAR},
+        open_search = #{openSearch,jdbcType=INTEGER},
+        recommend_url = #{recommendUrl,jdbcType=VARCHAR},
+        putaway = #{putaway,jdbcType=INTEGER},
+        description = #{description,jdbcType=LONGVARCHAR},
+        search_key_field = #{searchKeyField,jdbcType=LONGVARCHAR}
         where id = #{id,jdbcType=INTEGER}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.BookInfo">
         update book_info
-        set book_id            = #{bookId,jdbcType=INTEGER},
-            book_name          = #{bookName,jdbcType=VARCHAR},
-            subtitle           = #{subtitle,jdbcType=VARCHAR},
-            author             = #{author,jdbcType=VARCHAR},
-            keywords           = #{keywords,jdbcType=VARCHAR},
-            words              = #{words,jdbcType=INTEGER},
-            category           = #{category,jdbcType=VARCHAR},
-            parent_category_id = #{parentCategoryId,jdbcType=INTEGER},
-            child_category_id  = #{childCategoryId,jdbcType=INTEGER},
-            valid              = #{valid,jdbcType=INTEGER},
-            complete_state     = #{completeState,jdbcType=INTEGER},
-            producer           = #{producer,jdbcType=VARCHAR},
-            last_chapter_id    = #{lastChapterId,jdbcType=INTEGER},
-            level_code         = #{levelCode,jdbcType=INTEGER},
-            book_type          = #{bookType,jdbcType=INTEGER},
-            copyright_code     = #{copyrightCode,jdbcType=VARCHAR},
-            fee_unit           = #{feeUnit,jdbcType=INTEGER},
-            pub_type           = #{pubType,jdbcType=INTEGER},
-            copy_belong        = #{copyBelong,jdbcType=INTEGER},
-            price              = #{price,jdbcType=REAL},
-            putaway_date       = #{putawayDate,jdbcType=TIMESTAMP},
-            create_time        = #{createTime,jdbcType=TIMESTAMP},
-            update_time        = #{updateTime,jdbcType=TIMESTAMP},
-            category_name      = #{categoryName,jdbcType=VARCHAR},
-            pic_url            = #{picUrl,jdbcType=VARCHAR},
-            down_count         = #{downCount,jdbcType=INTEGER},
-            hits_count         = #{hitsCount,jdbcType=INTEGER},
-            cp_book_id         = #{cpBookId,jdbcType=VARCHAR},
-            source             = #{source,jdbcType=VARCHAR},
-            open_search        = #{openSearch,jdbcType=INTEGER},
-            recommend_url      = #{recommendUrl,jdbcType=VARCHAR},
-            putaway            = #{putaway,jdbcType=INTEGER}
+        set book_id = #{bookId,jdbcType=INTEGER},
+        book_name = #{bookName,jdbcType=VARCHAR},
+        subtitle = #{subtitle,jdbcType=VARCHAR},
+        author = #{author,jdbcType=VARCHAR},
+        keywords = #{keywords,jdbcType=VARCHAR},
+        words = #{words,jdbcType=INTEGER},
+        category = #{category,jdbcType=VARCHAR},
+        parent_category_id = #{parentCategoryId,jdbcType=INTEGER},
+        child_category_id = #{childCategoryId,jdbcType=INTEGER},
+        valid = #{valid,jdbcType=INTEGER},
+        complete_state = #{completeState,jdbcType=INTEGER},
+        producer = #{producer,jdbcType=VARCHAR},
+        last_chapter_id = #{lastChapterId,jdbcType=INTEGER},
+        level_code = #{levelCode,jdbcType=INTEGER},
+        book_type = #{bookType,jdbcType=INTEGER},
+        copyright_code = #{copyrightCode,jdbcType=VARCHAR},
+        fee_unit = #{feeUnit,jdbcType=INTEGER},
+        pub_type = #{pubType,jdbcType=INTEGER},
+        copy_belong = #{copyBelong,jdbcType=INTEGER},
+        price = #{price,jdbcType=REAL},
+        putaway_date = #{putawayDate,jdbcType=TIMESTAMP},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        category_name = #{categoryName,jdbcType=VARCHAR},
+        pic_url = #{picUrl,jdbcType=VARCHAR},
+        down_count = #{downCount,jdbcType=INTEGER},
+        hits_count = #{hitsCount,jdbcType=INTEGER},
+        cp_book_id = #{cpBookId,jdbcType=VARCHAR},
+        source = #{source,jdbcType=VARCHAR},
+        open_search = #{openSearch,jdbcType=INTEGER},
+        recommend_url = #{recommendUrl,jdbcType=VARCHAR},
+        putaway = #{putaway,jdbcType=INTEGER}
         where id = #{id,jdbcType=INTEGER}
     </update>
     <select id="selectByBookId" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
@@ -532,46 +532,51 @@
         select id
         from vip_book
         where book_id = #{bookId,jdbcType=INTEGER}
-            limit 0
-            ,1
+        limit 0
+        ,1
     </select>
 
     <select id="selectBooksLikeKeyWords" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
         select book_id,book_name,author,pic_url,complete_state,category,description
-        from book_info
+        from bc_source.book_info
         where keywords like concat('%', #{keyWords,jdbcType=VARCHAR}, '%')
-          and putaway = 1
-          and open_search = 1
+        and putaway = 1
+        and open_search = 1
+        and copyright_code in ('鼎甜')
     </select>
     <select id="selectBooksLikeBookName" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
         select book_id,book_name,author,pic_url,complete_state,category,description
-        from book_info
+        from bc_source.book_info
         where book_name like concat('%', #{keyWords,jdbcType=VARCHAR}, '%')
-          and putaway = 1
-          and open_search = 1
+        and putaway = 1
+        and open_search = 1
+        and copyright_code in ('鼎甜')
     </select>
 
     <select id="selectBooksByAuthor" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
         select book_id,book_name,author,pic_url,complete_state,category,description
-        from book_info
+        from bc_source.book_info
         where author like concat('%', #{author,jdbcType=VARCHAR}, '%')
-          and putaway = 1
-          and open_search = 1
+        and putaway = 1
+        and open_search = 1
+        and copyright_code in ('鼎甜')
     </select>
 
     <select id="selectBooksByCategory" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
         select book_id,book_name,author,pic_url,complete_state,category,description
-        from book_info
+        from bc_source.book_info
         where category like concat('%', #{category,jdbcType=VARCHAR}, '%')
-          and putaway = 1
-          and open_search = 1
-            limit 0
-            ,6
+        and putaway = 1
+        and open_search = 1
+        and copyright_code in ('鼎甜')
+        limit 0
+        ,6
     </select>
 
     <select id="countBooksByParams" resultType="int">
         select count(*) from book_info
         <where>
+            copyright_code in ('鼎甜')
             <if test="bookId != null and bookId !=0">
                 and book_id=#{bookId}
             </if>
@@ -590,6 +595,7 @@
     <select id="selectBooksByParams" resultMap="ResultMapWithBLOBs">
         select * from book_info
         <where>
+            copyright_code in ('鼎甜')
             <if test="bookId != null and bookId !=0">
                 and book_id=#{bookId}
             </if>
@@ -619,7 +625,8 @@
         select book_id,book_name,author,pic_url,complete_state,category,description
         from book_info
         where description like concat('%', #{keyWords,jdbcType=VARCHAR}, '%')
-          and putaway = 1
-          and open_search = 1
+        and putaway = 1
+        and open_search = 1
+        and copyright_code in ('鼎甜')
     </select>
 </mapper>

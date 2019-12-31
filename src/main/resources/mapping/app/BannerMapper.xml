@@ -179,8 +179,8 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.Banner">
         update banner
-        set banner_id   = #{bannerId,jdbcType=INTEGER},
-            banner_name = #{bannerName,jdbcType=VARCHAR}
+        set banner_id = #{bannerId,jdbcType=INTEGER},
+        banner_name = #{bannerName,jdbcType=VARCHAR}
         where id = #{id,jdbcType=INTEGER}
     </update>
 

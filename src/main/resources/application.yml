@@ -31,7 +31,7 @@ spring:
     maxOpenPreparedStatements: 20
     #配置redis缓存
   redis:
-    database: 0 #数据库
+    database: 7 #数据库
     host: 47.99.114.219 #主机
     port: 6379 #端口号
     password: root

@@ -40,6 +40,7 @@ public interface ReadHistoryService {
 
     /**
      * 判断该用户是否阅读了该本书,如果阅读过则返回阅读的章节
+     *
      * @param userId
      * @param bookId
      * @return

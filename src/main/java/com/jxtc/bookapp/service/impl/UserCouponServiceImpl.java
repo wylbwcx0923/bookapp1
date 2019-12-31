@@ -50,7 +50,7 @@ public class UserCouponServiceImpl implements UserCouponService {
         example.createCriteria().andStatusEqualTo(ApiConstant.CouponStatus.UNUSE).andUserIdEqualTo(userId);
         List<UserCoupon> couponList = userCouponMapper.selectByExample(example);
         if (couponList != null && couponList.size() > 0) {
-            System.out.println("没有过期和使用的优惠券"+couponList.size());
+            System.out.println("没有过期和使用的优惠券" + couponList.size());
             //说明用户有未使用的优惠券
             for (UserCoupon userCoupon : couponList) {
                 if (userCoupon.getExpireTime().getTime() < now.getTime()) {

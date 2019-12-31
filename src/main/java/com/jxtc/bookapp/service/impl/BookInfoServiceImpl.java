@@ -4,6 +4,7 @@ import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.PutObjectRequest;
+import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import com.jxtc.bookapp.config.AliyunOSSConfig;
 import com.jxtc.bookapp.config.ApiConstant;
 import com.jxtc.bookapp.config.OSSCacheKey;
@@ -25,14 +26,12 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -250,6 +249,8 @@ public class BookInfoServiceImpl implements BookInfoService {
     @Override
     public List<BookInfo> searchBook(String keyWords, int pageIndex, int pageSize) {
         System.out.println(keyWords);
+        keyWords = ZhConverterUtil.convertToSimple(keyWords);//无论输入的是繁体还是简体,让他都以简体去搜索
+        System.out.println(keyWords);
         List<BookInfo> bookInfos = new ArrayList<>();
         //先从关键字库中查询
         bookInfos.addAll(bookInfoMapper.selectBooksLikeKeyWords(keyWords));
@@ -272,19 +273,25 @@ public class BookInfoServiceImpl implements BookInfoService {
 
     @Override
     public PageResult<BookInfo> recommendBook(String author, String category, int pageIndex, int pageSize) {
+        author = ZhConverterUtil.convertToSimple(author);
+        logger.info("作者" + author);
+        category = ZhConverterUtil.convertToSimple(category);
+        logger.info("类型" + category);
         PageResult<BookInfo> pageResult = new PageResult<>();
         List<BookInfo> bookInfos = new ArrayList<>();
-        List<BookInfo> authorBooks = null;
+        List<BookInfo> authorBooks = new ArrayList<>();
         //从缓存中取交叉推荐的内容
         String isExists = (String) redisService.get("recommend" + author + "_" + category);
+        logger.info("缓存中取到的字符串" + isExists);
         if (isExists == null || "".equals(isExists) || isExists.length() < 5) {
             //不存在的话从MYSQL中取
             if (author != null) {
                 authorBooks = bookInfoMapper.selectBooksByAuthor(author);
             }
             List<BookInfo> categoryBooks = bookInfoMapper.selectBooksByCategory(category);
+            logger.info("推荐书籍列表" + categoryBooks.toString());
             authorBooks.addAll(categoryBooks);
-            logger.info("推荐书籍列表", authorBooks);
+            logger.info("推荐书籍列表" + authorBooks.toString());
             //将取得的书籍放入缓存
             if (authorBooks != null && authorBooks.size() > 0) {
                 String arrayStr = JSONArray.fromObject(authorBooks).toString();
@@ -294,8 +301,9 @@ public class BookInfoServiceImpl implements BookInfoService {
             //如果缓存中可以取到,就直接从缓存中取
             JSONArray array = JSONArray.fromObject(isExists);
             authorBooks = (List<BookInfo>) JSONArray.toCollection(array, BookInfo.class);
+            logger.info("缓存不为空" + authorBooks.toString());
         }
-
+        logger.info("最终的推荐" + authorBooks.toString());
         if (authorBooks != null && authorBooks.size() > 0) {
             int offset = (pageIndex - 1) * pageSize;
             int total = authorBooks.size();

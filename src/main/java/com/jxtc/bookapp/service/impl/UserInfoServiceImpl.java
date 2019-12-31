@@ -7,22 +7,20 @@ import com.jxtc.bookapp.mapper.app.*;
 import com.jxtc.bookapp.service.RedisService;
 import com.jxtc.bookapp.service.UserEmpiricalService;
 import com.jxtc.bookapp.service.UserInfoService;
-import com.jxtc.bookapp.utils.HttpClientUtil;
 import com.jxtc.bookapp.utils.PageResult;
-
 import net.sf.json.JSONObject;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import weixin.popular.api.SnsAPI;
 import weixin.popular.bean.BaseResult;
 import weixin.popular.bean.sns.SnsToken;
 import weixin.popular.bean.user.User;
 
+import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -399,11 +397,9 @@ public class UserInfoServiceImpl implements UserInfoService {
         int yesterdayDown = userInfoMapper.countUserList(null, sdf.format(calendar.getTime()), sdf.format(calendar.getTime()));
         int yesterdayActi = userInfoMapper.countActiviteUser(sdf.format(calendar.getTime()), sdf.format(calendar.getTime()));
         //本月人数
-        calendar.setTime(new Date());
-        int year = calendar.getWeekYear();
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int monthDown = userInfoMapper.countUserList(null, year + "-" + month + "-" + "01", sdf.format(new Date()));
-        int monthActi = userInfoMapper.countActiviteUser(year + "-" + month + "-" + "01", sdf.format(new Date()));
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-01");
+        int monthDown = userInfoMapper.countUserList(null, sdf1.format(new Date()), sdf.format(new Date()));
+        int monthActi = userInfoMapper.countActiviteUser(sdf1.format(new Date()), sdf.format(new Date()));
         int total = userInfoMapper.countUserList(null, null, null);
         HashMap<String, Object> map = new HashMap<>();
         map.put("todayDown", todayDown);
@@ -463,5 +459,43 @@ public class UserInfoServiceImpl implements UserInfoService {
         map.put("monthDay", monthDay);
         map.put("monthDayRate", monthDayRate);
         return map;
+    }
+
+    @Override
+    @Transactional(rollbackFor = SQLException.class)
+    public String googleLogin(String googleId, String nickname, String photo) {
+        //判断googleId是否是空
+        if (StringUtils.isNotBlank(googleId)) {
+            UserInfoExample example = new UserInfoExample();
+            example.createCriteria().andPasswordEqualTo(googleId);
+            List<UserInfo> userInfos = userInfoMapper.selectByExample(example);
+            //已经注册过
+            if (userInfos != null && userInfos.size() > 0) {
+                return userInfos.get(0).getUserId();
+            }
+            //程序执行至此,说明没有注册过
+            UserInfo userInfo = new UserInfo();
+            userInfo.setPassword(googleId);//传ID
+            userInfo.setNickname(nickname);//传名字
+            userInfo.setSex(2);
+            if (StringUtils.isNotBlank(photo)) {
+                userInfo.setHeadimgurl(photo);//传用户的头像
+            } else {
+                userInfo.setHeadimgurl(ApiConstant.Config.DEFULT_HEAD);
+            }
+            userInfo.setCoin(14);
+            userInfo.setType(1);
+            userInfo.setCreateTime(new Date());
+            userInfo.setUpdateTime(new Date());
+            String userId = getUserId();
+            userInfo.setUserId(userId);
+            userInfoMapper.insertSelective(userInfo);
+            //在用户经验值的表中插入一条该用户的数据
+            createUserEmpirical(userId);
+            //在用户的阅币表中插入一条数据,初始化用户的阅币账户
+            initUserCoin(userId);
+            return userId;
+        }
+        return "google登录失败,请重试";
     }
 }

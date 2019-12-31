@@ -86,7 +86,7 @@ public class AliPayController {
             e.printStackTrace();
         }
         //订单处理
-        String res=aliPayService.orderProcess(orderId, orderBody, tradeStatus, flag);
+        String res = aliPayService.orderProcess(orderId, orderBody, tradeStatus, flag);
         return res;
     }
 

@@ -53,5 +53,5 @@ public interface UserInfoMapper {
 
     int countUserRegistByTime(@Param("days") Integer days, @Param("nowTime") String nowTime);
 
-    List<UserCount> selectUserCountActisList(@Param("offset") int offset,@Param("size") int size);
+    List<UserCount> selectUserCountActisList(@Param("offset") int offset, @Param("size") int size);
 }

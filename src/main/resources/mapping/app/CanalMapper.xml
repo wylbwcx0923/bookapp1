@@ -66,8 +66,8 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, noun_name
-  </sql>
+        id, noun_name
+    </sql>
     <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.jxtc.bookapp.entity.CanalExample">
         select
         <if test="distinct">
@@ -90,9 +90,9 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from canal
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
+        delete from canal
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
     <delete id="deleteByExample" parameterType="com.jxtc.bookapp.entity.CanalExample">
         delete from canal
         <if test="_parameter != null">
@@ -100,9 +100,9 @@
         </if>
     </delete>
     <insert id="insert" parameterType="com.jxtc.bookapp.entity.Canal">
-    insert into canal (id, noun_name)
-    values (#{id,jdbcType=INTEGER}, #{nounName,jdbcType=VARCHAR})
-  </insert>
+        insert into canal (id, noun_name)
+        values (#{id,jdbcType=INTEGER}, #{nounName,jdbcType=VARCHAR})
+    </insert>
     <insert id="insertSelective" parameterType="com.jxtc.bookapp.entity.Canal">
         insert into canal
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -165,8 +165,8 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.Canal">
-    update canal
-    set noun_name = #{nounName,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+        update canal
+        set noun_name = #{nounName,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
 </mapper>

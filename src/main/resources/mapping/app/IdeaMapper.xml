@@ -108,9 +108,9 @@
     </delete>
     <insert id="insert" parameterType="com.jxtc.bookapp.entity.Idea">
         insert into idea (id, user_id, idea,
-                          create_time)
+        create_time)
         values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{idea,jdbcType=VARCHAR},
-                #{createTime,jdbcType=TIMESTAMP})
+        #{createTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.jxtc.bookapp.entity.Idea">
         insert into idea
@@ -196,15 +196,15 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.Idea">
         update idea
-        set user_id     = #{userId,jdbcType=VARCHAR},
-            idea        = #{idea,jdbcType=VARCHAR},
-            create_time = #{createTime,jdbcType=TIMESTAMP}
+        set user_id = #{userId,jdbcType=VARCHAR},
+        idea = #{idea,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP}
         where id = #{id,jdbcType=INTEGER}
     </update>
     <select id="selectIdeasForPage" resultMap="BaseResultMap">
         select *
         from idea
         order by create_time desc
-                 limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
+        limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
     </select>
 </mapper>

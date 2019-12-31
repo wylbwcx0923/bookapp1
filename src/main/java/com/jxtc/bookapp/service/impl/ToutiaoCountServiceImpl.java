@@ -11,7 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service("toutiaoCountService")
+/**
+ * @author wangyuliang
+ */
+@Service(value = "toutiaoCountService")
 public class ToutiaoCountServiceImpl implements ToutiaoCountService {
     @Autowired
     private ToutiaoCountMapper toutiaoCountMapper;

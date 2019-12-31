@@ -43,7 +43,7 @@ public interface BookInfoService {
     String uploadBookPic(String bookId, MultipartFile file);
 
     //修改章节内容
-    void updateChapterContent(int bookId,int chapterId,String content);
+    void updateChapterContent(int bookId, int chapterId, String content);
 
 
 }

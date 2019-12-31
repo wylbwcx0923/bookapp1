@@ -28,6 +28,7 @@ public class BookappApplication {
 
     /**
      * 注册可以访问的路径
+     *
      * @return
      */
     @Bean

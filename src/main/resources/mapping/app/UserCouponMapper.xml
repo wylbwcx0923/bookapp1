@@ -124,13 +124,13 @@
     </delete>
     <insert id="insert" parameterType="com.jxtc.bookapp.entity.UserCoupon">
         insert into user_coupon (id, user_id, coupon_type,
-                                 discount, voucher, reward,
-                                 status, `limit`, `full`,
-                                 des, create_time, expire_time)
+        discount, voucher, reward,
+        status, `limit`, `full`,
+        des, create_time, expire_time)
         values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{couponType,jdbcType=INTEGER},
-                #{discount,jdbcType=DOUBLE}, #{voucher,jdbcType=DOUBLE}, #{reward,jdbcType=INTEGER},
-                #{status,jdbcType=INTEGER}, #{limit,jdbcType=VARCHAR}, #{`full`,jdbcType=INTEGER},
-                #{des,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{expireTime,jdbcType=TIMESTAMP})
+        #{discount,jdbcType=DOUBLE}, #{voucher,jdbcType=DOUBLE}, #{reward,jdbcType=INTEGER},
+        #{status,jdbcType=INTEGER}, #{limit,jdbcType=VARCHAR}, #{`full`,jdbcType=INTEGER},
+        #{des,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{expireTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.jxtc.bookapp.entity.UserCoupon">
         insert into user_coupon
@@ -321,17 +321,17 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.UserCoupon">
         update user_coupon
-        set user_id     = #{userId,jdbcType=VARCHAR},
-            coupon_type = #{couponType,jdbcType=INTEGER},
-            discount    = #{discount,jdbcType=DOUBLE},
-            voucher     = #{voucher,jdbcType=DOUBLE},
-            reward      = #{reward,jdbcType=INTEGER},
-            status      = #{status,jdbcType=INTEGER},
-            `limit`     = #{limit,jdbcType=VARCHAR},
-            `full`      = #{full,jdbcType=INTEGER},
-            des         = #{des,jdbcType=VARCHAR},
-            create_time = #{createTime,jdbcType=TIMESTAMP},
-            expire_time = #{expireTime,jdbcType=TIMESTAMP}
+        set user_id = #{userId,jdbcType=VARCHAR},
+        coupon_type = #{couponType,jdbcType=INTEGER},
+        discount = #{discount,jdbcType=DOUBLE},
+        voucher = #{voucher,jdbcType=DOUBLE},
+        reward = #{reward,jdbcType=INTEGER},
+        status = #{status,jdbcType=INTEGER},
+        `limit` = #{limit,jdbcType=VARCHAR},
+        `full` = #{full,jdbcType=INTEGER},
+        des = #{des,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        expire_time = #{expireTime,jdbcType=TIMESTAMP}
         where id = #{id,jdbcType=INTEGER}
     </update>
 

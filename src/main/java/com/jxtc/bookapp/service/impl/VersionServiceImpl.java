@@ -1,8 +1,6 @@
 package com.jxtc.bookapp.service.impl;
 
-import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSSClient;
-import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.jxtc.bookapp.entity.Version;
 import com.jxtc.bookapp.mapper.app.VersionMapper;
@@ -109,14 +107,8 @@ public class VersionServiceImpl implements VersionService {
         try {
             // 带进度条的上传
             ossClient.putObject(new PutObjectRequest(BUCKETNAME, key, inputStream));
-        } catch (OSSException oe) {
+        } catch (Exception oe) {
             oe.printStackTrace();
-            key = null;
-        } catch (ClientException ce) {
-            ce.printStackTrace();
-            key = null;
-        } catch (Exception e) {
-            e.printStackTrace();
             key = null;
         } finally {
             ossClient.shutdown();

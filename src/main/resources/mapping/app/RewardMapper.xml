@@ -114,11 +114,11 @@
     </delete>
     <insert id="insert" parameterType="com.jxtc.bookapp.entity.Reward">
         insert into reward (id, user_id, book_id,
-                            type, mun, amount,
-                            create_time)
+        type, mun, amount,
+        create_time)
         values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{bookId,jdbcType=INTEGER},
-                #{type,jdbcType=INTEGER}, #{mun,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER},
-                #{createTime,jdbcType=TIMESTAMP})
+        #{type,jdbcType=INTEGER}, #{mun,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.jxtc.bookapp.entity.Reward">
         insert into reward
@@ -243,30 +243,30 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.jxtc.bookapp.entity.Reward">
         update reward
-        set user_id     = #{userId,jdbcType=VARCHAR},
-            book_id     = #{bookId,jdbcType=INTEGER},
-            type        = #{type,jdbcType=INTEGER},
-            mun         = #{mun,jdbcType=INTEGER},
-            amount      = #{amount,jdbcType=INTEGER},
-            create_time = #{createTime,jdbcType=TIMESTAMP}
+        set user_id = #{userId,jdbcType=VARCHAR},
+        book_id = #{bookId,jdbcType=INTEGER},
+        type = #{type,jdbcType=INTEGER},
+        mun = #{mun,jdbcType=INTEGER},
+        amount = #{amount,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP}
         where id = #{id,jdbcType=INTEGER}
     </update>
 
     <select id="selectTotals" resultType="com.jxtc.bookapp.entity.RewardRank">
         select sum(r.amount) as total,
-               r.user_id     as userId,
-               u.nickname    as nickname,
-               u.headimgurl  as headimgurl,
-               count(r.id)   as num
+        r.user_id as userId,
+        u.nickname as nickname,
+        u.headimgurl as headimgurl,
+        count(r.id) as num
         from reward r,
-             user_info u
+        user_info u
         where
-                r.book_id =
-                #{bookId,jdbcType=INTEGER}
-          and r.user_id = u.user_id
+        r.book_id =
+        #{bookId,jdbcType=INTEGER}
+        and r.user_id = u.user_id
         group by r.user_id
         order by sum(r.amount) desc
-                 limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
+        limit #{offset,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
     </select>
     <select id="countTotals" resultType="int">
         select count(distinct (user_id))

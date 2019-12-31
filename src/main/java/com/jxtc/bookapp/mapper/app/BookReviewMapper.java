@@ -39,7 +39,7 @@ public interface BookReviewMapper {
 
     List<BookInfo> selectHaveReviewBookList(@Param("bookName") String bookName, @Param("offset") int offset, @Param("size") int size);
 
-    int countHaveReviewBook(@Param("bookName")String bookName);
+    int countHaveReviewBook(@Param("bookName") String bookName);
 
     int countByBookId(@Param("bookId") Integer bookId);
 }

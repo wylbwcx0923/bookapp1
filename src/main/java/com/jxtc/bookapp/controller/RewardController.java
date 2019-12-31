@@ -27,7 +27,7 @@ public class RewardController {
                               @ApiParam(value = "优惠券Id", required = false)
                               @RequestParam(value = "couponId", required = false) Integer couponId) {
         System.out.println(reward);
-        int flog = rewardService.insert(reward,couponId);
+        int flog = rewardService.insert(reward, couponId);
         if (flog == 0) {
             return new JXResult(false, ApiConstant.StatusCode.OK, "打赏失败");
         } else {

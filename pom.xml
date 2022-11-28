@@ -90,7 +90,7 @@
         <dependency>
             <groupId>net.sf.mpxj</groupId>
             <artifactId>mpxj</artifactId>
-            <version>7.1.0</version>
+            <version>10.14.1</version>
         </dependency>
         <!--阿里云OSS依赖-->
         <dependency>
